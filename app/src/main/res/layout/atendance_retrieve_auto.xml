@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+
+
+        >
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+           >
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="#80f8fcff"
+                android:onClick="onClickSubmit"
+                android:text="Submit"
+                android:textColor="#f8fcff" />
+    <Button
+        android:id="@+id/remove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#80f8fcff"
+        android:onClick="onClickRemove"
+        android:text="Remove Students"
+        android:textColor="#f8fcff" />
+
+</LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
+<LinearLayout
+    android:layout_width="wrap_content"
+
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    >
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Present : "
+                android:textColor="#80f8fcff"
+                android:textStyle="bold"
+                   />
+                <TextView
+                    android:id="@+id/sPresent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#80f8fcff"
+                    android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Absent : "
+                        android:textColor="#80f8fcff"
+                        android:textStyle="bold"
+
+                        />
+                    <TextView
+                        android:id="@+id/sAbsent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#80f8fcff"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total : "
+                        android:textColor="#80f8fcff"
+                        android:textStyle="bold"
+                        android:layout_gravity="right"
+                        />
+                    <TextView
+                        android:id="@+id/sTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#80f8fcff"
+                        android:textStyle="bold"
+                        android:layout_gravity="right"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#FFFFFF" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+
+            >
+
+            <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/list"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:dividerHeight="26dp"
+                android:scrollbars="none"
+                android:divider="#00000000"
+
+
+                />
+
+
+        </LinearLayout>
+
+     <!--   <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/navbar"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+
+            android:onClick="onClickPlus"
+            android:src="@drawable/plusfloat"
+            android:background="@drawable/empty"
+
+            app:fabSize="normal"
+            /> -->
+
+
+    </RelativeLayout>
+</LinearLayout>

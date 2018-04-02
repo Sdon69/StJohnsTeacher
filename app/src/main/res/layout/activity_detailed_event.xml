@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"><RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+
+    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        android:id="@+id/detailedlaytitle"
+        tools:text="Event Name"
+        android:textColor="@color/colorPrimary"
+       />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    android:layout_marginLeft="36dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginTop="26dp"
+    >
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textColor="#8497b0"
+        android:textSize="14sp"
+        android:text="Date of Publication"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:id="@+id/detailedlay_publishDate"
+        tools:text="DD/MM/YYYY"
+        android:textColor="#8497b0"
+       />
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:layout_marginLeft="36dp"
+        android:layout_marginBottom="12dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="Date of Event"
+            android:textColor="#8497b0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:id="@+id/detailedlay_EventDate"
+            tools:text="DD/MM/YYYY"
+            android:textColor="#8497b0"
+       />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="36dp"
+        android:layout_marginBottom="12dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="Last Date of Registration"
+            android:textColor="#8497b0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:id="@+id/detailedlay_EndDateofReg"
+            tools:text="DD/MM/YYYY"
+            android:textColor="#8497b0"
+            />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Entry Fees : "
+            android:textColor="#2f5597"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:id="@+id/detailedlay_entryfees"
+            android:textColor="#2f5597"
+            android:textStyle="bold"
+            tools:text="XXX"
+            android:layout_marginRight="20sp"
+            />
+    </LinearLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="14dp"
+    android:layout_marginBottom="14dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.5"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:id="@+id/detailedlaydesc"
+
+        tools:text="A full version of description which will is continued in detailed version of the event viewer made by event host. A full version of description which will is continued in detailed version of the event viewer made by event host. A full version of description which will is continued in detailed version of the event viewer made by event host. A full version of description which will is continued in detailed version of the event viewer made by event host. A full version of description which will is continued in detailed version of the event viewer made by event host.
+"
+
+        />
+
+</LinearLayout>
+
+
+
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:id="@+id/detailedlay_fullName"
+        android:visibility="invisible"/>
+
+
+
+
+</LinearLayout></ScrollView></RelativeLayout></LinearLayout>

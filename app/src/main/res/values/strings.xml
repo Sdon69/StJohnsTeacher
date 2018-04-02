@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">Quickstart</string>
+
+    <string name="country_prompt">Choose a country</string>
+    <string name="section_prompt">Choose a section</string>
+
+    <string-array name="class_arrays">
+        <item>BBA</item>
+
+    </string-array>
+
+    <string-array name="class_arrays2">
+
+
+    </string-array>
+
+    <string-array name="section_arrays">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+
+    </string-array>
+
+
+    <string-array name="section_title">
+        <item>Section</item>
+
+
+    </string-array>
+
+    <string-array name="class_title">
+        <item>Class</item>
+
+
+    </string-array>
+
+    <string-array name="section_arrays2">
+        <item>Section</item>
+
+
+    </string-array>
+
+
+    <string-array name="dept_arrays">
+        <item>All Departments</item>
+        <item>Art</item>
+        <item>Commerce</item>
+        <item>Management</item>
+        <item>Education</item>
+        <item>Science</item>
+        <item>Other Subjects</item>
+
+
+    </string-array>
+
+
+    <string-array name="dept_arrays2">
+        <item>Department</item>
+        <item>Art</item>
+        <item>Commerce</item>
+        <item>Management</item>
+        <item>Education</item>
+        <item>Science</item>
+        <item>Other Subjects</item>
+
+
+    </string-array>
+
+
+    <string-array name="semester_arrays">
+        <item>All Semesters</item>
+        <item>First Semester</item>
+        <item>Second Semester</item>
+        <item>Third Semester</item>
+        <item>Fourth Semester</item>
+        <item>Fifth Semester</item>
+        <item>Sixth and Above Semesters</item>
+
+
+    </string-array>
+
+    <string-array name="semester_arrays2">
+        <item>Semester</item>
+        <item>First Semester</item>
+        <item>Second Semester</item>
+        <item>Third Semester</item>
+        <item>Fourth Semester</item>
+        <item>Fifth Semester</item>
+        <item>Sixth and Above Semesters</item>
+
+    </string-array>
+
+
+    <string-array name="subjects_arrays">
+        <item>Subject</item>
+
+
+
+    </string-array>
+
+    <string-array name="genre_arrays">
+        <item>All Events</item>
+        <item>Technology</item>
+        <item>Social Gathering</item>
+        <item>Debate</item>
+        <item>Social Awareness</item>
+        <item>Convention</item>
+        <item>Sports</item>
+        <item>Other</item>
+
+
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

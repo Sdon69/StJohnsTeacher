@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/s3"
+            android:background="@drawable/empty"
+            app:fabSize="normal"
+            android:onClick="submitInfo"
+
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"><!-- Put height to wrap content in case of any problem -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#fff">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
+                    android:background="@drawable/bg23">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:padding="8dp"
+                        android:src="@drawable/signup_circle"
+
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="8"
+                    android:orientation="vertical">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:background="#203f8acd"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
+
+
+
+                        <EditText
+                            android:id="@+id/pFirstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="First Name"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"
+
+
+                            />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"     android:padding="14dp"  android:background="#203f8acd">
+
+                        <EditText
+                            android:id="@+id/pLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Last Name"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"     android:padding="14dp"  android:background="#203f8acd">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/pUser_id"
+                            android:hint="User Id"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"
+                        android:onClick="onClickClass"
+                        android:padding="14dp"  android:background="#203f8acd">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:layout_height="match_parent"
+    android:onClick="onClickDepartment"
+    android:id="@+id/department_layout"
+    android:clickable="false"
+    android:longClickable="false"
+
+    android:enabled="false">
+                        <Spinner
+                            android:id="@+id/spinner_department"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="36dp"
+                            android:entries="@array/dept_arrays2"
+                            android:prompt="@string/section_prompt"
+                            android:textColorHint="#c0cce0"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:clickable="false"
+                            android:enabled="false"/>
+</LinearLayout>
+                        <Spinner
+                            android:id="@+id/spinner_class"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="36dp"
+                            android:entries="@array/class_title"
+                            android:prompt="@string/country_prompt"
+                            android:textColorHint="#c0cce0"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:clickable="false"
+                            android:enabled="false"
+                            />
+
+
+
+                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/pClass"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Class (Tap To Change)"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/section_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:onClick="onClickSection"
+                        android:layout_margin="12dp"     android:padding="14dp"  android:background="#203f8acd">
+                        <Spinner
+                            android:id="@+id/spinner_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:entries="@array/section_title"
+                            android:prompt="@string/section_prompt"
+                            android:textColorHint="#eaedfa"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:clickable="false"
+                            android:enabled="false"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/pSection"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Section (Tap To Change) "
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"
+                        android:padding="14dp"
+                        android:background="#203f8acd"
+                        android:onClick="onClickSemester">
+
+
+                        <Spinner
+                            android:id="@+id/spinner_semesters"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:entries="@array/semester_arrays2"
+                            android:prompt="@string/section_prompt"
+                            android:textColorHint="#eaedfa"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="4dp"
+                            android:visibility="invisible"
+                            android:clickable="false"
+                            android:enabled="false"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/pSemester"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Semester (Tap To Change)"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"     android:padding="14dp"  android:background="#203f8acd">
+                        <EditText
+                            android:id="@+id/pEmail"
+                            android:hint="Email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="12dp"
+                        android:padding="14dp"
+                        android:background="#203f8acd">
+                        <EditText
+                            android:id="@+id/pPhoneNo"
+                            android:hint="Phone Number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:textColor="#4489c8"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColorHint="#4489c8"/>
+
+
+                    </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</LinearLayout>

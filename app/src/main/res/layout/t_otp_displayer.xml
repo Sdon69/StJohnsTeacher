@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout"
+    android:background="#fff">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"><!-- Put height to wrap content in case of any problem -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#fff">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
+                    android:background="@drawable/bg23">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:padding="8dp"
+                        android:src="@drawable/signup_circle"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="8"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OTP"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="46sp"
+
+                            android:layout_gravity="center_horizontal"
+                            android:textAlignment="gravity"
+
+
+
+
+                            />
+                        <TextView
+                            android:id="@+id/otp"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="999"
+                            android:textColor="#696969"
+                            android:textSize="36sp"
+                            android:layout_marginTop="26dp"
+
+                            android:layout_gravity="center_horizontal"
+                            android:textAlignment="gravity"
+
+
+
+
+                            />
+
+
+
+
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="26dp"
+                            android:background="@drawable/round_button"
+                            android:onClick="onClickDone"
+                            android:text="DONE"
+                            android:textAllCaps="true"
+                            android:textColor="#f8fcff"
+
+                            />
+
+                    </LinearLayout></RelativeLayout></LinearLayout></ScrollView></RelativeLayout></LinearLayout>

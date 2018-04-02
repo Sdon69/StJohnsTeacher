@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_background"
+    android:orientation="vertical"
+    android:overScrollMode="always">
+
+    <ImageView
+        android:id="@+id/imgur"
+        android:layout_width="280dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_weight="5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_weight="0.5"
+        android:scaleType="fitCenter"
+         />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="16dp"
+        android:text="Instant Attendance"
+        android:textColor="#3F51B5"
+        android:textSize="17.5sp"
+        android:textStyle="bold"
+        android:id="@+id/head"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center_horizontal"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
+        android:paddingTop="6dp"
+        android:textSize="17.5sp"
+        android:text="Get Attendance using \n the instructor guided code (IGC)"
+        android:textColor="#424242"
+        android:id="@+id/head2"/>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_marginTop="26dp">
+        <Button
+            android:id="@+id/Button1"
+
+
+            android:layout_gravity="center_horizontal"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:onClick="onClickButton0"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/blue_button"
+
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_margin="10dp"
+            />   <Button
+        android:id="@+id/Button2"
+
+
+        android:layout_gravity="center_horizontal"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/blue_button"
+        android:onClick="onClickButton1"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_margin="10dp"
+        />
+
+        <Button
+            android:id="@+id/Button3"
+
+
+            android:layout_gravity="center_horizontal"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:onClick="onClickButton2"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/blue_button"
+
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>

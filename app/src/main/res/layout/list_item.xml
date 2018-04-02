@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for a single list item -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:id="@+id/root_layoutl"
+    android:orientation="horizontal"
+    android:layout_marginTop="28dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="@drawable/border">
+    <TextView
+        android:id="@+id/date_published"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="DD/MM/YY"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:paddingTop="8dp"
+        android:textSize="10sp"/>
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/image_view"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        ><LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="0.5"
+        >
+        <TextView
+            android:id="@+id/miwok_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Event Name"
+            android:textColor="@color/colorPrimary"
+            />
+    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/eTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                android:text="Author : "
+
+
+                />
+            <TextView
+
+                android:layout_toRightOf="@+id/eTextView"
+                android:id="@+id/author_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                tools:text="XXX"
+                />
+
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/default_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="72"
+                android:layout_marginRight="16dp"
+                android:textSize="14sp"
+                android:textColor="#000000"
+
+                tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+
+        />
+
+</RelativeLayout>

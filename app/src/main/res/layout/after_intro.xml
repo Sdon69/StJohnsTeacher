@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_background"
+    android:orientation="vertical"
+
+    android:overScrollMode="always">
+
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:background="@drawable/bluebwbl"
+        android:onClick="onClickSignUp"
+        android:text="Sign up \n (New Users)"
+        android:textAllCaps="true"
+        android:textColor="#f8fcff"
+        android:id="@+id/signup"
+        android:layout_above="@+id/signin"
+
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/bluebwbl"
+        android:onClick="onClickSing"
+        android:text="Sign in \n (Existing USers)"
+        android:textAllCaps="true"
+        android:textColor="#f8fcff"
+        android:id="@+id/signin"
+
+
+
+        />
+
+
+
+</RelativeLayout>
+
+
+
+
+</LinearLayout>

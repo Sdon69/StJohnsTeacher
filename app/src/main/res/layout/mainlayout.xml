@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/Retrive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClick2"
+                android:text="Retrive info" />
+
+            <Button
+                android:id="@+id/intro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickintro"
+                android:text="Intro" />
+
+            <Button
+                android:id="@+id/details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickDetail"
+                android:text="Teacher's Sign Up" />
+
+            <Button
+                android:id="@+id/student_sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickStudentSignUp"
+                android:text="Student's Sign Up" />
+
+            <Button
+                android:id="@+id/sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickSignIn"
+                android:text="SignIN" />
+
+            <Button
+                android:id="@+id/signStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickSignInStudent"
+                android:text="SignIN Student" />
+
+            <Button
+                android:id="@+id/studentProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickdStudentProfile"
+                android:text="Student's Profile" />
+
+            <Button
+                android:id="@+id/qrMainAvtivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickqrMainActivity"
+                android:text="Qr Activity" />
+
+            <Button
+                android:id="@+id/qrDecoder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickDecoderActivity"
+                android:text="Qr Decoder" />
+
+            <Button
+                android:id="@+id/eventViewer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickEventViewer"
+                android:text="Event Viewer" />
+
+            <Button
+                android:id="@+id/eventWriter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickEventWriter"
+                android:text="Event Writer" />
+
+            <Button
+                android:id="@+id/T_noteswriter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickt_notes_writer"
+                android:text="Notes Writer" />
+
+            <Button
+                android:id="@+id/T_notes_viewer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickt_notes_viewer"
+                android:text="Notes Viewer" />
+
+            <Button
+                android:id="@+id/t_Announcement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickAnnouncementWriter"
+                android:text="Announcement Writer" />
+
+            <Button
+                android:id="@+id/t_AnnouncementViewer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickAnnouncementViewer"
+                android:text="Announcement Viewer" />
+
+
+            <Button
+                android:id="@+id/t_SubjectAdder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickSubjectAdder"
+                android:text="Subject Adder" />
+            <Button
+                android:id="@+id/t_ClassAdder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickClassAdder"
+                android:text="Class Adder" />
+            <Button
+            android:id="@+id/t_SectionAdder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="onClickSectionAdder"
+            android:text="Section Adder" />
+
+            <Button
+                android:id="@+id/s_StudentAttendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickStudentAttendance"
+                android:text="Student Attendance" />
+
+            <Button
+                android:id="@+id/jfw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onClickjfw"
+                android:text="jfw" />
+
+
+            <TextView
+                android:id="@+id/numbers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="Suyash" />
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
