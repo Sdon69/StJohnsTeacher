@@ -24,7 +24,6 @@
         </activity>
         <activity android:name=".Random" />
         <activity android:name=".Select" />
-        <activity android:name=".jfw"/>
         <activity android:name=".intro"/>
         <activity android:name=".details"/>
         <activity android:name=".signin"/>
