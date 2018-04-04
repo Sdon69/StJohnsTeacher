@@ -1,0 +1,191 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".youtubeDataUploader.ReviewActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
+    <EditText
+        android:id="@+id/videoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:maxLength="80"
+        android:textColorHint="#c0cce0"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/videoDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:maxLength="49000"
+        android:textColorHint="#c0cce0"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/pass_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:textColorHint="#c0cce0"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Department(s) Concerned:"
+        android:textColor="#4489c8"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gTechnology"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Art"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSocialGathering"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Commerce"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gDebate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Management"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSocialAwareness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Education"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gConvention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Science"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gOther"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Other Subjects"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Semester(s) Concerned:"
+        android:textColor="#4489c8"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+    <CheckBox
+        android:id="@+id/gSemester1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Semester"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSemester2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Second Semester"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSemester3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Third Semester"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSemester4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fourth Semester"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSemester5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fifth Semester"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/gSemester6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sixth and Above Semesters"
+        android:textColor="#4489c8"
+        android:textStyle="bold" />
+    <FrameLayout
+        android:id="@+id/detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#eee"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/upload_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Upload And Submit"
+            android:maxLines="2"
+            android:onClick="submitInfo"
+            android:padding="8dp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColorHint="#3f8acd"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

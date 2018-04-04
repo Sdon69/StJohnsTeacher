@@ -44,4 +44,14 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.8.4'
     implementation 'com.android.support:support-v4:25.3.1'
     testImplementation 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.gms:play-services-plus:11.0.4'
+    implementation 'com.android.support:support-v13:25.3.1'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev120-1.19.0'
+    implementation 'com.google.http-client:google-http-client-android:+'
+    implementation 'com.google.api-client:google-api-client-android:+'
+    implementation 'com.google.api-client:google-api-client-gson:+'
+    implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.mcxiaoke.volley:library:1.0.18'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }

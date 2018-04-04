@@ -12,8 +12,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -25,6 +28,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,63 +52,39 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class t_notes_writer extends Activity
+public class t_VideoInfoWriter extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private Button mCallApiButton;
     ProgressDialog mProgress;
-    private String sFName;
-    private String sLName;
-    private String sClass;
-    private String sEmail;
-    private String sSection;
+
     private String sId;
-    private String sPhone;
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
     private boolean workbookEnd = false;
 
-    private int a = 2;
-    private float x1,x2;
-    static final int MIN_DISTANCE = 150;
-
     private String fullName;
 
-
-
-
+    private int a = 1;
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
 
     //Event Details
     private String eventTitle;
     private String eventDescription;
     private String publishDate;
-    private String eventDate;
     private String confirmPass;
     private String savedPass;
     private String savedId;
-    private String savedTable;
-
-    private String eventDay;
-    private String eventMonth;
-    private String eventYear;
-
-
-    private String lastDateOfRegistration;
-    private String lastDayOfRegistration;
-    private String lastMonthOfRegistration;
-    private String lastYearOfRegistration;
-
-    private String entryfees;
-
-    private String savedSpreadsheetId;
-
-
 
     //Subjects
     private boolean art = false;
@@ -132,16 +112,7 @@ public class t_notes_writer extends Activity
     private String sScience ;
 
     private int tableNo;
-    private String gSavedTableSheetId;
-
-
-
-
-
-
-
-
-
+    private String gSavedAnnSheetId;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -160,11 +131,7 @@ public class t_notes_writer extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.t_notes_writer);
-
-        colorCheck();
-
-
+        setContentView(R.layout.t_announcement_writer);
 
         LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
 
@@ -174,11 +141,9 @@ public class t_notes_writer extends Activity
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
 
-
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -192,14 +157,19 @@ public class t_notes_writer extends Activity
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Loading ...");
         mProgress.setCanceledOnTouchOutside(false);
+
         setContentView(activityLayout);
 
         loadData();
 
-        // Initialize credentials and service object.
+
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+        timer.schedule(doAsynchronousTask, 0    , 1000);
+
 
     }
 
@@ -218,12 +188,13 @@ public class t_notes_writer extends Activity
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-
+            mOutputText.setText("No network connection available.");
             Toast.makeText(getApplicationContext(), "No Network Connection",
                     Toast.LENGTH_SHORT).show();
-            mOutputText.setText("No network connection available.");
         } else {
+
             new MakeRequestTask(mCredential).execute();
+
         }
     }
 
@@ -261,7 +232,16 @@ public class t_notes_writer extends Activity
         }
     }
 
-
+    /**
+     * Called when an activity launched here (specifically, AccountPicker
+     * and authorization) exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     * @param requestCode code indicating which activity result is incoming.
+     * @param resultCode code indicating the result of the incoming
+     *     activity result.
+     * @param data Intent (containing result data) returned by incoming
+     *     activity result.
+     */
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
@@ -362,7 +342,7 @@ public class t_notes_writer extends Activity
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
-        Log.v("t_notes_writer" , "Success");
+        Log.v("t_Announcement_Writer" , "Success");
         return connectionStatusCode == ConnectionResult.SUCCESS;
 
     }
@@ -392,7 +372,7 @@ public class t_notes_writer extends Activity
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                t_notes_writer.this,
+                t_VideoInfoWriter.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -437,11 +417,13 @@ public class t_notes_writer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";
+            String spreadsheetId = "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";
             int a = 2;
-            String range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
+            idAvailcheck = true;
+            String range =  "videoInfo!".concat("A"+ 2 + ":S");
 
             List<List<Object>> arrData;
+
             ValueRange oRange = new ValueRange();
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
 
@@ -465,7 +447,7 @@ public class t_notes_writer extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                Log.v("MainActivity", "Wofdad");
+
 
                 results.add("");
 
@@ -479,31 +461,24 @@ public class t_notes_writer extends Activity
 
                     if (Str1.contains("BonBlank88"))
                     {
-                        Log.v("if", Str1);
-                        Log.v("if", range);
+
 
                         break;
                     }
 
-
-
-                    if (Str1.equals("endfaggio88"))
+                    if (Str1.equals(sId))
                     {
-                        saveNewWorkbookName();
-                        spreadsheetId = gSavedTableSheetId;
-                        workbookEnd = true;
-                        Log.v("New" ,"Workbook");
 
-                        break;
-
-
+                        idAvailcheck = false;
                     }
 
 
 
 
-                    range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
-                    Log.v("for", range);
+
+
+                    range =  "videoInfo!".concat("A"+ ++a + ":I");
+
 
 
 
@@ -514,19 +489,44 @@ public class t_notes_writer extends Activity
 
             }
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
-            long timestamp = System.currentTimeMillis() / 1000;
-                // Check if id is not taken
-                arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName
-                        ,String.valueOf(--a),publishDate,"None", String.valueOf(timestamp));
+            if(idAvailcheck) {           // Check if id is not taken
+                long timestamp = System.currentTimeMillis() / 1000;
+                //Getting System date
+                Calendar c = Calendar.getInstance();
+                System.out.println("Current time => " + c.getTime());
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = df.format(c.getTime());
+
+                SharedPreferences mPrefs = getSharedPreferences("label", 0);
+                String idString = mPrefs.getString("ttag", "default_value_if_variable_not_found");
+                String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
+                String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
+                String videoTitle =  mPrefs.getString("videoTitle", "default_value_if_variable_not_found");
+                String videoDescription =  mPrefs.getString("videoDescription", "default_value_if_variable_not_found");
+                String videoCataegories =  mPrefs.getString("videoCataegories", "default_value_if_variable_not_found");
+                String videoUrl = mPrefs.getString("videoUrl", "default_value_if_variable_not_found");
+                String fullName = FirstName.concat(" " + LastName);
+
+
+                arrData = getData(videoTitle , videoDescription ,videoCataegories, idString , fullName ,
+                        String.valueOf(--a),formattedDate,videoUrl, String.valueOf(timestamp));
                 oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
-            range = "Timestamp!B3:B";
-            oRange.setRange(range);
-            spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";
-            arrData = getDataForTimeStamp(String.valueOf(timestamp));
-            oRange.setValues(arrData);
-            oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
+                range = "Timestamp!B5:B";
+                oRange.setRange(range);
+                spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";
+                arrData = getDataForTimeStamp(String.valueOf(timestamp));
+                oRange.setValues(arrData);
+                oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
+
+
+            }
+            else {
+                Log.v("Not available", sId);
+
+
+            }
 
 
 
@@ -543,7 +543,7 @@ public class t_notes_writer extends Activity
         protected void onPreExecute() {
             mOutputText.setText("");
             mProgress.show();
-            Log.v("t_notes_writer" , "Worked");
+            Log.v("t_Announcement_Writer" , "Worked");
 
 
         }
@@ -555,13 +555,12 @@ public class t_notes_writer extends Activity
             mProgress.hide();
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
-                Log.v("t_notes_writer" , "damn");
+                Log.v("t_Announcement_Writer" , "damn");
             } else {
                 output.add(0, " ");
                 mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_notes_writer" , "Wofdad21");
+                Log.v("t_Announcement_Writer" , "Wofdad21");
                 successfulRecord();
-
 
 
             }
@@ -579,11 +578,11 @@ public class t_notes_writer extends Activity
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            t_notes_writer.REQUEST_AUTHORIZATION);
+                            t_VideoInfoWriter.REQUEST_AUTHORIZATION);
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
-                    Log.v("t_notes_writer" , "Worked2");
+                    Log.v("t_Announcement_Writer" , "Worked2");
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
@@ -598,7 +597,7 @@ public class t_notes_writer extends Activity
         } else {
             output.add(0, "Data retrieved using the Google Sheets API:");
             mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_notes_writer" , "Wofdad");
+            Log.v("t_Announcement_Writer" , "Wofdad");
 
         }
     }
@@ -610,18 +609,21 @@ public class t_notes_writer extends Activity
 
 
     }
+
+
     public void onClickAttachFiles(View v) {
 
-        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/androidNotesWriter");
+        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/androidAnnouncementWriter");
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
         startActivity(webIntent);
 
 
     }
 
+
     public static List<List<Object>> getData (String pTitle , String pDesc,
-                                               String pCataegories , String pId
-    ,String fullN,String uniquedId, String publishDate, String fileUrl,String timestamp)  {
+                                              String pCataegories , String pId
+            ,String fullN,String uniqueId,String pDate,String fileUrl,String timestamp)  {
 
         List<Object> data1 = new ArrayList<Object>();
         data1.add(pTitle);
@@ -629,20 +631,17 @@ public class t_notes_writer extends Activity
         data1.add(pCataegories);
         data1.add(pId);
         data1.add(fullN);
-        data1.add(uniquedId);
-        data1.add(publishDate);
+        data1.add(uniqueId);
+        data1.add(pDate);
         data1.add(fileUrl);
         data1.add(timestamp);
-
-
-
-
 
         List<List<Object>> data = new ArrayList<List<Object>>();
         data.add (data1);
 
         return data;
     }
+
 
     public static List<List<Object>> getDataForTimeStamp (String timeStamp)  {
 
@@ -660,6 +659,7 @@ public class t_notes_writer extends Activity
 
         return data;
     }
+
 
     public void submitInfo(View view) {
 
@@ -739,14 +739,6 @@ public class t_notes_writer extends Activity
         sManagement = String.valueOf(management);
         sScience = String.valueOf(science);
 
-        //Converting above booleans to String so they can be used in public static list parameters
-        /*sArt = String.valueOf(semesterOne);
-        sEducation = String.valueOf(semesterTwo);
-        sCommerce = String.valueOf(semesterThree);
-        sOtherSubjects = String.valueOf(semesterFour);
-        sManagement = String.valueOf(semesterFive);
-        sScience = String.valueOf(semesterSix);*/
-
 
         //Password Security Check
         confirmPass = String.valueOf(lpasswordConfirm.getText());
@@ -763,10 +755,61 @@ public class t_notes_writer extends Activity
                             if(art || commerce || management ||  science || education|| otherSubjects ) {
 
 
+//Concatenating a string to check which cataegory is present
+                                if(art)
+                                {
+                                    subCataegories = subCataegories.concat("Art");
+                                }
+
+                                if(commerce)
+                                {
+                                    subCataegories = subCataegories.concat("Commerce");
+                                }
+
+                                if(education)
+                                {
+                                    subCataegories = subCataegories.concat("Education");
+                                }
+
+                                if(management){
+                                    subCataegories = subCataegories.concat("Management");
+                                }
+
+                                if(science){
+                                    subCataegories = subCataegories.concat("Science");
+                                }
+
+                                if(otherSubjects){
+                                    subCataegories = subCataegories.concat("Other Subjects");
+                                }
+
+                                if(semesterOne){
+                                    subCataegories = subCataegories.concat("First Semester");
+                                }
+
+                                if(semesterTwo){
+                                    subCataegories = subCataegories.concat("Second Semester");
+                                }
+
+                                if(semesterThree){
+                                    subCataegories = subCataegories.concat("Third Semester");
+                                }
+
+                                if(semesterFour){
+                                    subCataegories = subCataegories.concat("Fourth Semester");
+                                }
+
+                                if(semesterFive){
+                                    subCataegories = subCataegories.concat("Fifth Semester");
+                                }
+
+                                if(semesterSix){
+                                    subCataegories = subCataegories.concat("Sixth and Above Semesters");
+                                }
                                 mOutputText.setText("");
                                 getResultsFromApi();
 
-                                }else {
+                            }else {
                                 Toast.makeText(getApplicationContext(), "Atleast Choose One Department",
                                         Toast.LENGTH_SHORT).show();
                             }
@@ -801,57 +844,6 @@ public class t_notes_writer extends Activity
                     Toast.LENGTH_SHORT).show();
         }
 
-//Concatenating a string to check which cataegory is present
-        if(art)
-        {
-            subCataegories = subCataegories.concat("Art");
-        }
-
-        if(commerce)
-        {
-            subCataegories = subCataegories.concat("Commerce");
-        }
-
-        if(education)
-        {
-            subCataegories = subCataegories.concat("Education");
-        }
-
-        if(management){
-            subCataegories = subCataegories.concat("Management");
-        }
-
-        if(science){
-            subCataegories = subCataegories.concat("Science");
-        }
-
-        if(otherSubjects){
-            subCataegories = subCataegories.concat("Other Subjects");
-        }
-
-        if(semesterOne){
-            subCataegories = subCataegories.concat("First Semester");
-        }
-
-        if(semesterTwo){
-            subCataegories = subCataegories.concat("Second Semester");
-        }
-
-        if(semesterThree){
-            subCataegories = subCataegories.concat("Third Semester");
-        }
-
-        if(semesterFour){
-            subCataegories = subCataegories.concat("Fourth Semester");
-        }
-
-        if(semesterFive){
-            subCataegories = subCataegories.concat("Fifth Semester");
-        }
-
-        if(semesterSix){
-            subCataegories = subCataegories.concat("Sixth and Above Semesters");
-        }
 
 
 
@@ -892,16 +884,12 @@ public class t_notes_writer extends Activity
 
 
 
-        //tableDetails
-        tableNo = mPrefs.getInt("tableNo", 1);
-        String tableSheetId = mPrefs.getString("tableSheetId", "1g6CIOrbqXTrMOMnlrgi_S2HpaABcUqPd_vch8HHSujM");
-        gSavedTableSheetId = tableSheetId;
 
 
 
 
 
-        Log.v(passString , idString);
+
     }
 
 
@@ -916,14 +904,14 @@ public class t_notes_writer extends Activity
         String tableIds[] = new String[10];
 
         tableIds[0] ="a";
-        tableIds[1] ="1g6CIOrbqXTrMOMnlrgi_S2HpaABcUqPd_vch8HHSujM";
+        tableIds[1] ="1OKiX0QWm2VerdWhuLPF1NIoTEOXHpBFo9qNPgu9HH7Y";
         tableIds[2] ="1CPkY8WUh1xK7oLPT3Fv33ZvD4XVQF40NB24GkhbOx60";
 
 
 
-        mEditor.putString("tableSheetId", tableIds[tableNo]).commit();
+        mEditor.putString("AnnSheetId", tableIds[tableNo]).commit();
 
-        gSavedTableSheetId = tableIds[tableNo];
+        gSavedAnnSheetId = tableIds[tableNo];
 
 
 
@@ -935,7 +923,7 @@ public class t_notes_writer extends Activity
 
     public void onClickAttendance(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,t_Attendance.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Attendance.class);
         startActivity(selectIntent);
 
 
@@ -943,7 +931,7 @@ public class t_notes_writer extends Activity
 
     public void onClickAnnouncement(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,t_Announcement_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Announcement_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -951,7 +939,7 @@ public class t_notes_writer extends Activity
 
     public void onClickNotes(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -959,7 +947,7 @@ public class t_notes_writer extends Activity
 
     public void onClickEvents(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,EventViewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,EventViewer.class);
         startActivity(selectIntent);
 
 
@@ -967,12 +955,11 @@ public class t_notes_writer extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Teacher_Profile.class);
         startActivity(selectIntent);
 
 
     }
-
 
 
     private void swipe() {
@@ -988,7 +975,7 @@ public class t_notes_writer extends Activity
 
         if(a==0){
 
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Attendance.class);
+            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Attendance.class);
             startActivity(selectIntent);
 
         }
@@ -996,25 +983,25 @@ public class t_notes_writer extends Activity
 
         if(a==1) {
 
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Announcement_Viewer.class);
+            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Announcement_Viewer.class);
             startActivity(selectIntent);
 
 
         }
 
         if(a==2) {
-            Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
+            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
             startActivity(selectIntent);
         }
 
         if(a==3) {
-            Intent selectIntent = new Intent(t_notes_writer.this,EventViewer.class);
+            Intent selectIntent = new Intent(t_VideoInfoWriter.this,EventViewer.class);
             startActivity(selectIntent);
 
         }
 
         if(a==4){
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Teacher_Profile.class);
+            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Teacher_Profile.class);
             startActivity(selectIntent);
 
         }
@@ -1085,14 +1072,61 @@ public class t_notes_writer extends Activity
 
     }
 
+    private void deviceOffline()
+    {
+        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
+        activityLayout.setBackgroundResource(R.drawable.no_connection);
+        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.content_viewer);
+        listviewer.setVisibility(View.INVISIBLE);
+    }
+
+    private void deviceOnline()
+    {
+        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
+        activityLayout.setBackgroundResource(0);
+        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.content_viewer);
+        listviewer.setVisibility(View.VISIBLE);
+    }
 
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
 
-        Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Announcement_Viewer.class);
         startActivity(selectIntent);
-
     }
-}
 
+    public void writeVideoData()
+    {
+        getResultsFromApi();
+    }
+
+
+    final Handler handler = new Handler();
+    Timer timer = new Timer();
+    TimerTask doAsynchronousTask = new TimerTask() {
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @SuppressWarnings("unchecked")
+                public void run() {
+                    try {
+                        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+                        String videoUploaded = mPrefs.getString("videoUploaded", "false");
+                        if(videoUploaded.equals("true")) {
+                            SharedPreferences.Editor mEditor = mPrefs.edit();
+                            mEditor.putString("videoUploaded", "false").commit();
+                            getResultsFromApi();
+                        }
+                    }
+                    catch (Exception e) {
+                        // TODO Auto-generated catch block
+                    }
+                }
+            });
+        }
+    };
+
+
+}
