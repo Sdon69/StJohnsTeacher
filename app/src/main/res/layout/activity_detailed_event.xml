@@ -183,4 +183,9 @@
 
 
 
-</LinearLayout></ScrollView></RelativeLayout></LinearLayout>
+</LinearLayout></ScrollView> <include
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    layout="@layout/mainmenuui"
+    android:layout_alignParentBottom="true"
+    /></RelativeLayout></LinearLayout>

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailedEvent extends AppCompatActivity {
@@ -21,6 +22,8 @@ public class DetailedEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_event);
         loadData();
+        colorCheck();
+
 
 
 
@@ -77,6 +80,63 @@ public class DetailedEvent extends AppCompatActivity {
         entryfeesTextView.setText(expEntryFees);
         fullNameTextView.setText(expFullName);
 
+
+
+    }
+
+    private void colorCheck() {
+
+        ImageView attendanceImageView = (ImageView) findViewById(R.id.attendance);
+        ImageView announcementImageView = (ImageView) findViewById(R.id.announcement);
+        ImageView notesImageView = (ImageView) findViewById(R.id.notes);
+        ImageView eventsImageView = (ImageView) findViewById(R.id.events);
+        ImageView profileImageView = (ImageView) findViewById(R.id.profile);
+
+        int a = 3;
+
+
+
+
+        if (a == 0) {
+
+            attendanceImageView.setImageResource(R.drawable.attendance_grey);
+            announcementImageView.setImageResource(R.drawable.announcements);
+            notesImageView.setImageResource(R.drawable.notes);
+            eventsImageView.setImageResource(R.drawable.events);
+            profileImageView.setImageResource(R.drawable.profile);
+
+        }
+        if (a == 1) {
+            attendanceImageView.setImageResource(R.drawable.attendance);
+            announcementImageView.setImageResource(R.drawable.announcements_grey);
+            notesImageView.setImageResource(R.drawable.notes);
+            eventsImageView.setImageResource(R.drawable.events);
+            profileImageView.setImageResource(R.drawable.profile);
+        }
+
+        if (a == 2) {
+            attendanceImageView.setImageResource(R.drawable.attendance);
+            announcementImageView.setImageResource(R.drawable.announcements);
+            notesImageView.setImageResource(R.drawable.notes_grey);
+            eventsImageView.setImageResource(R.drawable.events);
+            profileImageView.setImageResource(R.drawable.profile);
+        }
+
+        if (a == 3) {
+            attendanceImageView.setImageResource(R.drawable.attendance);
+            announcementImageView.setImageResource(R.drawable.announcements);
+            notesImageView.setImageResource(R.drawable.notes);
+            eventsImageView.setImageResource(R.drawable.events_grey);
+            profileImageView.setImageResource(R.drawable.profile);
+        }
+
+        if (a == 4) {
+            attendanceImageView.setImageResource(R.drawable.attendance);
+            announcementImageView.setImageResource(R.drawable.announcements);
+            notesImageView.setImageResource(R.drawable.notes);
+            eventsImageView.setImageResource(R.drawable.events);
+            profileImageView.setImageResource(R.drawable.profile_grey);
+        }
 
 
     }
