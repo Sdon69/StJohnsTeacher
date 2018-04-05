@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/mainmenu"
-    android:background="#ffffff"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <LinearLayout
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/whitebg"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="#f5f5f5"
-            android:paddingTop="1.5dp"
-
-            >
-
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
-                android:onClick=""
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClickAttendance"
                 android:orientation="vertical"
+
 
                 >
 
@@ -33,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/attendance"
                     android:src="@drawable/attendance" />
 
                 <TextView
@@ -40,6 +46,8 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_weight="0.5"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="1dp"
                     android:text="Attendance"
                     android:textAlignment="center"
                     android:textStyle="bold" />
@@ -51,7 +59,10 @@
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
-                android:onClick=""
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClickAnnouncement"
                 android:orientation="vertical"
 
 
@@ -61,6 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/announcement"
                     android:src="@drawable/announcements" />
 
                 <TextView
@@ -80,7 +92,10 @@
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
-                android:onClick=""
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClickNotes"
                 android:orientation="vertical"
 
                 >
@@ -89,6 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/notes"
                     android:src="@drawable/notes" />
 
                 <TextView
@@ -107,7 +123,10 @@
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
-                android:onClick=""
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClickEvents"
                 android:orientation="vertical"
 
                 >
@@ -116,6 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/events"
                     android:src="@drawable/events" />
 
                 <TextView
@@ -134,7 +154,10 @@
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:layout_weight="1"
-                android:onClick=""
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClickProfile"
                 android:orientation="vertical"
 
                 >
@@ -143,6 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/profile"
                     android:src="@drawable/profile" />
 
                 <TextView
@@ -156,7 +180,8 @@
 
             </LinearLayout>
 
-
         </LinearLayout>
-    </RelativeLayout>
+
+    </LinearLayout>
+
 

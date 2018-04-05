@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quickstart</string>
+    <string name="app_name">St Johns Teacher</string>
 
     <string name="country_prompt">Choose a country</string>
     <string name="section_prompt">Choose a section</string>

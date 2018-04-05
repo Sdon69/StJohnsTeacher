@@ -465,12 +465,6 @@ public class t_SignUp extends Activity
 
 
 
-   /*             requests.add(new Request().setAddSheet(new AddSheetRequest()
-                        .setProperties(new SheetProperties().setTitle(notesTableName))));
-                BatchUpdateSpreadsheetRequest body
-                        = new BatchUpdateSpreadsheetRequest().setRequests(requests);
-                BatchUpdateSpreadsheetResponse response2 = mService.spreadsheets().batchUpdate(spreadsheetId, body).execute();
-*/
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
 

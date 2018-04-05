@@ -147,6 +147,11 @@ public class youtubeUploadMainActivity extends Activity implements
             mUploadsListFragment = (UploadsListFragment) getFragmentManager()
                     .findFragmentById(R.id.list_fragment);
 
+            if(mChosenAccountName!= null)
+            {
+                pickFileFunction();
+            }
+
         }
     }
 
@@ -537,6 +542,12 @@ public class youtubeUploadMainActivity extends Activity implements
     }
 
     public void pickFile(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("video/*");
+        startActivityForResult(intent, RESULT_PICK_IMAGE_CROP);
+    }
+
+    public void pickFileFunction() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("video/*");
         startActivityForResult(intent, RESULT_PICK_IMAGE_CROP);

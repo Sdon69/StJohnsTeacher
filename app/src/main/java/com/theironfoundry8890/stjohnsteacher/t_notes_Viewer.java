@@ -40,6 +40,8 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.ReviewActivity;
+import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -213,7 +215,7 @@ public class t_notes_Viewer extends Activity
 
             } else {
                 // Start a dialog from which the user can choose an account
-                Log.v("Google Accounts","Select");
+
                 startActivityForResult(
                         mCredential.newChooseAccountIntent(),
                         REQUEST_ACCOUNT_PICKER);
@@ -949,6 +951,12 @@ public class t_notes_Viewer extends Activity
 
     }
 
+
+    public void onClickAddVideo(View view)
+    {
+        Intent selectIntent = new Intent(t_notes_Viewer.this,youtubeUploadMainActivity.class);
+        startActivity(selectIntent);
+    }
 
 
 

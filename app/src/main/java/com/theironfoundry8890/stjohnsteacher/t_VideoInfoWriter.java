@@ -131,7 +131,7 @@ public class t_VideoInfoWriter extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.t_announcement_writer);
+        setContentView(R.layout.t_video_info_writer_layout);
 
         LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
 
@@ -542,7 +542,7 @@ public class t_VideoInfoWriter extends Activity
         @Override
         protected void onPreExecute() {
             mOutputText.setText("");
-            mProgress.show();
+//            mProgress.show();
             Log.v("t_Announcement_Writer" , "Worked");
 
 

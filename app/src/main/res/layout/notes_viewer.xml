@@ -116,13 +116,27 @@
             android:layout_above="@+id/navbar"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
-
             android:onClick="onClickPlus"
             android:src="@drawable/plusfloat"
+            android:background="@drawable/empty"
+            app:fabSize="normal"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/navbar"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="90dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClickAddVideo"
+            android:src="@drawable/add_news_icon"
             android:background="@drawable/empty"
 
             app:fabSize="normal"
             />
+
 
         <LinearLayout
             android:id="@+id/navbar"

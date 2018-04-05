@@ -14,8 +14,7 @@
         android:theme="@style/AppTheme"
         >
         <activity
-            android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity"
-            android:configChanges="orientation|screenSize"
+            android:name=".t_Teacher_Profile"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +22,6 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".Random" />
-        <activity android:name=".Select" />
         <activity android:name=".details"/>
         <activity android:name=".signin"/>
         <activity android:name=".qrMainActivity"/>
@@ -60,6 +57,9 @@
         <service
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.UploadService"
             android:exported="true" />
+        <activity
+            android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity"
+            android:label="@string/app_name"/>
 
         <activity
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.PlayActivity"
