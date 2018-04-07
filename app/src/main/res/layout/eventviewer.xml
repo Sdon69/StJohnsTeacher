@@ -76,7 +76,12 @@
         android:layout_height="10dp"
         android:background="#FFFFFF" />
 
+    <ProgressBar
 
+        android:id="@+id/loadingCircle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

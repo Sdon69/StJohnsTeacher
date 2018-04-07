@@ -106,7 +106,7 @@ public class t_Announcement_Viewer extends Activity
     private List dRow;
 
     private boolean end = true;
-    private boolean stopLoading = false;
+
 
     private int tableNo;
     private String gSavedAnnSheetId;
@@ -609,7 +609,9 @@ public class t_Announcement_Viewer extends Activity
                 EventList();
 
 
-                stopLoading = true;
+
+
+
             }
         }
 
@@ -651,8 +653,15 @@ public class t_Announcement_Viewer extends Activity
                         if (isViewerTimestampUpdated)
                             postViewerMode();
                     }
+                    EventList();
 
-                    stopLoading = true;
+
+                    if(globalDataArrayString.equals("[]"))
+                    {
+                        Button filterButton = (Button) findViewById(R.id.button2);
+                        filterButton.performClick();
+                    }
+
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
@@ -717,9 +726,6 @@ public class t_Announcement_Viewer extends Activity
         tableNo = mPrefs.getInt("tableNo", 1);
         String AnnSheetId = mPrefs.getString("AnnSheetId", "1OKiX0QWm2VerdWhuLPF1NIoTEOXHpBFo9qNPgu9HH7Y");
         gSavedAnnSheetId = AnnSheetId;
-
-        mOutputText.setText("");
-        getResultsFromApi();
 
     }
 
@@ -1183,8 +1189,8 @@ public class t_Announcement_Viewer extends Activity
     public void loadDataForList(){
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
 
-         dept_filter =  mPrefs.getString("savedDepartmentAnnouncement", "unknown");
-        semester_filter = mPrefs.getString("savedSemesterAnnouncement", "default_value_if_variable_not_found");
+         dept_filter =  mPrefs.getString("savedDepartmentAnnouncement", "All Departments");
+        semester_filter = mPrefs.getString("savedSemesterAnnouncement", "All Semesters");
 
 
         viewerTimestamp = mPrefs.getString("savedAnnouncementTimestamp", "1521000000");
@@ -1204,6 +1210,8 @@ public class t_Announcement_Viewer extends Activity
         SharedPreferences.Editor mEditor = mPrefs.edit();
 
         mEditor.putString("dataArray", dataArray).commit();
+
+
 
     }
 
