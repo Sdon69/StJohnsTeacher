@@ -18,6 +18,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,6 +47,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -68,6 +70,7 @@ public class EventViewer extends Activity
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
+    private ListView listViewGlobal;
 
     private int a = 3;
     private float x1,x2;
@@ -515,7 +518,7 @@ public class EventViewer extends Activity
 
                 }
 
-
+                Collections.reverse(words);
 
 
             }
@@ -695,6 +698,9 @@ public class EventViewer extends Activity
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} in the list.
         listView.setAdapter(adapter);
+        listViewGlobal = listView;
+
+        listViewGlobal.setOnScrollListener(onScrollListener());
 
         if(end) {
 
@@ -939,4 +945,54 @@ public class EventViewer extends Activity
         listviewer.setVisibility(View.VISIBLE);
     }
 
+    private void hideOnScroll()
+    {
+        LinearLayout filterBar = (LinearLayout) findViewById(R.id.filterBar);
+        filterBar.setVisibility(View.GONE);
+    }
+
+    private void showOnScroll()
+    {
+        LinearLayout filterBar = (LinearLayout) findViewById(R.id.filterBar);
+        filterBar.setVisibility(View.VISIBLE);
+
+    }
+
+
+    public AbsListView.OnScrollListener onScrollListener() {
+        return new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    // check if we reached the top or bottom of the list
+                    View v = listViewGlobal.getChildAt(0);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the top: visible header and footer
+                        showOnScroll();
+                        Log.i("scrollLocation", "top reached");
+
+                    }
+                } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
+                    View v = listViewGlobal.getChildAt(totalItemCount - 1);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the bottom: visible header and footer
+                        Log.i("scrollLocation", "bottom reached!");
+
+                    }
+                } else if (totalItemCount - visibleItemCount > firstVisibleItem){
+                    // on scrolling
+                    hideOnScroll();
+                    Log.i("scrollLocation", "on scroll");
+                }
+            }
+        };
+    }
 }

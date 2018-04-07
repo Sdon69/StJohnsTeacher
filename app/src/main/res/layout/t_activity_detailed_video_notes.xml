@@ -1,16 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"><RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".youtubeDataUploader.PlayActivity">
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_above="@+id/navbar"
+        >
 
-    <ImageView
-        android:layout_width="106dp"
-        android:layout_height="56dp"
-        android:src="@drawable/sjc"
-        android:layout_gravity="center_horizontal"
-        />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+<ImageView
+    android:layout_width="106dp"
+    android:layout_height="56dp"
+    android:src="@drawable/sjc"
+    android:layout_gravity="center_horizontal"
+    />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,40 +73,15 @@
         android:padding="16dp"
         android:lineSpacingMultiplier="1.5"
         />
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
 
-        <FrameLayout
-            android:id="@+id/detail_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+</LinearLayout></ScrollView>
+    <include
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#eee"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/submit_button"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_av_upload"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="@string/button_submit"
-            android:maxLines="2"
-            android:onClick="directLite"
-            android:padding="8dp"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:textColorHint="#c00"
-            android:textStyle="bold" />
-    </LinearLayout>
-
+        layout="@layout/mainmenuui"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>
 </LinearLayout>

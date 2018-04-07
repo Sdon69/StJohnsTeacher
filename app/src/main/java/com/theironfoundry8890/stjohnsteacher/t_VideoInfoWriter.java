@@ -417,10 +417,10 @@ public class t_VideoInfoWriter extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";
+            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
             int a = 2;
             idAvailcheck = true;
-            String range =  "videoInfo!".concat("A"+ 2 + ":S");
+            String range = "Stj Teacher Notes!".concat("A"+ 2 + ":I");
 
             List<List<Object>> arrData;
 
@@ -477,7 +477,7 @@ public class t_VideoInfoWriter extends Activity
 
 
 
-                    range =  "videoInfo!".concat("A"+ ++a + ":I");
+                    range =  "Stj Teacher Notes!".concat("A"+ ++a + ":I");
 
 
 
@@ -513,9 +513,9 @@ public class t_VideoInfoWriter extends Activity
                 oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
-                range = "Timestamp!B5:B";
+                range = "Timestamp!B3:B";
                 oRange.setRange(range);
-                spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";
+                spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";  //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 arrData = getDataForTimeStamp(String.valueOf(timestamp));
                 oRange.setValues(arrData);
                 oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
@@ -1092,7 +1092,7 @@ public class t_VideoInfoWriter extends Activity
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
 
-        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Announcement_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
         startActivity(selectIntent);
     }
 

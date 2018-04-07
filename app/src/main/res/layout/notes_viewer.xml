@@ -16,20 +16,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-
+        android:id="@+id/filterBar"
 
         >
 
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
             <Spinner
                 android:id="@+id/spinner_dept"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/dept_arrays"
                 android:prompt="@string/country_prompt"
@@ -39,7 +39,7 @@
 
             <Spinner
                 android:id="@+id/spinner_semesters"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/semester_arrays"
                 android:prompt="@string/country_prompt"
@@ -56,7 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             >
 
 
@@ -136,6 +138,31 @@
 
             app:fabSize="normal"
             />
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_above="@+id/add_video"-->
+            <!--android:background="@drawable/curved_rect"-->
+            <!--android:layout_marginBottom="12dp"-->
+            <!--&gt;-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toLeftOf="@+id/videoCheckbox"-->
+                <!--android:text="Video"-->
+                <!--android:textColor="@color/colorPrimary"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_marginTop="8dp"/>-->
+            <!--<CheckBox-->
+                <!--android:id="@+id/videoCheckbox"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--/>-->
+
+        <!--</RelativeLayout>-->
 
 
         <include

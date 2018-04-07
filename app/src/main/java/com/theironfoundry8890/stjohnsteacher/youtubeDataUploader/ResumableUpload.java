@@ -93,7 +93,7 @@ public class ResumableUpload {
                 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentTitle(context.getString(R.string.youtube_upload))
                 .setContentText(context.getString(R.string.youtube_upload_started))
-                .setSmallIcon(R.drawable.ic_mailboxes_accounts).setContentIntent(contentIntent).setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumbnail));
+                .setSmallIcon(R.drawable.notification_icon).setContentIntent(contentIntent).setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumbnail));
         notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
 
         String videoId = null;
@@ -243,7 +243,7 @@ public class ResumableUpload {
             PendingIntent contentIntent = PendingIntent.getActivity(context,
                     0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             builder.setContentTitle(context.getString(R.string.watch_your_video))
-                    .setContentText(context.getString(R.string.see_the_newly_uploaded_video)).setSmallIcon(R.drawable.ic_mailboxes_accounts).setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumbnail));
+                    .setContentText(context.getString(R.string.see_the_newly_uploaded_video)).setSmallIcon(R.drawable.notification_icon).setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumbnail));
             notifyManager.notify(PLAYBACK_NOTIFICATION_ID, builder.build());
             Log.d(TAG, String.format("Selectable notification for video ID [%s] posted", videoId));
         } catch (MalformedURLException e) {

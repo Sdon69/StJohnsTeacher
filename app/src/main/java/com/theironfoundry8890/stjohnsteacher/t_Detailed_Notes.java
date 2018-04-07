@@ -18,8 +18,6 @@ public class t_Detailed_Notes extends AppCompatActivity {
 
     private String expTitle;
     private String expDesc;
-    private String expPublishDate;
-    private String expEventDate;
     private String expFullName;
     private String expFileAttachment;
 

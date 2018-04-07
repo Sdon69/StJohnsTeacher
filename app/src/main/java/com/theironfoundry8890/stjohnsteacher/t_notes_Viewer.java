@@ -18,6 +18,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,12 +41,16 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.gson.Gson;
+import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.PlayActivity;
 import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.ReviewActivity;
 import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -68,6 +73,7 @@ public class t_notes_Viewer extends Activity
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
+    private ListView  listViewGlobal;
 
     private String fullName;
 
@@ -88,6 +94,7 @@ public class t_notes_Viewer extends Activity
     private String lastDateofRegistration;
     private String fees;
     final ArrayList<Word> words = new ArrayList<Word>();
+
 
     private String dept_filter = "All Departments";
     private String semester_filter = "All Semesters";
@@ -415,7 +422,7 @@ public class t_notes_Viewer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";
+            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
             int a = 2;
             idAvailcheck = true;
             String range = "Stj Teacher Notes!".concat("A"+ a++ + ":I");
@@ -515,6 +522,8 @@ public class t_notes_Viewer extends Activity
 
                 }
 
+                Collections.reverse(words);
+
 
 
 
@@ -554,6 +563,7 @@ public class t_notes_Viewer extends Activity
                 mOutputText.setText(TextUtils.join("\n", output));
                 Log.v("t_notes_Viewer" , "Wofdad21");
                 end = true;
+                convertWordArrayListToStringAndSave();
                 EventList();
 
 
@@ -578,6 +588,7 @@ public class t_notes_Viewer extends Activity
                             + mLastError.getMessage());
                     Log.v("t_notes_Viewer" , "Worked2");
                     end = true;
+                    convertWordArrayListToStringAndSave();
                     EventList();
                 }
             } else {
@@ -698,15 +709,6 @@ public class t_notes_Viewer extends Activity
     public void EventList(){
 
 
-
-
-        Log.v("Done","Done3");
-
-
-
-
-
-
         // Create an {@link WordAdapter}, whose data source is a list of {@link Word}s. The
         // adapter knows how to create list items for each item in the list.
         WordAdapter adapter = new WordAdapter(this, words);
@@ -719,6 +721,9 @@ public class t_notes_Viewer extends Activity
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} in the list.
         listView.setAdapter(adapter);
+        listViewGlobal = listView;
+
+        listViewGlobal.setOnScrollListener(onScrollListener());
 
         if(end) {
 
@@ -737,6 +742,8 @@ public class t_notes_Viewer extends Activity
                     String exLastDateofRegistation = word.getfullName(); // Publish Date
                     String exFileAttachment = word.getFileAttachment();
 
+
+
                     Log.v("Hello" ,exTitle + exDesc +exFullName + exFileAttachment);
 
 
@@ -750,11 +757,15 @@ public class t_notes_Viewer extends Activity
 
 
 
+                    if(exFileAttachment.length()>4 && exFileAttachment.length()<20) {
+                        Intent selectIntent = new Intent(t_notes_Viewer.this, PlayActivity.class);
+                        startActivity(selectIntent);
 
-
-                    Intent selectIntent = new Intent(t_notes_Viewer.this,t_Detailed_Notes.class);
-                    startActivity(selectIntent);
-
+                    }else
+                    {
+                        Intent selectIntent = new Intent(t_notes_Viewer.this, t_Detailed_Notes.class);
+                        startActivity(selectIntent);
+                    }
 
 
 
@@ -907,7 +918,8 @@ public class t_notes_Viewer extends Activity
         ImageView profileImageView = (ImageView) findViewById(R.id.profile);
 
 
-        if (a == 0) {
+        if (a == 0)
+        {
 
             attendanceImageView.setImageResource(R.drawable.attendance_grey);
             announcementImageView.setImageResource(R.drawable.announcements);
@@ -916,36 +928,48 @@ public class t_notes_Viewer extends Activity
             profileImageView.setImageResource(R.drawable.profile);
 
         }
-        if (a == 1) {
+        if (a == 1)
+        {
+
             attendanceImageView.setImageResource(R.drawable.attendance);
             announcementImageView.setImageResource(R.drawable.announcements_grey);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
             profileImageView.setImageResource(R.drawable.profile);
+
         }
 
-        if (a == 2) {
+        if (a == 2)
+        {
+
             attendanceImageView.setImageResource(R.drawable.attendance);
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes_grey);
             eventsImageView.setImageResource(R.drawable.events);
             profileImageView.setImageResource(R.drawable.profile);
+
         }
 
-        if (a == 3) {
+        if (a == 3)
+        {
+
             attendanceImageView.setImageResource(R.drawable.attendance);
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events_grey);
             profileImageView.setImageResource(R.drawable.profile);
+
         }
 
-        if (a == 4) {
+        if (a == 4)
+        {
+
             attendanceImageView.setImageResource(R.drawable.attendance);
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
             profileImageView.setImageResource(R.drawable.profile_grey);
+
         }
 
 
@@ -959,7 +983,85 @@ public class t_notes_Viewer extends Activity
     }
 
 
+    private void hideOnScroll()
+    {
+        LinearLayout filterBar = (LinearLayout) findViewById(R.id.filterBar);
+        filterBar.setVisibility(View.GONE);
+    }
+
+    private void showOnScroll()
+    {
+        LinearLayout filterBar = (LinearLayout) findViewById(R.id.filterBar);
+        filterBar.setVisibility(View.VISIBLE);
+
+    }
 
 
+    public AbsListView.OnScrollListener onScrollListener() {
+        return new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    // check if we reached the top or bottom of the list
+                    View v = listViewGlobal.getChildAt(0);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the top: visible header and footer
+                        showOnScroll();
+                        Log.i("scrollLocation", "top reached");
+
+                    }
+                } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
+                    View v = listViewGlobal.getChildAt(totalItemCount - 1);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the bottom: visible header and footer
+                        Log.i("scrollLocation", "bottom reached!");
+
+                    }
+                } else if (totalItemCount - visibleItemCount > firstVisibleItem){
+                    // on scrolling
+                    hideOnScroll();
+                    Log.i("scrollLocation", "on scroll");
+                }
+            }
+        };
+    }
+
+
+    public void convertWordArrayListToStringAndSave(){
+        // How to store JSON string
+        Gson gson = new Gson();
+// This can be any object. Does not have to be an arraylist.
+        String json = gson.toJson(words);
+//        Log.v("json",json);
+
+//        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+//        SharedPreferences.Editor mEditor = mPrefs.edit();
+//        mEditor.putString("savedNotesListData", json).commit();
+
+
+    }
+
+    public void loadAndConvertStringToWordArrayList(){
+
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+
+        String arrayString = mPrefs.getString("savedNotesListData", "default_value_if_variable_not_found");
+
+        Gson gson = new Gson();
+        Word obj  = gson.fromJson(arrayString, Word.class);
+        words.addAll((Collection<? extends Word>) obj);
+        EventList();
+
+
+    }
 
 }

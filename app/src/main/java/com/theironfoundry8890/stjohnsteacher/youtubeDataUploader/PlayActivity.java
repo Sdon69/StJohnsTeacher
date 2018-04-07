@@ -3,12 +3,15 @@ package com.theironfoundry8890.stjohnsteacher.youtubeDataUploader;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -44,6 +47,7 @@ import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader_util.VideoData;
  *         Main fragment showing YouTube Direct Lite upload options and having
  *         YT Android Player.
  */
+
 public class PlayActivity extends Activity implements
         PlayerStateChangeListener, OnFullscreenListener {
 
@@ -54,6 +58,10 @@ public class PlayActivity extends Activity implements
     private YouTubePlayer mYouTubePlayer;
     private boolean mIsFullScreen = false;
     private Intent intent;
+    private String expTitle;
+    private String expDesc;
+    private String expFullName;
+    private String expFileAttachment;
 
     public PlayActivity() {
     }
@@ -90,7 +98,9 @@ public class PlayActivity extends Activity implements
                     public void onInitializationSuccess(
                             YouTubePlayer.Provider provider,
                             YouTubePlayer youTubePlayer, boolean b) {
-                        youTubePlayer.loadVideo(youtubeId);
+//                        youTubePlayer.loadVideo(youtubeId);
+                        Log.v("expFileAttachment",expFileAttachment);
+                        youTubePlayer.loadVideo(expFileAttachment);
                         mYouTubePlayer = youTubePlayer;
                         youTubePlayer
                                 .setPlayerStateChangeListener(PlayActivity.this);
@@ -123,7 +133,34 @@ public class PlayActivity extends Activity implements
     public void onAdStarted() {
     }
 
-    @Override
+
+    public void loadData() {
+
+        //Loading Data via ShredPreferences
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        String TitleString = mPrefs.getString("title", "default_value_if_variable_not_found");
+        String DescriptionString = mPrefs.getString("desc", "default_value_if_variable_not_found");
+        String fullName = mPrefs.getString("fullName", "default_value_if_variable_not_found");
+        String fileAttachment = mPrefs.getString("fileAttachment", "default_value_if_variable_not_found");
+
+
+        //Initializing using above variables
+        expTitle = TitleString;
+        expDesc = DescriptionString;
+        expFullName = fullName;
+        expFileAttachment = fileAttachment;
+
+        TextView titleTextView = (TextView) findViewById(R.id.detailedlaytitle);
+        TextView descTextView = (TextView) findViewById(R.id.detailedlaydesc);
+        TextView fullNameTextView = (TextView) findViewById(R.id.publisher);
+
+        //Setting values to layouts
+        titleTextView.setText(expTitle);
+        descTextView.setText(expDesc);
+        fullNameTextView.setText(expFullName);
+    }
+
+        @Override
     public void onError(YouTubePlayer.ErrorReason errorReason) {
         showErrorToast(errorReason.toString());
     }
@@ -166,8 +203,10 @@ public class PlayActivity extends Activity implements
             submitButton.setVisibility(View.GONE);
             setTitle(R.string.playing_uploaded_video);
         }
+        loadData();
         String youtubeId = intent.getStringExtra(youtubeUploadMainActivity.YOUTUBE_ID);
         panToVideo(youtubeId);
+
     }
 
     @Override

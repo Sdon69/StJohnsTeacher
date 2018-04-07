@@ -64,11 +64,11 @@
         <activity
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.PlayActivity"
             android:label="@string/title_activity_play"
-            android:parentActivityName="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity"></activity>
+            android:parentActivityName="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity" />
         <activity
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.ReviewActivity"
             android:label="@string/title_activity_review"
-            android:parentActivityName="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity"></activity>
+            android:parentActivityName="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity" />
 
     </application>
 </manifest>

@@ -104,7 +104,16 @@
         </LinearLayout>
     </LinearLayout>
 
-
+<ImageView
+    android:id="@+id/vidOnPhone_ImageView"
+    android:layout_width="24dp"
+    android:layout_height="18dp"
+    android:src="@drawable/vid_on_phone"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentBottom="true"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="4dp"
+    android:visibility="gone"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
