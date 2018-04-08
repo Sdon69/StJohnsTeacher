@@ -431,7 +431,7 @@ public class t_notes_Viewer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
+            String spreadsheetId = "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
             int a = 2;
             idAvailcheck = true;
             String range = "Stj Teacher Notes!".concat("A"+ a++ + ":I");
@@ -655,17 +655,7 @@ public class t_notes_Viewer extends Activity
         }
     }
 
-    private void Go(List<String> output) {
-        mProgress.hide();
-        if (output == null || output.size() == 0) {
-            mOutputText.setText("No results returned.");
-        } else {
-            output.add(0, "Data retrieved using the Google Sheets API:");
-            mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_notes_Viewer"   , "Wofdad");
 
-        }
-    }
 
     public void onClick2(View v) {
 

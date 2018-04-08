@@ -63,7 +63,7 @@ public class t_Detailed_Announcement extends AppCompatActivity {
         expRealPublishDate = lastDateofReg;
         expFileAttachment = fileAttachment;
 
-        if(fileAttachment.equals("None")) {
+        if(!fileAttachment.equals("None")) {
             String trimmedFileId = fileAttachment.substring(fileAttachment.lastIndexOf("/d/") + 3, fileAttachment.lastIndexOf("vi") - 1);
             String sourceString = "https://docs.google.com/viewer?srcid=fileid&pid=explorer&efh=false&a=v&chrome=false&embedded=true";
             String generatedSrc = sourceString.replace("fileid", trimmedFileId);
