@@ -416,7 +416,7 @@ public class t_EventWriter extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw";
+            String spreadsheetId = sheetsIdCollection.getEventSheetId();
             int a = 2;
             idAvailcheck = true;
             String range = "Events!".concat("A"+ a++ + ":S");
@@ -490,7 +490,7 @@ public class t_EventWriter extends Activity
 
                 range = "Timestamp!B4:B";
                 oRange.setRange(range);
-                spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";
+                spreadsheetId = sheetsIdCollection.getMiscSheetId();
                 arrData = getDataForTimeStamp(String.valueOf(timestamp));
                 oRange.setValues(arrData);
                  oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
@@ -643,7 +643,6 @@ public class t_EventWriter extends Activity
         DatePicker lLastdateofReg =  (DatePicker) findViewById(R.id.lastDateOfRegistration);
         DatePicker lDateEvent =  (DatePicker) findViewById(R.id.date_of_event);
         EditText lentryFees =  (EditText) findViewById(R.id.entryFees);
-        EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
         CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
         CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
         CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
@@ -708,17 +707,14 @@ public class t_EventWriter extends Activity
 
 
         //Password Security Check
-        confirmPass = String.valueOf(lpasswordConfirm.getText());
-
-
 
 
 
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
                 if (entryfees.length() >= 1) {
-                    if (confirmPass.length() >= 8) {
-                        if (confirmPass.equals(savedPass)) {
+                    if (true) {
+                        if (true) {
                             if(technology || socialGathering || debate ||  convention || socialAwareness  || sports || other ) {
 
                                 //Concatenating a string to check which cataegory is present
@@ -989,6 +985,73 @@ public class t_EventWriter extends Activity
 
         Intent selectIntent = new Intent(t_EventWriter.this,EventViewer.class);
         startActivity(selectIntent);
+    }
+
+    public void setSheetIds()
+    {
+        String mode = "test";
+
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+
+        if(mode.equals("test")) {
+            mEditor.putString("eventSheetId", "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw").apply();
+            mEditor.putString("notesSheetId", "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0").apply();
+            mEditor.putString("announcementSheetId", "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0").apply();
+            mEditor.putString("miscSheetId", "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY").apply();
+            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+        }else if(mode.equals("release"))
+        {
+            mEditor.putString("eventSheetId", "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw").apply();
+            mEditor.putString("notesSheetId", "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ").apply();
+            mEditor.putString("announcementSheetId", "116OBhXliG69OB5bKRAEwpmlOz21LCCWStniSuIR6wPI").apply();
+            mEditor.putString("miscSheetId", "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU  ").apply();
+            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+        }
+
+
+
+    }
+
+    public String  getEventSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("eventSheetId", "default_value_if_variable_not_found");
+    }
+
+    public String  getAnnouncementSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("announcementSheetId", "default_value_if_variable_not_found");
+    }
+
+    public String  getNoteSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("notesSheetId", "default_value_if_variable_not_found");
+
+    }
+
+    public String  getMiscSheetId()
+    {
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("miscSheetId", "default_value_if_variable_not_found");
+
+    }
+
+    public String getUploadedVideoInfoSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
     }
 
 

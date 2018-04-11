@@ -439,7 +439,7 @@ public class t_notes_Viewer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
+            String spreadsheetId = sheetsIdCollection.getNoteSheetId();  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
             int a = 2;
             idAvailcheck = true;
             String range = "Stj Teacher Notes!".concat("A"+ a++ + ":I");
@@ -463,11 +463,11 @@ public class t_notes_Viewer extends Activity
 
             if(mode.equals("timestampViewer"))
             {
-                spreadsheetId = "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY"; //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
+                spreadsheetId= sheetsIdCollection.getMiscSheetId(); //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 range = "Timestamp!".concat("A"+ 2 + ":B");
             }else if(mode.equals("videoInfoViewer"))
             {
-                spreadsheetId = "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";
+                spreadsheetId = sheetsIdCollection.getUploadedVideoInfoSheetId();
                 range = "videoInfo!".concat("A"+ 2 + ":I");
             }
 

@@ -437,7 +437,7 @@ public class t_notes_writer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ";
+            String spreadsheetId = sheetsIdCollection.getNoteSheetId();
             int a = 2;
             String range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
 
@@ -479,8 +479,7 @@ public class t_notes_writer extends Activity
 
                     if (Str1.contains("BonBlank88"))
                     {
-                        Log.v("if", Str1);
-                        Log.v("if", range);
+
 
                         break;
                     }
@@ -489,14 +488,8 @@ public class t_notes_writer extends Activity
 
                     if (Str1.equals("endfaggio88"))
                     {
-                        saveNewWorkbookName();
-                        spreadsheetId = gSavedTableSheetId;
-                        workbookEnd = true;
-                        Log.v("New" ,"Workbook");
 
                         break;
-
-
                     }
 
 
@@ -523,7 +516,7 @@ public class t_notes_writer extends Activity
 
             range = "Timestamp!B3:B";
             oRange.setRange(range);
-            spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";
+            spreadsheetId = sheetsIdCollection.getMiscSheetId();
             arrData = getDataForTimeStamp(String.valueOf(timestamp));
             oRange.setValues(arrData);
             oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
@@ -668,10 +661,8 @@ public class t_notes_writer extends Activity
         //Retriving data from layout
         EditText lEventTitle =  (EditText) findViewById(R.id.eventTitle);
         EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
-        DatePicker lLastdateofReg =  (DatePicker) findViewById(R.id.lastDateOfRegistration);
-        DatePicker lDateEvent =  (DatePicker) findViewById(R.id.date_of_event);
-        EditText lentryFees =  (EditText) findViewById(R.id.entryFees);
-        EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
+
+
 
         CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
         CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
@@ -739,17 +730,9 @@ public class t_notes_writer extends Activity
         sManagement = String.valueOf(management);
         sScience = String.valueOf(science);
 
-        //Converting above booleans to String so they can be used in public static list parameters
-        /*sArt = String.valueOf(semesterOne);
-        sEducation = String.valueOf(semesterTwo);
-        sCommerce = String.valueOf(semesterThree);
-        sOtherSubjects = String.valueOf(semesterFour);
-        sManagement = String.valueOf(semesterFive);
-        sScience = String.valueOf(semesterSix);*/
 
 
-        //Password Security Check
-        confirmPass = String.valueOf(lpasswordConfirm.getText());
+
 
 
 
@@ -758,14 +741,66 @@ public class t_notes_writer extends Activity
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
                 if (eventDescription.length() <= 49000) {
-                    if (confirmPass.length() >= 8) {
-                        if (confirmPass.equals(savedPass)) {
+                    if (true) {
+                        if (true) {
                             if(art || commerce || management ||  science || education|| otherSubjects ) {
+                               if(semesterOne || semesterTwo || semesterThree || semesterFour || semesterFive || semesterSix) {
 
 
-                                mOutputText.setText("");
-                                getResultsFromApi();
+                                   if (art) {
+                                       subCataegories = subCataegories.concat("Art");
+                                   }
 
+                                   if (commerce) {
+                                       subCataegories = subCataegories.concat("Commerce");
+                                   }
+
+                                   if (education) {
+                                       subCataegories = subCataegories.concat("Education");
+                                   }
+
+                                   if (management) {
+                                       subCataegories = subCataegories.concat("Management");
+                                   }
+
+                                   if (science) {
+                                       subCataegories = subCataegories.concat("Science");
+                                   }
+
+                                   if (otherSubjects) {
+                                       subCataegories = subCataegories.concat("Other Subjects");
+                                   }
+
+                                   if (semesterOne) {
+                                       subCataegories = subCataegories.concat("First Semester");
+                                   }
+
+                                   if (semesterTwo) {
+                                       subCataegories = subCataegories.concat("Second Semester");
+                                   }
+
+                                   if (semesterThree) {
+                                       subCataegories = subCataegories.concat("Third Semester");
+                                   }
+
+                                   if (semesterFour) {
+                                       subCataegories = subCataegories.concat("Fourth Semester");
+                                   }
+
+                                   if (semesterFive) {
+                                       subCataegories = subCataegories.concat("Fifth Semester");
+                                   }
+
+                                   if (semesterSix) {
+                                       subCataegories = subCataegories.concat("Sixth and Above Semesters");
+                                   }
+
+                                   mOutputText.setText("");
+                                   getResultsFromApi();
+                               }else{
+                                   Toast.makeText(getApplicationContext(), "Atleast Choose One Semester",
+                                           Toast.LENGTH_SHORT).show();
+                               }
                                 }else {
                                 Toast.makeText(getApplicationContext(), "Atleast Choose One Department",
                                         Toast.LENGTH_SHORT).show();
@@ -802,56 +837,6 @@ public class t_notes_writer extends Activity
         }
 
 //Concatenating a string to check which cataegory is present
-        if(art)
-        {
-            subCataegories = subCataegories.concat("Art");
-        }
-
-        if(commerce)
-        {
-            subCataegories = subCataegories.concat("Commerce");
-        }
-
-        if(education)
-        {
-            subCataegories = subCataegories.concat("Education");
-        }
-
-        if(management){
-            subCataegories = subCataegories.concat("Management");
-        }
-
-        if(science){
-            subCataegories = subCataegories.concat("Science");
-        }
-
-        if(otherSubjects){
-            subCataegories = subCataegories.concat("Other Subjects");
-        }
-
-        if(semesterOne){
-            subCataegories = subCataegories.concat("First Semester");
-        }
-
-        if(semesterTwo){
-            subCataegories = subCataegories.concat("Second Semester");
-        }
-
-        if(semesterThree){
-            subCataegories = subCataegories.concat("Third Semester");
-        }
-
-        if(semesterFour){
-            subCataegories = subCataegories.concat("Fourth Semester");
-        }
-
-        if(semesterFive){
-            subCataegories = subCataegories.concat("Fifth Semester");
-        }
-
-        if(semesterSix){
-            subCataegories = subCataegories.concat("Sixth and Above Semesters");
-        }
 
 
 
@@ -1089,10 +1074,79 @@ public class t_notes_writer extends Activity
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
-
+        Log.v("pre-Send","pre-Send");
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription);
         Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 
+    }
+
+
+    public void setSheetIds()
+    {
+        String mode = "test";
+
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+
+        if(mode.equals("test")) {
+            mEditor.putString("eventSheetId", "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw").apply();
+            mEditor.putString("notesSheetId", "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0").apply();
+            mEditor.putString("announcementSheetId", "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0").apply();
+            mEditor.putString("miscSheetId", "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY").apply();
+            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+        }else if(mode.equals("release"))
+        {
+            mEditor.putString("eventSheetId", "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw").apply();
+            mEditor.putString("notesSheetId", "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ").apply();
+            mEditor.putString("announcementSheetId", "116OBhXliG69OB5bKRAEwpmlOz21LCCWStniSuIR6wPI").apply();
+            mEditor.putString("miscSheetId", "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU  ").apply();
+            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+        }
+
+
+
+    }
+
+    public String  getEventSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("eventSheetId", "default_value_if_variable_not_found");
+    }
+
+    public String  getAnnouncementSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("announcementSheetId", "default_value_if_variable_not_found");
+    }
+
+    public String  getNoteSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("notesSheetId", "default_value_if_variable_not_found");
+
+    }
+
+    public String  getMiscSheetId()
+    {
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("miscSheetId", "default_value_if_variable_not_found");
+
+    }
+
+    public String getUploadedVideoInfoSheetId()
+    {
+        setSheetIds();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+
+        return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
     }
 }
 

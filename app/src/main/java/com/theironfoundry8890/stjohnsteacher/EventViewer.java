@@ -421,7 +421,7 @@ public class EventViewer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw";
+            String spreadsheetId = sheetsIdCollection.getEventSheetId();
             int a = 2;
             idAvailcheck = true;
             String range = "Events!".concat("A"+ a++ + ":S");
@@ -445,7 +445,7 @@ public class EventViewer extends Activity
 
             if(mode.equals("timestampViewer"))
             {
-                spreadsheetId = "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY"; //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
+                spreadsheetId= sheetsIdCollection.getMiscSheetId(); //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 range = "Timestamp!".concat("A"+ 2 + ":B");
             }
 
@@ -907,21 +907,7 @@ public class EventViewer extends Activity
 
     }
 
-    private void deviceOffline()
-    {
-        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
-        activityLayout.setBackgroundResource(R.drawable.no_connection);
-        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.listinflater);
-        listviewer.setVisibility(View.INVISIBLE);
-    }
 
-    private void deviceOnline()
-    {
-        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
-        activityLayout.setBackgroundResource(0);
-        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.listinflater);
-        listviewer.setVisibility(View.VISIBLE);
-    }
 
     private void hideOnScroll()
     {

@@ -417,7 +417,7 @@ public class t_VideoInfoWriter extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";  //1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ
+            String spreadsheetId = sheetsIdCollection.getUploadedVideoInfoSheetId();
             int a = 2;
             idAvailcheck = true;
             String range =  "videoInfo!".concat("A"+ 2 + ":I");
@@ -515,7 +515,7 @@ public class t_VideoInfoWriter extends Activity
 
                 range = "Timestamp!B5:B";
                 oRange.setRange(range);
-                spreadsheetId = "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU";  //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
+                spreadsheetId = sheetsIdCollection.getMiscSheetId();  //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 arrData = getDataForTimeStamp(String.valueOf(timestamp));
                 oRange.setValues(arrData);
                 oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
@@ -559,7 +559,7 @@ public class t_VideoInfoWriter extends Activity
             } else {
                 output.add(0, " ");
                 mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_Announcement_Writer" , "Wofdad21");
+
                 successfulRecord();
 
 
@@ -582,23 +582,11 @@ public class t_VideoInfoWriter extends Activity
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
-                    Log.v("t_Announcement_Writer" , "Worked2");
+
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
             }
-        }
-    }
-
-    private void Go(List<String> output) {
-        mProgress.hide();
-        if (output == null || output.size() == 0) {
-            mOutputText.setText("No results returned.");
-        } else {
-            output.add(0, "Data retrieved using the Google Sheets API:");
-            mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_Announcement_Writer" , "Wofdad");
-
         }
     }
 
@@ -668,9 +656,6 @@ public class t_VideoInfoWriter extends Activity
         //Retriving data from layout
         EditText lEventTitle =  (EditText) findViewById(R.id.eventTitle);
         EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
-        DatePicker lLastdateofReg =  (DatePicker) findViewById(R.id.lastDateOfRegistration);
-        DatePicker lDateEvent =  (DatePicker) findViewById(R.id.date_of_event);
-        EditText lentryFees =  (EditText) findViewById(R.id.entryFees);
         EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
 
         CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
@@ -894,32 +879,7 @@ public class t_VideoInfoWriter extends Activity
 
 
 
-    public void saveNewWorkbookName(){
 
-
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-        mEditor.putInt("tableNo", tableNo++);
-
-        String tableIds[] = new String[10];
-
-        tableIds[0] ="a";
-        tableIds[1] ="1OKiX0QWm2VerdWhuLPF1NIoTEOXHpBFo9qNPgu9HH7Y";
-        tableIds[2] ="1CPkY8WUh1xK7oLPT3Fv33ZvD4XVQF40NB24GkhbOx60";
-
-
-
-        mEditor.putString("AnnSheetId", tableIds[tableNo]).commit();
-
-        gSavedAnnSheetId = tableIds[tableNo];
-
-
-
-
-        Log.v("Saved data" , sId);
-
-
-    }
 
     public void onClickAttendance(View v)
     {
@@ -962,136 +922,16 @@ public class t_VideoInfoWriter extends Activity
     }
 
 
-    private void swipe() {
-
-        TextView head2 = (TextView) findViewById(R.id.head2);
-        TextView head1 = (TextView) findViewById(R.id.head);
-
-        Button button1 = (Button) findViewById(R.id.Button1);
-        Button button2 = (Button) findViewById(R.id.Button2);
-        Button button3 = (Button) findViewById(R.id.Button3);
-
-
-
-        if(a==0){
-
-            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Attendance.class);
-            startActivity(selectIntent);
-
-        }
-
-
-        if(a==1) {
-
-            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Announcement_Viewer.class);
-            startActivity(selectIntent);
-
-
-        }
-
-        if(a==2) {
-            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
-            startActivity(selectIntent);
-        }
-
-        if(a==3) {
-            Intent selectIntent = new Intent(t_VideoInfoWriter.this,EventViewer.class);
-            startActivity(selectIntent);
-
-        }
-
-        if(a==4){
-            Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Teacher_Profile.class);
-            startActivity(selectIntent);
-
-        }
-
-
-
-
-
-
-
-
-
-    }
-
-
-
-
-    private void colorCheck() {
-
-        ImageView attendanceImageView = (ImageView) findViewById(R.id.attendance);
-        ImageView announcementImageView = (ImageView) findViewById(R.id.announcement);
-        ImageView notesImageView = (ImageView) findViewById(R.id.notes);
-        ImageView eventsImageView = (ImageView) findViewById(R.id.events);
-        ImageView profileImageView = (ImageView) findViewById(R.id.profile);
-
-
-        if (a == 0) {
-
-            attendanceImageView.setImageResource(R.drawable.attendance_grey);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
-
-        }
-        if (a == 1) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements_grey);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
-        }
-
-        if (a == 2) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes_grey);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
-        }
-
-        if (a == 3) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events_grey);
-            profileImageView.setImageResource(R.drawable.profile);
-        }
-
-        if (a == 4) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile_grey);
-        }
-
-
-    }
-
-    private void deviceOffline()
-    {
-        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
-        activityLayout.setBackgroundResource(R.drawable.no_connection);
-        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.content_viewer);
-        listviewer.setVisibility(View.INVISIBLE);
-    }
-
-    private void deviceOnline()
-    {
-        LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
-        activityLayout.setBackgroundResource(0);
-        RelativeLayout listviewer = (RelativeLayout) findViewById(R.id.content_viewer);
-        listviewer.setVisibility(View.VISIBLE);
-    }
 
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
+        Log.v("pre-Send","pre-Send");
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        String videoTitle =  mPrefs.getString("videoTitle", "default_value_if_variable_not_found");
+        String videoDescription =  mPrefs.getString("videoDescription", "default_value_if_variable_not_found");
 
+        send_firebase_notification.sendGcmMessage(videoTitle,videoDescription);
         Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
         startActivity(selectIntent);
     }

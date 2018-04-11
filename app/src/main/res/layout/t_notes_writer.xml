@@ -77,14 +77,7 @@
 
 
 
-                <EditText
-                    android:id="@+id/pass_check"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
-                    android:inputType="textPassword"
-                    android:textColorHint="#c0cce0"
-                    android:textStyle="bold" />
+
 
                 <TextView
                     android:layout_width="match_parent"

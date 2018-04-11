@@ -120,7 +120,6 @@ public class ReviewActivity extends Activity {
         //Retriving data from layout
         EditText lEventTitle =  (EditText) findViewById(R.id.videoTitle);
         EditText lEventDesc =  (EditText) findViewById(R.id.videoDescription);
-        EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
 
         CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
         CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
@@ -161,18 +160,16 @@ public class ReviewActivity extends Activity {
 
 
         //Password Security Check
-       String confirmPass = String.valueOf(lpasswordConfirm.getText());
 
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        String savedPass = mPrefs.getString("tpass", "default_value_if_variable_not_found");
 
         String subCataegories = "All Departments All Semesters";
 
         if (title.length() >= 1) {
             if (description.length() >= 1) {
                 if (description.length() <= 49000) {
-                    if (confirmPass.length() >= 8) {
-                        if (confirmPass.equals(savedPass)) {
+                    if (true) {
+                        if (true) {
                             if(art || commerce || management ||  science || education|| otherSubjects ) {
                                 if(semesterOne || semesterTwo || semesterThree ||  semesterFour || semesterFive|| semesterSix ) {
 

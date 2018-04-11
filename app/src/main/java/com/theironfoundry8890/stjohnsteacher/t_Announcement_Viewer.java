@@ -436,7 +436,7 @@ public class t_Announcement_Viewer extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0";
+            String spreadsheetId = sheetsIdCollection.getAnnouncementSheetId();
             int a = 2;
             idAvailcheck = true;
             String range = "Stj Teacher Notes!".concat("A"+ a++ + ":I");
@@ -460,7 +460,7 @@ public class t_Announcement_Viewer extends Activity
 
             if(mode.equals("timestampViewer"))
             {
-                spreadsheetId = "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY"; //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
+                spreadsheetId= sheetsIdCollection.getMiscSheetId();
                 range = "Timestamp!".concat("A"+ 2 + ":B");
             }
 

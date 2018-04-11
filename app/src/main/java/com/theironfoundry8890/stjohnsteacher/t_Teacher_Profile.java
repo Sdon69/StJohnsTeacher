@@ -61,6 +61,7 @@ public class t_Teacher_Profile extends AppCompatActivity implements  EasyPermiss
         }
         else{
             setContentView(R.layout.t_profile_lay);
+
             loadData();
             colorCheck();
         }

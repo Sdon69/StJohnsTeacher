@@ -135,6 +135,7 @@ public class dStudentProfile extends Activity
 
             colorCheck();
 
+
             // Initialize credentials and service object.
             mCredential = GoogleAccountCredential.usingOAuth2(
                     getApplicationContext(), Arrays.asList(SCOPES))
@@ -492,6 +493,8 @@ public class dStudentProfile extends Activity
 
 
     }
+
+
 
 
 }

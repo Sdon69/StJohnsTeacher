@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -515,11 +516,9 @@ public class youtubeUploadMainActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
-        // if (mDirectFragment.popPlayerFromBackStack()) {
-        // super.onBackPressed();
-        // }
+        super.onBackPressed();
+        NavUtils.navigateUpFromSameTask(this);
     }
-
     @Override
     public ImageLoader onGetImageLoader() {
         ensureLoader();
@@ -621,6 +620,8 @@ public class youtubeUploadMainActivity extends Activity implements
             this.body = body;
         }
     }
+
+
 
     // public Uri getOutputMediaFile(int type)
     // {
