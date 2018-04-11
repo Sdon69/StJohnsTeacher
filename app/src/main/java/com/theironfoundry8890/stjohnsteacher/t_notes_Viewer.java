@@ -92,10 +92,18 @@ public class t_notes_Viewer extends Activity
 
     private String mode = "timestampViewer" ;
     private boolean isViewerTimestampUpdated = false;
+
+
     private String globalDataArrayString;
     private boolean retrievingDataEnd = false;
     private String viewerTimestamp;
+
     private String viewerTimestampHolder;
+
+    private boolean isVideoInfoViewerTimestampUpdated = false;
+    private String videoInfoViewerTimestamp;
+    private String videoInfoViewerTimestampHolder;
+
     final ArrayList<newsfeedPublic> words = new ArrayList<newsfeedPublic>();
     final ArrayList<newsfeedPublic> viewerArrayList = new ArrayList<newsfeedPublic>();
 
@@ -457,6 +465,10 @@ public class t_notes_Viewer extends Activity
             {
                 spreadsheetId = "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY"; //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 range = "Timestamp!".concat("A"+ 2 + ":B");
+            }else if(mode.equals("videoInfoViewer"))
+            {
+                spreadsheetId = "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";
+                range = "videoInfo!".concat("A"+ 2 + ":I");
             }
 
 
@@ -484,12 +496,67 @@ public class t_notes_Viewer extends Activity
                                     timestampCompare(timeStamp, viewerTimestamp);
 
                             viewerTimestampHolder = timeStamp;
+                        }else if(modeRetrieved.equals("videoInfoViewer")){
+                            String timeStamp = String.valueOf(row.get(1));
+                            isVideoInfoViewerTimestampUpdated =
+                                    timestampCompare(timeStamp, videoInfoViewerTimestamp);
+
+                            videoInfoViewerTimestampHolder = timeStamp;
                         }
                     }else if(mode.equals("viewer")) {
 
                         String timeStamp = String.valueOf(row.get(8));
 
                         if (Integer.parseInt(timeStamp) <= Integer.parseInt(viewerTimestamp))
+                            continue;
+
+
+                        dId = String.valueOf(row.get(0));
+
+                        if (dId.contains("BonBlank88")) {
+
+                            end = true;
+
+                            continue;
+                        }
+
+
+                        String cataegories = String.valueOf(row.get(2));
+
+
+                        if (cataegories.contains(dept_filter)) {
+                            if (cataegories.contains(semester_filter)) {
+                                title = String.valueOf(row.get(0));
+                                description = String.valueOf(row.get(1));
+                                String publisherId = String.valueOf(row.get(3));//Departments
+                                fullName = String.valueOf(row.get(4));
+                                String uniqueId = String.valueOf(row.get(5));
+                                String datePublished = String.valueOf(row.get(6));
+                                String fileAttachment = String.valueOf(row.get(7));
+
+
+                                description = splitProtection(description);
+                                title = splitProtection(title);
+                                cataegories = splitProtection(cataegories);
+                                publisherId = splitProtection(publisherId);
+                                fullName = splitProtection(fullName);
+                                uniqueId = splitProtection(uniqueId);
+                                datePublished = splitProtection(datePublished);
+                                fileAttachment = splitProtection(fileAttachment);
+                                timeStamp = splitProtection(timeStamp);
+
+
+                                viewerArrayList.add(new newsfeedPublic(description, title, cataegories, publisherId, fullName, uniqueId, datePublished
+                                        , fileAttachment, "NOTES", timeStamp));
+                            }
+                        }
+
+
+                    }else if(mode.equals("videoInfoViewer")) {
+
+                        String timeStamp = String.valueOf(row.get(8));
+
+                        if (Integer.parseInt(timeStamp) <= Integer.parseInt(videoInfoViewerTimestamp))
                             continue;
 
 
@@ -586,7 +653,10 @@ public class t_notes_Viewer extends Activity
                 if(mode.equals("timestampViewer")) {
 
 
-                    if (isViewerTimestampUpdated) {
+                    if (isVideoInfoViewerTimestampUpdated) {
+                        mode = "videoInfoViewer";
+                        getResultsFromApi();
+                    }else  if (isViewerTimestampUpdated) {
                         mode = "viewer";
                         getResultsFromApi();
                     }else
@@ -599,10 +669,18 @@ public class t_notes_Viewer extends Activity
                     retrievingDataEnd = true;
                     if(globalDataArrayString.equals("unknown"))
                         postViewerMode();
+                }else if(mode.equals("videoInfoViewer"))
+                {
+                    if (isViewerTimestampUpdated) {
+                        mode = "viewer";
+                        getResultsFromApi();
+                    }else{
+                        retrievingDataEnd = true;
+                    }
                 }
 
                 if(retrievingDataEnd) {
-                    if (isViewerTimestampUpdated)
+                    if (isViewerTimestampUpdated || isVideoInfoViewerTimestampUpdated )
                         postViewerMode();
                 }
                 EventList();
@@ -624,16 +702,21 @@ public class t_notes_Viewer extends Activity
                             t_notes_Viewer.REQUEST_AUTHORIZATION);
                 } else {
 
+
                     end = true;
 
                     if(mode.equals("timestampViewer")) {
 
 
-                        if (isViewerTimestampUpdated) {
+                        if (isVideoInfoViewerTimestampUpdated) {
+                            mode = "videoInfoViewer";
+                            getResultsFromApi();
+                        }else  if (isViewerTimestampUpdated) {
                             mode = "viewer";
                             getResultsFromApi();
                         }else
                         {
+                            EventList();
                             ProgressBar loadingCircle = (ProgressBar) findViewById(R.id.loadingCircle);
                             loadingCircle.setVisibility(View.GONE);
                         }
@@ -641,10 +724,20 @@ public class t_notes_Viewer extends Activity
                         retrievingDataEnd = true;
                         if(globalDataArrayString.equals("unknown"))
                             postViewerMode();
+                    }else if(mode.equals("videoInfoViewer"))
+                    {
+                        if (isViewerTimestampUpdated) {
+                            mode = "viewer";
+                            getResultsFromApi();
+                        }else{
+                            retrievingDataEnd = true;
+                            if(globalDataArrayString.equals("unknown"))
+                                postViewerMode();
+                        }
                     }
 
                     if(retrievingDataEnd) {
-                        if (isViewerTimestampUpdated)
+                        if (isViewerTimestampUpdated || isVideoInfoViewerTimestampUpdated )
                             postViewerMode();
                     }
                     EventList();
@@ -784,12 +877,16 @@ public class t_notes_Viewer extends Activity
         words.clear();
         viewerArrayList.clear();
         mEditor.putString("savedNotesTimestamp", "1521000000").commit();
+        mEditor.putString("savedNotesVideoInfoViewerTimestamp", "1521000000").commit();
         mEditor.putString("savedIndividualNotesDataArray", "unknown").commit();
         viewerTimestamp = "1521000000";
+        videoInfoViewerTimestamp = "1521000000";
         globalDataArrayString = "unknown";
         viewerTimestampHolder = "1521000000";
+        videoInfoViewerTimestampHolder = "1521000000";
         mode = "timestampViewer";
         isViewerTimestampUpdated = false;
+        isVideoInfoViewerTimestampUpdated = false;
         retrievingDataEnd = false;
         EventList();
 
@@ -985,13 +1082,6 @@ public class t_notes_Viewer extends Activity
 
 
 
-    public String  splitProtection(String original)
-    {
-        original = original.replace(",","<comma5582>");
-        original = original.replace("%","<percent6643>");
-
-        return original;
-    }
 
     public boolean timestampCompare(String timestampRetrieved, String timestampStored){
 
@@ -1034,6 +1124,7 @@ public class t_notes_Viewer extends Activity
             storedData =  globalDataArrayString.replace("]","");
         }
         viewerTimestamp = viewerTimestampHolder;
+        videoInfoViewerTimestamp = videoInfoViewerTimestampHolder;
 
 
 
@@ -1217,6 +1308,7 @@ public class t_notes_Viewer extends Activity
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         SharedPreferences.Editor mEditor = mPrefs.edit();
         mEditor.putString("savedNotesTimestamp", viewerTimestamp).commit();
+        mEditor.putString("savedNotesVideoInfoViewerTimestamp", videoInfoViewerTimestamp).commit();
 
     }
 
@@ -1229,6 +1321,7 @@ public class t_notes_Viewer extends Activity
 
 
         viewerTimestamp = mPrefs.getString("savedNotesTimestamp", "1521000000");
+        videoInfoViewerTimestamp =  mPrefs.getString("savedNotesVideoInfoViewerTimestamp", "1521000000");
 
 
         Spinner semesterSpinner = (Spinner) findViewById(R.id.spinner_semesters);
@@ -1248,11 +1341,23 @@ public class t_notes_Viewer extends Activity
 
     }
 
+    public String  splitProtection(String original)
+    {
+        original = original.replace(",","<comma5582>");
+        original = original.replace("%","<percent6643>");
+        original = original.replace("NOTES","<notes6513>");
+        original = original.replace("ANNOUNCEMENTS","<announcements9235>");
+        original = original.replace("EVENTS","<events3321>");
+        return original;
+    }
+
     public String  splitProtectionDeactivated(String original)
     {
         original = original.replace("<comma5582>",",");
         original = original.replace("<percent6643>","%");
-
+        original = original.replace("<notes6513>","NOTES");
+        original = original.replace("<announcements9235>","ANNOUNCEMENTS");
+        original = original.replace("<events3321>","EVENTS");
         return original;
     }
 

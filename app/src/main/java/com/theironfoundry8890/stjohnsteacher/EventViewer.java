@@ -940,13 +940,6 @@ public class EventViewer extends Activity
 
     //Saved listView functions
 
-    public String  splitProtection(String original)
-    {
-        original = original.replace(",","<comma5582>");
-        original = original.replace("%","<percent6643>");
-
-        return original;
-    }
 
     public boolean timestampCompare(String timestampRetrieved, String timestampStored){
 
@@ -1202,15 +1195,28 @@ public class EventViewer extends Activity
 
     }
 
+
+
+
+    public String  splitProtection(String original)
+    {
+        original = original.replace(",","<comma5582>");
+        original = original.replace("%","<percent6643>");
+        original = original.replace("NOTES","<notes6513>");
+        original = original.replace("ANNOUNCEMENTS","<announcements9235>");
+        original = original.replace("EVENTS","<events3321>");
+        return original;
+    }
+
     public String  splitProtectionDeactivated(String original)
     {
         original = original.replace("<comma5582>",",");
         original = original.replace("<percent6643>","%");
-
+        original = original.replace("<notes6513>","NOTES");
+        original = original.replace("<announcements9235>","ANNOUNCEMENTS");
+        original = original.replace("<events3321>","EVENTS");
         return original;
     }
-
-
 
 
     public AbsListView.OnScrollListener onScrollListener() {
