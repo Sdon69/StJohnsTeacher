@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1075,7 +1074,7 @@ public class t_notes_writer extends Activity
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
         Log.v("pre-Send","pre-Send");
-        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription);
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"notes");
         Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 

@@ -24,11 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -931,7 +927,7 @@ public class t_VideoInfoWriter extends Activity
         String videoTitle =  mPrefs.getString("videoTitle", "default_value_if_variable_not_found");
         String videoDescription =  mPrefs.getString("videoDescription", "default_value_if_variable_not_found");
 
-        send_firebase_notification.sendGcmMessage(videoTitle,videoDescription);
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"videoInfo");
         Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_notes_Viewer.class);
         startActivity(selectIntent);
     }

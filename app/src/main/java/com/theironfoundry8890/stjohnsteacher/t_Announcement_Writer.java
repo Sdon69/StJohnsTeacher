@@ -1059,9 +1059,15 @@ public class t_Announcement_Writer extends Activity
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
+        Log.v("pre-Send","pre-Send " + subCataegories);
 
-        Log.v("pre-Send","pre-Send");
-        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription);
+
+
+
+
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"announcement");
+
+
 
         Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Announcement_Viewer.class);
         startActivity(selectIntent);

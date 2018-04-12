@@ -28,7 +28,6 @@
         <activity android:name=".QrActivity"/>
         <activity android:name=".BarScan"/>
         <activity android:name=".EventViewer"/>
-        <activity android:name=".EventWriter"/>
         <activity android:name=".DetailedEvent"/>
         <activity android:name=".t_SignUp"/>
         <activity android:name=".t_Signin"/>

@@ -685,6 +685,80 @@ public class t_EventWriter extends Activity
         String formattedDate = df.format(c.getTime());
         Log.v("Date" , formattedDate);
 
+
+
+        SimpleDateFormat yearformat = new SimpleDateFormat("yyyy");
+        String formattedYear = yearformat.format(c.getTime());
+        int formattedYearInt = Integer.parseInt(formattedYear);
+        int eventYearInteger = Integer.parseInt(eventYear);
+        int lastYearOfRegistrationInteger = Integer.parseInt(lastYearOfRegistration);
+
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+        String formattedMonth = monthFormat.format(c.getTime());
+        int formattedMonthInt = Integer.parseInt(formattedMonth);
+        int eventMonthInteger = Integer.parseInt(eventMonth);
+        int lastMonthOfRegistrationInteger = Integer.parseInt(lastMonthOfRegistration);
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+        String formattedDay = dayFormat.format(c.getTime());
+        int formattedDayInt = Integer.parseInt(formattedDay);
+        int eventDayInteger = Integer.parseInt(eventDay);
+        int lastDayOfRegistrationInteger = Integer.parseInt(lastDayOfRegistration);
+
+
+        boolean isDateOfEventPast = false;
+        boolean isLastDateofRegistrationPast = false;
+
+
+
+        if(eventYearInteger<formattedYearInt)
+        {
+            isDateOfEventPast = true;
+        }
+        if (eventMonthInteger < formattedMonthInt) {
+            if(eventYearInteger <= formattedYearInt)
+            {
+                isDateOfEventPast = true;
+            }
+        }
+
+
+        if (eventDayInteger < formattedDayInt) {
+            if (eventMonthInteger <= formattedMonthInt) {
+                if(eventYearInteger <= formattedYearInt){
+                    isDateOfEventPast = true;
+
+                }
+            }
+        }
+
+        if(lastYearOfRegistrationInteger < formattedYearInt)
+        {
+            isLastDateofRegistrationPast = true;
+        }
+
+        if(lastMonthOfRegistrationInteger < formattedMonthInt)
+        {
+            if(lastYearOfRegistrationInteger <= formattedYearInt)
+            {
+                isLastDateofRegistrationPast = true;
+            }
+        }
+
+
+        if (lastDayOfRegistrationInteger < formattedDayInt)
+        {
+            if(lastMonthOfRegistrationInteger <= formattedMonthInt)
+            {
+                if(lastYearOfRegistrationInteger <= formattedYearInt)
+                {
+                    isLastDateofRegistrationPast = true;
+                }
+            }
+        }
+
+
+
         publishDate = formattedDate;
 
         //Checkboxes
@@ -706,15 +780,15 @@ public class t_EventWriter extends Activity
         sConvention = String.valueOf(convention);
 
 
-        //Password Security Check
+
 
 
 
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
                 if (entryfees.length() >= 1) {
-                    if (true) {
-                        if (true) {
+                    if (!isDateOfEventPast) {
+                        if (!isLastDateofRegistrationPast) {
                             if(technology || socialGathering || debate ||  convention || socialAwareness  || sports || other ) {
 
                                 //Concatenating a string to check which cataegory is present
@@ -765,13 +839,13 @@ public class t_EventWriter extends Activity
 
                         else {
 
-                            Toast.makeText(getApplicationContext(), "Password dont match",
+                            Toast.makeText(getApplicationContext(), "Last Date of Registration Can not Be in Past",
                                     Toast.LENGTH_SHORT).show();
 
                         }
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Minimum size of Password is 8 characters",
+                        Toast.makeText(getApplicationContext(), "Date of Event Can not Be in Past",
                                 Toast.LENGTH_SHORT).show();
 
                     }
@@ -982,7 +1056,8 @@ public class t_EventWriter extends Activity
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
-
+        Log.v("pre-Send","pre-Send");
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"event");
         Intent selectIntent = new Intent(t_EventWriter.this,EventViewer.class);
         startActivity(selectIntent);
     }

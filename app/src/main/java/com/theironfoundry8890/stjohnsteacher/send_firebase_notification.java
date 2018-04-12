@@ -17,14 +17,29 @@ public class send_firebase_notification {
 
 
 
-    public static void sendGcmMessage(String messageTitle, String messageBody)
+    public static void sendGcmMessage(String messageTitle, String messageBody, String cataegories, String writer)
     {
         if(messageTitle!=null || messageBody!=null) {
             messageTitle = messageTitle.replace("<comma3384>", ".");
             messageBody = messageBody.replace("<comma3384>", ".");
             String envelope = messageTitle + "<comma3384>" + messageBody;
 
-            new RetrieveFeedTask().execute(envelope);
+            if(!writer.equals("event"))
+            {
+
+                String topicOutput = getTopics(cataegories);
+                Log.v("topicOutput",topicOutput);
+                String topicArray[]= topicOutput.split(",");
+                for (int i = 1; i < topicArray.length; i++)
+                {
+                    new RetrieveFeedTask().execute(envelope,"/topics/" +topicArray[i]);
+                }
+            }else
+            {
+                new RetrieveFeedTask().execute(envelope,"/topics/" +"global");
+            }
+
+
 
 
         }
@@ -37,6 +52,7 @@ public class send_firebase_notification {
 
 
         protected String doInBackground(String[] args) {
+
 
             if (args.length < 1 || args.length > 2 || args[0] == null) {
                 System.err.println("usage: ./gradlew run -Pmsg=\"MESSAGE\" [-Pto=\"DEVICE_TOKEN\"]");
@@ -72,7 +88,7 @@ public class send_firebase_notification {
                     }
                 } else {
                     try {
-                        jGcmData.put("to", "/topics/Management1");
+                        jGcmData.put("to", "/topics/Management4");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -112,13 +128,75 @@ public class send_firebase_notification {
                         "API key, and that the device's registration token is correct (if specified).");
                 e.printStackTrace();
             }
-            return args[0];
+            return args[1];
         }
         protected void onPostExecute(String feed) {
 
             Log.v("postfeed",feed);
 
         }
+
     }
 
+    
+    public static String getTopics(String subCataegories)
+    {
+        String[] departmentCollection = new String[6];
+        String outputTopic ="";
+        int arrayIncrementer = 0;
+        departmentCollection[arrayIncrementer] = "Art";
+        departmentCollection[++arrayIncrementer] = "Commerce";
+        departmentCollection[++arrayIncrementer] = "Management";
+        departmentCollection[++arrayIncrementer] = "Education";
+        departmentCollection[++arrayIncrementer] = "Science";
+        departmentCollection[++arrayIncrementer] = "Other Subjects";
+
+        String[] semesterCollection = new String[6];
+        arrayIncrementer = 0;
+        semesterCollection[arrayIncrementer] = "First Semester";
+        semesterCollection[++arrayIncrementer] = "Second Semester";
+        semesterCollection[++arrayIncrementer] = "Third Semester";
+        semesterCollection[++arrayIncrementer] = "Fourth Semester";
+        semesterCollection[++arrayIncrementer] = "Fifth Semester";
+        semesterCollection[++arrayIncrementer] = "Sixth and Above Semesters";
+
+        for(int i = departmentCollection.length-1;i>=0;i--)
+        {
+            
+            
+            Log.v("subcataegories",subCataegories + " / " + departmentCollection[i] );
+            if(subCataegories.contains(departmentCollection[i]))
+            {
+
+//                    Log.v("deptCollection",semesterCollection[k]);
+
+                String sSemester;
+                if (subCataegories.contains("First Semester")) {
+                    sSemester = "1";
+                     outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+                }  if (subCataegories.contains("Second Semester")) {
+                sSemester = "2";
+                 outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+            }  if (subCataegories.contains("Third Semester")) {
+                sSemester = "3";
+                 outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+            }  if (subCataegories.contains("Fourth Semester")) {
+                sSemester = "4";
+                 outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+            }  if (subCataegories.contains("Fifth Semester")) {
+                sSemester = "5";
+                 outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+            }  if (subCataegories.contains("Sixth and Above Semesters")) {
+                sSemester = "6";
+                 outputTopic  = outputTopic + "," + departmentCollection[i]  + sSemester;
+            }
+
+
+
+            }
+        }
+        return outputTopic;
+    }
 }
+
+

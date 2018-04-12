@@ -807,7 +807,7 @@ public class t_Announcement_Viewer extends Activity
 
         words.clear();
         mEditor.putString("savedAnnouncementTimestamp", "1521000000").commit();
-        mEditor.putString("dataArray", "unknown").commit();
+        mEditor.putString("savedIndividualAnnouncementDataArray", "unknown").commit();
         viewerTimestamp = "1521000000";
         globalDataArrayString = "unknown";
         viewerTimestampHolder = "1521000000";
@@ -964,7 +964,7 @@ public class t_Announcement_Viewer extends Activity
 
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
 
-        globalDataArrayString = mPrefs.getString("dataArray", "unknown");
+        globalDataArrayString = mPrefs.getString("savedIndividualAnnouncementDataArray", "unknown");
 
 
     }
@@ -1202,7 +1202,7 @@ public class t_Announcement_Viewer extends Activity
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         SharedPreferences.Editor mEditor = mPrefs.edit();
 
-        mEditor.putString("dataArray", dataArray).commit();
+        mEditor.putString("savedIndividualAnnouncementDataArray", dataArray).commit();
 
 
 
