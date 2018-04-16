@@ -64,7 +64,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         (getApplicationContext())
                         .setContentTitle(notificationTitle)
                         .setContentText(notificationDescription)
-                        .setSmallIcon(R.drawable.notification_icon).build();
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .build();
             }
 
             notify.flags |= Notification.FLAG_AUTO_CANCEL;

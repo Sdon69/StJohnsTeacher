@@ -936,7 +936,7 @@ public class t_notes_Viewer extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_notes_Viewer.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_notes_Viewer.this,Newsfeed.class);
         startActivity(selectIntent);
 
 
@@ -967,7 +967,7 @@ public class t_notes_Viewer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
         if (a == 1)
@@ -977,7 +977,7 @@ public class t_notes_Viewer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements_grey);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
 
@@ -988,7 +988,7 @@ public class t_notes_Viewer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes_grey);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
 
@@ -999,7 +999,7 @@ public class t_notes_Viewer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events_grey);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
 
@@ -1010,7 +1010,7 @@ public class t_notes_Viewer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile_grey);
+            profileImageView.setImageResource(R.drawable.newsfeed_grey);
 
         }
 

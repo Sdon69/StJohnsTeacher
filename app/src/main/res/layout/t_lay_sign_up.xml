@@ -109,7 +109,8 @@
                     android:hint="Email Address"
                     android:inputType="textEmailAddress"
                     android:textColorHint="#c0cce0"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:maxLength="100"/>
 
                 <EditText
                     android:id="@+id/Phone_no"
@@ -118,7 +119,8 @@
                     android:hint="Phone No"
                     android:inputType="phone"
                     android:textColorHint="#c0cce0"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:maxLength="10"/>
 
                 <TextView
                     android:layout_width="wrap_content"

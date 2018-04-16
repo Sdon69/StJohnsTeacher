@@ -722,7 +722,7 @@ public class t_ChangePassword extends Activity
 
 
 
-        Intent selectIntent = new Intent(t_ChangePassword.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_ChangePassword.this,Newsfeed.class);
         startActivity(selectIntent);
 
     }

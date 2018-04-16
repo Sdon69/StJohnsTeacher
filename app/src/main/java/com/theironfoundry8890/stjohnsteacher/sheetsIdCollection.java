@@ -21,7 +21,7 @@ public class sheetsIdCollection extends Activity {
 
     public void setSheetIds()
     {
-        String mode = "test";
+        String mode = "release";
 
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         SharedPreferences.Editor mEditor = mPrefs.edit();
@@ -47,7 +47,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getEventSheetId()
     {
-        String mode = "test";
+        String mode = "release";
         if(mode.equals("test")) {
           return  "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw";
 
@@ -59,7 +59,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getAnnouncementSheetId()
     {
-        String mode = "test";
+        String mode = "release";
         if(mode.equals("test")) {
             return  "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0";
 
@@ -71,7 +71,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getNoteSheetId()
     {
-        String mode = "test";
+        String mode = "release";
         if(mode.equals("test")) {
             return  "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0";
 
@@ -84,7 +84,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getMiscSheetId()
     {
-        String mode = "test";
+        String mode = "release";
         if(mode.equals("test")) {
             return  "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY";
 
@@ -97,13 +97,25 @@ public class sheetsIdCollection extends Activity {
 
     public static String getUploadedVideoInfoSheetId()
     {
-        String mode = "test";
+        String mode = "release";
         if(mode.equals("test")) {
             return  "17o0GpXwWZskawufsMj-iH8wdbFx_2HZ6Jfjtc1JjjfU";
 
         }else
         {
             return  "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8";
+        }
+    }
+
+    public static String getApiKey()
+    {
+        String mode = "release";
+        if(mode.equals("test")) {
+            return  "AIzaSyDhyP7p8FDixgOyGy0KdbHMXRRFCvaXpWc";
+
+        }else
+        {
+            return  "AIzaSyDxQgIdYx9B_OA8cDuwSSHHCJ8kUDhL_YY";
         }
     }
 

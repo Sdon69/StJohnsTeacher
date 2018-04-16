@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         >
         <activity
-            android:name=".t_Teacher_Profile"
+            android:name=".Newsfeed"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,10 +52,14 @@
         <activity android:name=".s_EditProfileActivity"/>
         <activity android:name=".t_Detailed_Announcement"/>
         <activity android:name=".t_VideoInfoWriter"/>
+        <activity android:name=".t_Teacher_Profile"/>
 
         <service
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.UploadService"
             android:exported="true" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" />
         <activity
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity"
             android:label="@string/app_name"

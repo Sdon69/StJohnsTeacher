@@ -23,7 +23,7 @@ public class send_firebase_notification {
             messageTitle = messageTitle.replace("<comma3384>", ".");
             messageBody = messageBody.replace("<comma3384>", ".");
             String envelope = messageTitle + "<comma3384>" + messageBody;
-
+            Log.v("getApiKey",sheetsIdCollection.getApiKey());
             if(!writer.equals("event"))
             {
 
@@ -103,7 +103,7 @@ public class send_firebase_notification {
                 // Create connection to send GCM Message request.
                 URL url = new URL("https://fcm.googleapis.com/fcm/send");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestProperty("Authorization", "key=" + "AIzaSyDhyP7p8FDixgOyGy0KdbHMXRRFCvaXpWc");
+                conn.setRequestProperty("Authorization", "key=" + sheetsIdCollection.getApiKey());
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);

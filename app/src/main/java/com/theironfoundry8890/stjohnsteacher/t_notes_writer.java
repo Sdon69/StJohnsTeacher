@@ -951,7 +951,7 @@ public class t_notes_writer extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_notes_writer.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_notes_writer.this,Newsfeed.class);
         startActivity(selectIntent);
 
 
@@ -998,7 +998,7 @@ public class t_notes_writer extends Activity
         }
 
         if(a==4){
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Teacher_Profile.class);
+            Intent selectIntent = new Intent(t_notes_writer.this,Newsfeed.class);
             startActivity(selectIntent);
 
         }
@@ -1031,7 +1031,7 @@ public class t_notes_writer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
         if (a == 1) {
@@ -1039,7 +1039,7 @@ public class t_notes_writer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements_grey);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 2) {
@@ -1047,7 +1047,7 @@ public class t_notes_writer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes_grey);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 3) {
@@ -1055,7 +1055,7 @@ public class t_notes_writer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events_grey);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 4) {
@@ -1063,7 +1063,7 @@ public class t_notes_writer extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile_grey);
+            profileImageView.setImageResource(R.drawable.newsfeed_grey);
         }
 
 
@@ -1074,7 +1074,7 @@ public class t_notes_writer extends Activity
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
         Log.v("pre-Send","pre-Send");
-        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"notes");
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"note");
         Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 

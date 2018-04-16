@@ -911,7 +911,7 @@ public class t_VideoInfoWriter extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_VideoInfoWriter.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriter.this,Newsfeed.class);
         startActivity(selectIntent);
 
 

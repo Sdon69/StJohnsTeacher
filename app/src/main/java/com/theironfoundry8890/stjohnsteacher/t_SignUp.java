@@ -704,7 +704,7 @@ public class t_SignUp extends Activity
         boolean use = false;
         mEditor.putBoolean("firstUse", use).commit();
 
-        Intent selectIntent = new Intent(t_SignUp.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_SignUp.this,Newsfeed.class);
         startActivity(selectIntent);
 
 

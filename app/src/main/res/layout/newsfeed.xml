@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#ffffff"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
+        >
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
+
+
+            <TextView
+                android:id="@+id/newsFeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="News Feed"
+
+                android:textStyle="bold"
+                android:textSize="16dp"
+
+
+                />
+            <View
+                android:layout_width="60dp"
+                android:layout_height="6dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorPrimary" />
+        </LinearLayout>
+
+        <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+            android:paddingTop="10dp"
+            android:visibility="gone"
+            android:id="@+id/progressLayout"
+        >
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+
+        android:id="@+id/progressCircle"
+        />
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@drawable/loading_icon"-->
+                <!--android:id="@+id/progressImage"/>-->
+
+
+
+
+    </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:onClick="onClickTimetable"
+            android:background="?android:attr/selectableItemBackground"
+
+            >
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:src="@drawable/timetable_logo"
+                android:onClick="onClickTimetable"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:onClick="onClickProfileButton"
+            android:background="?android:attr/selectableItemBackground"
+
+            >
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/profile" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/timetableNewsfeedLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:id="@+id/firstSemesterTimetableLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/timetable"
+        /></LinearLayout><LinearLayout
+        android:id="@+id/secondSemesterTimetableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/timetable_second"
+        />
+    </LinearLayout><LinearLayout
+        android:id="@+id/thirdSemesterTimetableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/timetable_third"
+        /></LinearLayout>
+        <TextView
+            android:id="@+id/timetableDrawerHandle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="▼"
+            android:textSize="18sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="onClickTimetableDrawerHandle"
+
+            />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/whatDepartment"
+        android:layout_width="220dp"
+        android:layout_height="120dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/border"
+        android:visibility="gone"
+        android:padding="8dp">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/question"
+            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:padding="6dp"
+            android:text="What's Your Department?"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+        <Spinner
+            android:id="@+id/spinner_department"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:entries="@array/dept_arrays2"
+            android:prompt="@string/country_prompt"
+            android:layout_below="@+id/question"
+
+
+            android:layout_above="@+id/textView" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="onClickOk"
+            android:padding="12dp"
+            android:text="OK"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/textView" />
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/content_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/navbar"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="false"
+            >
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:divider="#00000000"
+                android:dividerHeight="26dp"
+                android:orientation="vertical"
+                android:scrollbars="none"
+
+                />
+
+        </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal"
+    android:id="@+id/updateAvailableLayout"
+    android:background="#20555555"
+    android:visibility="gone"
+    >
+        <include
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            layout="@layout/update_available"
+
+            android:layout_marginTop="16dp"
+            />
+</LinearLayout>
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/mainmenuui"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+</LinearLayout>

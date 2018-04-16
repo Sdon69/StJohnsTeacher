@@ -778,66 +778,14 @@ public class t_EditProfileActivity extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_EditProfileActivity.this,t_Teacher_Profile.class);
+        Intent selectIntent = new Intent(t_EditProfileActivity.this,Newsfeed.class);
         startActivity(selectIntent);
 
 
     }
 
 
-    private void swipe() {
 
-        TextView head2 = (TextView) findViewById(R.id.head2);
-        TextView head1 = (TextView) findViewById(R.id.head);
-
-        Button button1 = (Button) findViewById(R.id.Button1);
-        Button button2 = (Button) findViewById(R.id.Button2);
-        Button button3 = (Button) findViewById(R.id.Button3);
-
-
-
-        if(a==0){
-
-            Intent selectIntent = new Intent(t_EditProfileActivity.this,t_Attendance.class);
-            startActivity(selectIntent);
-
-        }
-
-
-        if(a==1) {
-
-            Intent selectIntent = new Intent(t_EditProfileActivity.this,t_Announcement_Viewer.class);
-            startActivity(selectIntent);
-
-
-        }
-
-        if(a==2) {
-            Intent selectIntent = new Intent(t_EditProfileActivity.this,t_notes_Viewer.class);
-            startActivity(selectIntent);
-        }
-
-        if(a==3) {
-            Intent selectIntent = new Intent(t_EditProfileActivity.this,EventViewer.class);
-            startActivity(selectIntent);
-
-        }
-
-        if(a==4){
-            Intent selectIntent = new Intent(t_EditProfileActivity.this,t_Teacher_Profile.class);
-            startActivity(selectIntent);
-
-        }
-
-
-
-
-
-
-
-
-
-    }
 
 
 
@@ -857,7 +805,7 @@ public class t_EditProfileActivity extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
 
         }
         if (a == 1) {
@@ -865,7 +813,7 @@ public class t_EditProfileActivity extends Activity
             announcementImageView.setImageResource(R.drawable.announcements_grey);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 2) {
@@ -873,7 +821,7 @@ public class t_EditProfileActivity extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes_grey);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 3) {
@@ -881,7 +829,7 @@ public class t_EditProfileActivity extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events_grey);
-            profileImageView.setImageResource(R.drawable.profile);
+            profileImageView.setImageResource(R.drawable.newsfeed);
         }
 
         if (a == 4) {
@@ -889,7 +837,7 @@ public class t_EditProfileActivity extends Activity
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.profile_grey);
+            profileImageView.setImageResource(R.drawable.newsfeed_grey);
         }
 
 
