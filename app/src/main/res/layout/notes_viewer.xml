@@ -120,58 +120,61 @@
 
         </LinearLayout>
 
-       <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/navbar"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
+
+            android:background="@drawable/empty"
             android:onClick="onClickPlus"
             android:src="@drawable/plusfloat"
-            android:background="@drawable/empty"
-            app:fabSize="normal"
-            />
+
+            app:fabSize="normal" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_video"
+            android:id="@+id/fabVideoNoteAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/navbar"
+            android:layout_above="@+id/fabNoteAdd"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="90dp"
-            android:layout_marginRight="20dp"
-            android:onClick="onClickAddVideo"
-            android:src="@drawable/add_news_icon"
+            android:layout_marginRight="28dp"
+            android:layout_marginBottom="14dp"
             android:background="@drawable/empty"
-
-            app:fabSize="normal"
+            android:onClick="onClickAddVideoViaUpload"
+            android:src="@drawable/add_news_icon"
+            android:visibility="invisible"
+            app:fabSize="mini" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabNoteAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fabMain"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/empty"
+            android:onClick="onClickAddNote"
+            android:src="@drawable/add_note"
+            android:visibility="invisible"
+            app:fabSize="mini" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabVideoNoteAddViaUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fabVideoNoteAdd"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="28dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/empty"
+            android:onClick="onClickAddVideoViaUrl"
+            android:src="@drawable/url_icon"
+            android:visibility="invisible"
+            app:fabSize="mini"
             />
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_above="@+id/add_video"-->
-            <!--android:background="@drawable/curved_rect"-->
-            <!--android:layout_marginBottom="12dp"-->
-            <!--&gt;-->
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_toLeftOf="@+id/videoCheckbox"-->
-                <!--android:text="Video"-->
-                <!--android:textColor="@color/colorPrimary"-->
-                <!--android:textStyle="bold"-->
-                <!--android:layout_marginTop="8dp"/>-->
-            <!--<CheckBox-->
-                <!--android:id="@+id/videoCheckbox"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--/>-->
-
-        <!--</RelativeLayout>-->
 
 
         <include

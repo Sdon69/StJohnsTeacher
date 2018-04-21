@@ -13,7 +13,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,13 +46,10 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-import static com.theironfoundry8890.stjohnsteacher.R.id.pass;
 
 public class EventViewer extends Activity
         implements EasyPermissions.PermissionCallbacks {
@@ -803,9 +798,8 @@ public class EventViewer extends Activity
     {
         Intent selectIntent = new Intent(EventViewer.this,t_EventWriter.class);
         startActivity(selectIntent);
-
-
     }
+
 
 
     public void onClickAttendance(View v)

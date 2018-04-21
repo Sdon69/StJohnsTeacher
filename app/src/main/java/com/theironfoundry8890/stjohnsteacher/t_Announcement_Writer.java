@@ -461,17 +461,7 @@ public class t_Announcement_Writer extends Activity
                     }
 
 
-
-
-
-
                     range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
-
-
-
-
-
-
 
                 }
 

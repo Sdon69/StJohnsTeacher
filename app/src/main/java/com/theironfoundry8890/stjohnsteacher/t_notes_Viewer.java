@@ -13,7 +13,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -43,22 +42,16 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.google.gson.Gson;
 import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.PlayActivity;
-import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.ReviewActivity;
 import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.youtubeUploadMainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-import static com.theironfoundry8890.stjohnsteacher.R.id.pass;
 
 public class t_notes_Viewer extends Activity
         implements EasyPermissions.PermissionCallbacks {
@@ -89,6 +82,7 @@ public class t_notes_Viewer extends Activity
     private String title;
     private String description;
 
+    private boolean clickedPlus;
 
     private String mode = "timestampViewer" ;
     private boolean isViewerTimestampUpdated = false;
@@ -944,10 +938,47 @@ public class t_notes_Viewer extends Activity
 
     public void onClickPlus(View v)
     {
+        android.support.design.widget.FloatingActionButton addVideoButton =
+            (android.support.design.widget.FloatingActionButton) findViewById(R.id.fabVideoNoteAdd);
+        android.support.design.widget.FloatingActionButton addNoteButton =
+                (android.support.design.widget.FloatingActionButton) findViewById(R.id.fabNoteAdd);
+        android.support.design.widget.FloatingActionButton addViaUrlButton =
+                (android.support.design.widget.FloatingActionButton) findViewById(R.id.fabVideoNoteAddViaUrl);
+        if(!clickedPlus) {
+            clickedPlus = true;
+            addVideoButton.setVisibility(View.VISIBLE);
+            addNoteButton.setVisibility(View.VISIBLE);
+            addViaUrlButton.setVisibility(View.VISIBLE);
+        }else
+        {
+            clickedPlus = false;
+            addVideoButton.setVisibility(View.INVISIBLE);
+            addNoteButton.setVisibility(View.INVISIBLE);
+            addViaUrlButton.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    public void onClickAddNote(View v)
+    {
         Intent selectIntent = new Intent(t_notes_Viewer.this,t_notes_writer.class);
+
         startActivity(selectIntent);
+    }
 
 
+    public void onClickAddVideoViaUrl(View v)
+    {
+        Intent selectIntent = new Intent(t_notes_Viewer.this,t_VideoInfoWriterViaLink.class);
+
+        startActivity(selectIntent);
+    }
+
+    public void onClickAddVideoViaUpload(View v)
+    {
+        Intent selectIntent = new Intent(t_notes_Viewer.this,youtubeUploadMainActivity.class);
+
+        startActivity(selectIntent);
     }
 
 

@@ -40,6 +40,10 @@ public class ReviewActivity extends Activity {
         }
         mFileUri = intent.getData();
         loadAccount();
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        String savedCheckboxes =  mPrefs.getString("savedCheckBoxesVideoViaUpload", "default_value_if_variable_not_found");
+
+        loadCheckBoxes(savedCheckboxes);
 
         reviewVideo(mFileUri);
     }
@@ -275,5 +279,80 @@ public class ReviewActivity extends Activity {
     }
 
 
+
+    public void  loadCheckBoxes(String saveKey)
+    {
+
+        String savedCheckBoxes = saveKey;
+        if(savedCheckBoxes != null)
+        {
+            String subCataegories = savedCheckBoxes;
+            String[] departmentCollection = new String[6];
+            String outputTopic =  "";
+            int arrayIncrementer = 0;
+            departmentCollection[arrayIncrementer] = "Art";
+            departmentCollection[++arrayIncrementer] = "Commerce";
+            departmentCollection[++arrayIncrementer] = "Management";
+            departmentCollection[++arrayIncrementer] = "Education";
+            departmentCollection[++arrayIncrementer] = "Science";
+            departmentCollection[++arrayIncrementer] = "Other";
+
+            String[] semesterCollection = new String[6];
+            arrayIncrementer = 0;
+            semesterCollection[arrayIncrementer] = "First Semester";
+            semesterCollection[++arrayIncrementer] = "Second Semester";
+            semesterCollection[++arrayIncrementer] = "Third Semester";
+            semesterCollection[++arrayIncrementer] = "Fourth Semester";
+            semesterCollection[++arrayIncrementer] = "Fifth Semester";
+            semesterCollection[++arrayIncrementer] = "Sixth and Above Semesters";
+
+            CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
+            CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
+            CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
+            CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
+            CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
+            CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+
+            CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
+            CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
+            CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
+            CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
+            CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
+            CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+
+
+            if (subCataegories.contains("Art")) {
+                lGArt.setChecked(true);
+            }  if (subCataegories.contains("Commerce")) {
+            lGCommerce.setChecked(true);
+        }  if (subCataegories.contains("Management")) {
+            lGManagement.setChecked(true);
+        }  if (subCataegories.contains("Education")) {
+            lGEducation.setChecked(true);
+        }  if (subCataegories.contains("Science")) {
+            lGScience.setChecked(true);
+        }  if (subCataegories.contains("Other")) {
+            lGOther.setChecked(true);
+        }
+
+
+
+            if (subCataegories.contains("First Semester")) {
+                lSemster1.setChecked(true);
+            }  if (subCataegories.contains("Second Semester")) {
+            lSemster2.setChecked(true);
+        }  if (subCataegories.contains("Third Semester")) {
+            lSemster3.setChecked(true);
+        }  if (subCataegories.contains("Fourth Semester")) {
+            lSemster4.setChecked(true);
+        }  if (subCataegories.contains("Fifth Semester")) {
+            lSemster5.setChecked(true);
+        }  if (subCataegories.contains("Sixth and Above Semesters")) {
+            lSemster6.setChecked(true);
+        }
+
+
+        }
+    }
 
 }

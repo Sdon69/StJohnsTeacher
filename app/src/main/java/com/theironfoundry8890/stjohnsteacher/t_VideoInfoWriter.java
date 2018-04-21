@@ -506,6 +506,10 @@ public class t_VideoInfoWriter extends Activity
 
                 arrData = getData(videoTitle , videoDescription ,videoCataegories, idString , fullName ,
                         String.valueOf(--a),formattedDate,videoUrl, String.valueOf(timestamp));
+
+                SharedPreferences.Editor mEditor = mPrefs.edit();
+                mEditor.putString("savedCheckBoxesVideoViaUpload", videoCataegories).apply();
+
                 oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
@@ -853,6 +857,8 @@ public class t_VideoInfoWriter extends Activity
 
         String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
         String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
+
+
 
         fullName = FirstName.concat(" " + LastName);
 

@@ -159,7 +159,7 @@ public class t_notes_writer extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.t_video_url_writer);
+        setContentView(R.layout.t_notes_writer);
 
         colorCheck();
 
@@ -511,6 +511,12 @@ public class t_notes_writer extends Activity
                 arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName
                         ,String.valueOf(--a),publishDate,"None", String.valueOf(timestamp));
                 oRange.setValues(arrData);
+
+
+            SharedPreferences mPrefs = getSharedPreferences("label", 0);
+            SharedPreferences.Editor mEditor = mPrefs.edit();
+            mEditor.putString("savedCheckBoxesNotes", subCataegories).apply();
+
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
             range = "Timestamp!B3:B";
@@ -867,6 +873,9 @@ public class t_notes_writer extends Activity
 
         fullName = FirstName.concat(" " + LastName);
 
+        String savedCheckboxes =  mPrefs.getString("savedCheckBoxesNotes", "default_value_if_variable_not_found");
+
+        loadCheckBoxes(savedCheckboxes);
 
 
         String tableString = mPrefs.getString("table", "default_value_if_variable_not_found");
@@ -1146,6 +1155,81 @@ public class t_notes_writer extends Activity
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
 
         return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
+    }
+
+    public void  loadCheckBoxes(String saveKey)
+    {
+
+        String savedCheckBoxes = saveKey;
+        if(savedCheckBoxes != null)
+        {
+            subCataegories = savedCheckBoxes;
+            String[] departmentCollection = new String[6];
+            String outputTopic =  "";
+            int arrayIncrementer = 0;
+            departmentCollection[arrayIncrementer] = "Art";
+            departmentCollection[++arrayIncrementer] = "Commerce";
+            departmentCollection[++arrayIncrementer] = "Management";
+            departmentCollection[++arrayIncrementer] = "Education";
+            departmentCollection[++arrayIncrementer] = "Science";
+            departmentCollection[++arrayIncrementer] = "Other";
+
+            String[] semesterCollection = new String[6];
+            arrayIncrementer = 0;
+            semesterCollection[arrayIncrementer] = "First Semester";
+            semesterCollection[++arrayIncrementer] = "Second Semester";
+            semesterCollection[++arrayIncrementer] = "Third Semester";
+            semesterCollection[++arrayIncrementer] = "Fourth Semester";
+            semesterCollection[++arrayIncrementer] = "Fifth Semester";
+            semesterCollection[++arrayIncrementer] = "Sixth and Above Semesters";
+
+            CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
+            CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
+            CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
+            CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
+            CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
+            CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+
+            CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
+            CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
+            CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
+            CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
+            CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
+            CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+
+
+            if (subCataegories.contains("Art")) {
+                lGArt.setChecked(true);
+            }  if (subCataegories.contains("Commerce")) {
+            lGCommerce.setChecked(true);
+        }  if (subCataegories.contains("Management")) {
+            lGManagement.setChecked(true);
+        }  if (subCataegories.contains("Education")) {
+            lGEducation.setChecked(true);
+        }  if (subCataegories.contains("Science")) {
+            lGScience.setChecked(true);
+        }  if (subCataegories.contains("Other")) {
+            lGOther.setChecked(true);
+        }
+
+
+
+            if (subCataegories.contains("First Semester")) {
+                lSemster1.setChecked(true);
+            }  if (subCataegories.contains("Second Semester")) {
+            lSemster2.setChecked(true);
+        }  if (subCataegories.contains("Third Semester")) {
+            lSemster3.setChecked(true);
+        }  if (subCataegories.contains("Fourth Semester")) {
+            lSemster4.setChecked(true);
+        }  if (subCataegories.contains("Fifth Semester")) {
+            lSemster5.setChecked(true);
+        }  if (subCataegories.contains("Sixth and Above Semesters")) {
+            lSemster6.setChecked(true);
+        }
+
+
+        }
     }
 }
 
