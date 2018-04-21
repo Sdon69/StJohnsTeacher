@@ -159,7 +159,7 @@ public class t_notes_writer extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.t_notes_writer);
+        setContentView(R.layout.t_video_url_writer);
 
         colorCheck();
 
@@ -663,11 +663,11 @@ public class t_notes_writer extends Activity
 
 
 
-        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
-        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
-        CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
-        CheckBox lGConvention = (CheckBox) findViewById(R.id.gConvention);
-        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gSocialAwareness);
+        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gArt);
+        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gCommerce);
+        CheckBox lGDebate = (CheckBox) findViewById(R.id.gManagement);
+        CheckBox lGConvention = (CheckBox) findViewById(R.id.gScience);
+        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gEducation);
         CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
 
         CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
@@ -767,7 +767,7 @@ public class t_notes_writer extends Activity
                                    }
 
                                    if (otherSubjects) {
-                                       subCataegories = subCataegories.concat("Other Subjects");
+                                       subCataegories = subCataegories.concat("Other");
                                    }
 
                                    if (semesterOne) {

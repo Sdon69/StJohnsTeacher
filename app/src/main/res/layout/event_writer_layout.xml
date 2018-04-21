@@ -131,7 +131,7 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/gTechnology"
+                    android:id="@+id/gArt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Technology"
@@ -139,7 +139,7 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/gSocialGathering"
+                    android:id="@+id/gCommerce"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Social Gathering"
@@ -147,7 +147,7 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/gDebate"
+                    android:id="@+id/gManagement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Debate"
@@ -155,7 +155,7 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/gSocialAwareness"
+                    android:id="@+id/gEducation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Social Awareness"
@@ -163,7 +163,7 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/gConvention"
+                    android:id="@+id/gScience"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Convention"

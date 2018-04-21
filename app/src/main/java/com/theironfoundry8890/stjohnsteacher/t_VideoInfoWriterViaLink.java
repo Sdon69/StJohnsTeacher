@@ -4,43 +4,54 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.Auth;
+import com.theironfoundry8890.stjohnsteacher.youtubeDataUploader_util.VideoData;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -52,68 +63,61 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class t_EventWriter extends Activity
-        implements EasyPermissions.PermissionCallbacks {
+public class t_VideoInfoWriterViaLink extends Activity
+        implements EasyPermissions.PermissionCallbacks, YouTubePlayer.OnFullscreenListener, YouTubePlayer.PlayerStateChangeListener {
     GoogleAccountCredential mCredential;
-
+    private Button mCallApiButton;
     ProgressDialog mProgress;
+
+    private String sId;
     private TextView mOutputText;
-
-    private String userId;
+    private String sPassword;private String userId;
     private boolean idAvailcheck = true;
+    private boolean workbookEnd = false;
 
-    long timestamp = System.currentTimeMillis() / 1000;
+    private String fullName;
 
-
-
+    private int a = 1;
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
 
     //Event Details
     private String eventTitle;
     private String eventDescription;
     private String publishDate;
-    private String eventDate;
     private String confirmPass;
     private String savedPass;
     private String savedId;
+    public String videoUrl;
+    private boolean isYoutubeVerified = true;
 
-    private String eventDay;
-    private String eventMonth;
-    private String eventYear;
+    //Subjects
+    private boolean art = false;
+    private boolean commerce = false;
+    private boolean management = false;
+    private boolean science = false;
+    private boolean education= false;
+    private boolean otherSubjects = false;
 
-    private String fullName;
+    //Semesters
+    private boolean semesterOne = false;
+    private boolean semesterTwo = false;
+    private boolean semesterThree = false;
+    private boolean semesterFour = false;
+    private boolean semesterFive = false;
+    private boolean semesterSix = false;
 
-    private int a = 3;
-    private float x1,x2;
-    static final int MIN_DISTANCE = 150;
+    private String subCataegories = "All Departments All Semesters";
 
+    private String sArt;
+    private String sEducation;
+    private String sCommerce;
+    private String sOtherSubjects ;
+    private String sManagement ;
+    private String sScience ;
 
-    private String lastDateOfRegistration;
-    private String lastDayOfRegistration;
-    private String lastMonthOfRegistration;
-    private String lastYearOfRegistration;
-
-    private String entryfees;
-
-
-    //Genres
-    private boolean technology = false;
-    private boolean socialGathering = false;
-    private boolean debate = false;
-    private boolean convention = false;
-    private boolean socialAwareness = false;
-    private boolean other = false;
-    private boolean sports = true;
-
-    private String sTechnology;
-    private String sSocialAwareness;
-    private String sSocialGathering;
-    private String sOther ;
-    private String sDebate ;
-    private String sConvention ;
-
-    private String subCataegories = "All Events";
-
-
+    private int tableNo;
+    private String gSavedAnnSheetId;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -132,7 +136,7 @@ public class t_EventWriter extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.event_writer_layout);
+        setContentView(R.layout.t_video_url_writer);
 
         LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
 
@@ -142,11 +146,9 @@ public class t_EventWriter extends Activity
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
 
-
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -160,16 +162,28 @@ public class t_EventWriter extends Activity
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Loading ...");
         mProgress.setCanceledOnTouchOutside(false);
+
+
         setContentView(activityLayout);
 
-        colorCheck();
+//        validateYouTubeUrl();
 
-        loadData();
+        EditText youtubeUrl = (EditText) findViewById(R.id.videoUrl);
+        youtubeUrl.addTextChangedListener(watch);
 
-        // Initialize credentials and service object.
+
+
+       loadData();
+
+
+
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+
+
 
     }
 
@@ -188,18 +202,19 @@ public class t_EventWriter extends Activity
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-
+            mOutputText.setText("No network connection available.");
             Toast.makeText(getApplicationContext(), "No Network Connection",
                     Toast.LENGTH_SHORT).show();
-            mOutputText.setText("No network connection available.");
         } else {
+
             new MakeRequestTask(mCredential).execute();
+
         }
     }
 
     /**
      * Attempts to set the account used with the API credentials. If an account
-     * name was previously saved it will use that one; otherwise an account
+     * name was previously saved it will use that one; otherSubjectswise an account
      * picker dialog will be shown to the user. Note that the setting the
      * account to use with the credentials object requires the app to have the
      * GET_ACCOUNTS permission, which is requested here if it is not already
@@ -322,7 +337,7 @@ public class t_EventWriter extends Activity
 
     /**
      * Checks whether the device currently has a network connection.
-     * @return true if the device has a network connection, false otherwise.
+     * @return true if the device has a network connection, false otherSubjectswise.
      */
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr =
@@ -334,14 +349,14 @@ public class t_EventWriter extends Activity
     /**
      * Check that Google Play services APK is installed and up to date.
      * @return true if Google Play Services is available and up to
-     *     date on this device; false otherwise.
+     *     date on this device; false otherSubjectswise.
      */
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
-        Log.v("t_EventWriter" , "Success");
+        Log.v("t_Announcement_Writer" , "Success");
         return connectionStatusCode == ConnectionResult.SUCCESS;
 
     }
@@ -371,7 +386,7 @@ public class t_EventWriter extends Activity
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                t_EventWriter.this,
+                t_VideoInfoWriterViaLink.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -416,10 +431,10 @@ public class t_EventWriter extends Activity
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = sheetsIdCollection.getEventSheetId();
+            String spreadsheetId = sheetsIdCollection.getUploadedVideoInfoSheetId();
             int a = 2;
             idAvailcheck = true;
-            String range = "Events!".concat("A"+ a++ + ":S");
+            String range =  "videoInfo!".concat("A"+ 2 + ":I");
 
             List<List<Object>> arrData;
 
@@ -446,7 +461,7 @@ public class t_EventWriter extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                Log.v("MainActivity", "Wofdad");
+
 
                 results.add("");
 
@@ -465,10 +480,19 @@ public class t_EventWriter extends Activity
                         break;
                     }
 
+                    if (Str1.equals(sId))
+                    {
+
+                        idAvailcheck = false;
+                    }
 
 
-                    range = "Events!".concat("A"+ a++ + ":S");
-                    Log.v("for", range);
+
+
+
+
+                    range = "videoInfo!".concat("A"+ ++a + ":I");
+
 
 
 
@@ -481,25 +505,35 @@ public class t_EventWriter extends Activity
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
             if(idAvailcheck) {           // Check if id is not taken
                 long timestamp = System.currentTimeMillis() / 1000;
+                //Getting System date
+                Calendar c = Calendar.getInstance();
+                System.out.println("Current time => " + c.getTime());
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = df.format(c.getTime());
 
-                arrData = getData(eventTitle , eventDescription ,
-                        publishDate,eventDate,lastDateOfRegistration,
-                        entryfees, savedId , subCataegories , fullName ,"A", String.valueOf(--a), String.valueOf(timestamp));
+                SharedPreferences mPrefs = getSharedPreferences("label", 0);
+                String idString = mPrefs.getString("ttag", "default_value_if_variable_not_found");
+                String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
+                String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
+                  String fullName = FirstName.concat(" " + LastName);
+
+
+                arrData = getData(eventTitle  , eventDescription ,subCataegories, idString , fullName ,
+                        String.valueOf(--a),formattedDate,videoUrl, String.valueOf(timestamp));
                 oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
-                range = "Timestamp!B4:B";
+                range = "Timestamp!B5:B";
                 oRange.setRange(range);
-                spreadsheetId = sheetsIdCollection.getMiscSheetId();
+                spreadsheetId = sheetsIdCollection.getMiscSheetId();  //1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU
                 arrData = getDataForTimeStamp(String.valueOf(timestamp));
                 oRange.setValues(arrData);
-                 oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
-
+                oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
 
             }
             else {
-
+                Log.v("Not available", sId);
 
 
             }
@@ -517,9 +551,9 @@ public class t_EventWriter extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
-            Log.v("t_EventWriter" , "Worked");
+            Log.v("t_Announcement_Writer" , "Worked");
 
 
         }
@@ -531,14 +565,13 @@ public class t_EventWriter extends Activity
             mProgress.hide();
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
-                Log.v("t_EventWriter" , "damn");
+                Log.v("t_Announcement_Writer" , "damn");
             } else {
                 output.add(0, " ");
                 mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_EventWriter" , "Wofdad21");
 
                 successfulRecord();
-                displayAvailability();
+
 
             }
         }
@@ -555,27 +588,15 @@ public class t_EventWriter extends Activity
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            t_EventWriter.REQUEST_AUTHORIZATION);
+                            t_VideoInfoWriterViaLink.REQUEST_AUTHORIZATION);
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
-                    Log.v("t_EventWriter" , "Worked2");
+
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
             }
-        }
-    }
-
-    private void Go(List<String> output) {
-        mProgress.hide();
-        if (output == null || output.size() == 0) {
-            mOutputText.setText("No results returned.");
-        } else {
-            output.add(0, "Data retrieved using the Google Sheets API:");
-            mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_EventWriter" , "Wofdad");
-
         }
     }
 
@@ -587,27 +608,31 @@ public class t_EventWriter extends Activity
 
     }
 
-    public static List<List<Object>> getData (String pTitle , String pDesc, String pPublishDate , String pEventDate ,
-                                              String pEndDateReg ,String pFees , String pId ,String cataegories , String fullN ,
-                                              String status,String uniqueId ,String timestamp)  {
+
+    public void onClickAttachFiles(View v) {
+
+        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/androidAnnouncementWriter");
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+        startActivity(webIntent);
+
+
+    }
+
+
+    public static List<List<Object>> getData (String pTitle , String pDesc,
+                                              String pCataegories , String pId
+            ,String fullN,String uniqueId,String pDate,String fileUrl,String timestamp)  {
 
         List<Object> data1 = new ArrayList<Object>();
         data1.add(pTitle);
         data1.add(pDesc);
-        data1.add (pPublishDate);
-        data1.add (pEventDate);
-        data1.add (pEndDateReg);
-        data1.add(pFees);
-        data1.add(cataegories);
+        data1.add(pCataegories);
         data1.add(pId);
         data1.add(fullN);
-        data1.add(status);
         data1.add(uniqueId);
+        data1.add(pDate);
+        data1.add(fileUrl);
         data1.add(timestamp);
-
-
-
-
 
         List<List<Object>> data = new ArrayList<List<Object>>();
         data.add (data1);
@@ -633,6 +658,7 @@ public class t_EventWriter extends Activity
         return data;
     }
 
+
     public void submitInfo(View view) {
 
 
@@ -640,16 +666,24 @@ public class t_EventWriter extends Activity
         //Retriving data from layout
         EditText lEventTitle =  (EditText) findViewById(R.id.eventTitle);
         EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
-        DatePicker lLastdateofReg =  (DatePicker) findViewById(R.id.lastDateOfRegistration);
-        DatePicker lDateEvent =  (DatePicker) findViewById(R.id.date_of_event);
-        EditText lentryFees =  (EditText) findViewById(R.id.entryFees);
+        EditText lVideoUrl = (EditText) findViewById(R.id.videoUrl);
+
+
         CheckBox lGTechnology = (CheckBox) findViewById(R.id.gArt);
         CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gCommerce);
         CheckBox lGDebate = (CheckBox) findViewById(R.id.gManagement);
         CheckBox lGConvention = (CheckBox) findViewById(R.id.gScience);
         CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gEducation);
-        CheckBox lGSport = (CheckBox) findViewById(R.id.gSports);
         CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+
+        CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
+        CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
+        CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
+        CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
+        CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
+        CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+
+
 
 
 
@@ -661,19 +695,22 @@ public class t_EventWriter extends Activity
         //Event Details
         eventTitle = String.valueOf(lEventTitle.getText());
         eventDescription = String.valueOf(lEventDesc.getText());
-        entryfees = String.valueOf(lentryFees.getText());
+           videoUrl = String.valueOf(lVideoUrl.getText()).trim();
+           boolean isVideoUrlValid = false;
+        if(videoUrl.length()>=11)
+        {
+            String videoOutput =  getVideoId(videoUrl);
 
-        //Event Date of Registration Cancatenation
-        eventDay = String.valueOf(lDateEvent.getDayOfMonth());
-        eventMonth = String.valueOf(lDateEvent.getMonth() + 1);
-        eventYear = String.valueOf(lDateEvent.getYear());
-        eventDate = eventDay.concat("/" + eventMonth + "/" + eventYear);
+            if(!videoOutput.contains("Invalid Url"))
+            {
+                videoUrl = videoOutput.trim();
+                isVideoUrlValid = true;
 
-        //Last Date of Registration Cancatenation
-        lastDayOfRegistration = String.valueOf(lLastdateofReg.getDayOfMonth());
-        lastMonthOfRegistration = String.valueOf(lLastdateofReg.getMonth() + 1);
-        lastYearOfRegistration = String.valueOf(lLastdateofReg.getYear());
-        lastDateOfRegistration = lastDayOfRegistration.concat("/" + lastMonthOfRegistration + "/" + lastYearOfRegistration);
+            }
+        }
+
+
+
 
 
 
@@ -685,99 +722,34 @@ public class t_EventWriter extends Activity
         String formattedDate = df.format(c.getTime());
         Log.v("Date" , formattedDate);
 
-
-
-        SimpleDateFormat yearformat = new SimpleDateFormat("yyyy");
-        String formattedYear = yearformat.format(c.getTime());
-        int formattedYearInt = Integer.parseInt(formattedYear);
-        int eventYearInteger = Integer.parseInt(eventYear);
-        int lastYearOfRegistrationInteger = Integer.parseInt(lastYearOfRegistration);
-
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-        String formattedMonth = monthFormat.format(c.getTime());
-        int formattedMonthInt = Integer.parseInt(formattedMonth);
-        int eventMonthInteger = Integer.parseInt(eventMonth);
-        int lastMonthOfRegistrationInteger = Integer.parseInt(lastMonthOfRegistration);
-
-        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
-        String formattedDay = dayFormat.format(c.getTime());
-        int formattedDayInt = Integer.parseInt(formattedDay);
-        int eventDayInteger = Integer.parseInt(eventDay);
-        int lastDayOfRegistrationInteger = Integer.parseInt(lastDayOfRegistration);
-
-
-        boolean isDateOfEventPast = false;
-        boolean isLastDateofRegistrationPast = false;
-
-
-
-        if(eventYearInteger<formattedYearInt)
-        {
-            isDateOfEventPast = true;
-        }
-        if (eventMonthInteger < formattedMonthInt) {
-            if(eventYearInteger <= formattedYearInt)
-            {
-                isDateOfEventPast = true;
-            }
-        }
-
-
-        if (eventDayInteger < formattedDayInt) {
-            if (eventMonthInteger <= formattedMonthInt) {
-                if(eventYearInteger <= formattedYearInt){
-                    isDateOfEventPast = true;
-
-                }
-            }
-        }
-
-        if(lastYearOfRegistrationInteger < formattedYearInt)
-        {
-            isLastDateofRegistrationPast = true;
-        }
-
-        if(lastMonthOfRegistrationInteger < formattedMonthInt)
-        {
-            if(lastYearOfRegistrationInteger <= formattedYearInt)
-            {
-                isLastDateofRegistrationPast = true;
-            }
-        }
-
-
-        if (lastDayOfRegistrationInteger < formattedDayInt)
-        {
-            if(lastMonthOfRegistrationInteger <= formattedMonthInt)
-            {
-                if(lastYearOfRegistrationInteger <= formattedYearInt)
-                {
-                    isLastDateofRegistrationPast = true;
-                }
-            }
-        }
-
-
-
         publishDate = formattedDate;
 
-        //Checkboxes
-        technology = lGTechnology.isChecked();
-        socialAwareness = lGSocialAwareness.isChecked();
-        socialGathering = lGSocialGathering.isChecked();
-        other = lGOther.isChecked();
-        debate = lGDebate.isChecked();
-        convention = lGConvention.isChecked();
-        sports =lGSport.isChecked();
+        //Checkboxes for Genre
+        art = lGTechnology.isChecked();
+        education= lGSocialAwareness.isChecked();
+        commerce = lGSocialGathering.isChecked();
+        otherSubjects = lGOther.isChecked();
+        management = lGDebate.isChecked();
+        science = lGConvention.isChecked();
+
+        //Checkboxes for Semesters
+        semesterOne = lSemster1.isChecked();
+        semesterTwo= lSemster2.isChecked();
+        semesterThree = lSemster3.isChecked();
+        semesterFour = lSemster4.isChecked();
+        semesterFive = lSemster5.isChecked();
+        semesterSix = lSemster6.isChecked();
 
         //Converting above booleans to String so they can be used in public static list parameters
-        //To be deleted
-        sTechnology = String.valueOf(technology);
-        sSocialAwareness = String.valueOf(socialAwareness);
-        sSocialGathering = String.valueOf(socialGathering);
-        sOther = String.valueOf(other);
-        sDebate = String.valueOf(debate);
-        sConvention = String.valueOf(convention);
+        sArt = String.valueOf(art);
+        sEducation = String.valueOf(education);
+        sCommerce = String.valueOf(commerce);
+        sOtherSubjects = String.valueOf(otherSubjects);
+        sManagement = String.valueOf(management);
+        sScience = String.valueOf(science);
+
+
+
 
 
 
@@ -786,51 +758,69 @@ public class t_EventWriter extends Activity
 
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
-                if (entryfees.length() >= 1) {
-                    if (!isDateOfEventPast) {
-                        if (!isLastDateofRegistrationPast) {
-                            if(technology || socialGathering || debate ||  convention || socialAwareness  || sports || other ) {
+                if (eventDescription.length() <= 49000) {
+                    if (isVideoUrlValid) {
+                        if (isYoutubeVerified) {
+                            if(art || commerce || management ||  science || education|| otherSubjects ) {
+                                if(semesterOne || semesterTwo || semesterThree || semesterFour || semesterFive || semesterSix) {
 
-                                //Concatenating a string to check which cataegory is present
-                                if(technology)
-                                {
-                                    subCataegories = subCataegories.concat("Technology");
+
+                                    if (art) {
+                                        subCataegories = subCataegories.concat("Art");
+                                    }
+
+                                    if (commerce) {
+                                        subCataegories = subCataegories.concat("Commerce");
+                                    }
+
+                                    if (education) {
+                                        subCataegories = subCataegories.concat("Education");
+                                    }
+
+                                    if (management) {
+                                        subCataegories = subCataegories.concat("Management");
+                                    }
+
+                                    if (science) {
+                                        subCataegories = subCataegories.concat("Science");
+                                    }
+
+                                    if (otherSubjects) {
+                                        subCataegories = subCataegories.concat("Other");
+                                    }
+
+                                    if (semesterOne) {
+                                        subCataegories = subCataegories.concat("First Semester");
+                                    }
+
+                                    if (semesterTwo) {
+                                        subCataegories = subCataegories.concat("Second Semester");
+                                    }
+
+                                    if (semesterThree) {
+                                        subCataegories = subCataegories.concat("Third Semester");
+                                    }
+
+                                    if (semesterFour) {
+                                        subCataegories = subCataegories.concat("Fourth Semester");
+                                    }
+
+                                    if (semesterFive) {
+                                        subCataegories = subCataegories.concat("Fifth Semester");
+                                    }
+
+                                    if (semesterSix) {
+                                        subCataegories = subCataegories.concat("Sixth and Above Semesters");
+                                    }
+
+
+                                    getResultsFromApi();
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "Atleast Choose One Semester",
+                                            Toast.LENGTH_SHORT).show();
                                 }
-
-                                if(socialAwareness)
-                                {
-                                    subCataegories = subCataegories.concat("Social Awareness");
-                                }
-
-                                if(socialGathering)
-                                {
-                                    subCataegories = subCataegories.concat("Social Gathering");
-                                }
-
-                                if(debate){
-                                    subCataegories = subCataegories.concat("Debate");
-                                }
-
-                                if(convention){
-                                    subCataegories = subCataegories.concat("Convention");
-                                }
-
-                                if(sports)
-                                {
-                                    subCataegories = subCataegories.concat("Sports");
-                                }
-
-
-                                if(other){
-                                    subCataegories = subCataegories.concat("Other");
-                                }
-
-
-                                mOutputText.setText("");
-                                getResultsFromApi();
-
                             }else {
-                                Toast.makeText(getApplicationContext(), "Atleast Choose One Genre",
+                                Toast.makeText(getApplicationContext(), "Atleast Choose One Department",
                                         Toast.LENGTH_SHORT).show();
                             }
 
@@ -839,31 +829,32 @@ public class t_EventWriter extends Activity
 
                         else {
 
-                            Toast.makeText(getApplicationContext(), "Last Date of Registration Can not Be in Past",
+                            Toast.makeText(getApplicationContext(), "Enter a valid Youtube link",
                                     Toast.LENGTH_SHORT).show();
 
                         }
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Date of Event Can not Be in Past",
+                        Toast.makeText(getApplicationContext(), "Enter a valid Youtube link",
                                 Toast.LENGTH_SHORT).show();
 
                     }
                 } else {
 
-                    Toast.makeText(getApplicationContext(), "Enter entry fees",
+                    Toast.makeText(getApplicationContext(), "Notes field character limit is 49000",
                             Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Enter Last Name",
+                Toast.makeText(getApplicationContext(), "Description field is blank",
                         Toast.LENGTH_SHORT).show();
             }
-        }
-        else
+        }else
         {
-            Toast.makeText(getApplicationContext(), "Enter First Name",
+            Toast.makeText(getApplicationContext(), "Title field is blank",
                     Toast.LENGTH_SHORT).show();
         }
+
+//Concatenating a string to check which cataegory is present
 
 
 
@@ -883,67 +874,21 @@ public class t_EventWriter extends Activity
 
     }
 
+
+
     public void loadData(){
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         String idString = mPrefs.getString("ttag", "default_value_if_variable_not_found");
         String passString = mPrefs.getString("tpass", "default_value_if_variable_not_found");
+
         String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
         String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
 
         fullName = FirstName.concat(" " + LastName);
 
+
         savedPass = passString;
         savedId = idString;
-        Log.v(passString , idString);
-    }
-
-
-
-    private void swipe() {
-
-        TextView head2 = (TextView) findViewById(R.id.head2);
-        TextView head1 = (TextView) findViewById(R.id.head);
-
-        Button button1 = (Button) findViewById(R.id.Button1);
-        Button button2 = (Button) findViewById(R.id.Button2);
-        Button button3 = (Button) findViewById(R.id.Button3);
-
-
-
-        if(a==0){
-
-            Intent selectIntent = new Intent(t_EventWriter.this,t_Attendance.class);
-            startActivity(selectIntent);
-
-        }
-
-
-        if(a==1) {
-
-            Intent selectIntent = new Intent(t_EventWriter.this,t_Announcement_Viewer.class);
-            startActivity(selectIntent);
-
-
-        }
-
-        if(a==2) {
-            Intent selectIntent = new Intent(t_EventWriter.this,t_notes_Viewer.class);
-            startActivity(selectIntent);
-        }
-
-        if(a==3) {
-            Intent selectIntent = new Intent(t_EventWriter.this,EventViewer.class);
-            startActivity(selectIntent);
-
-        }
-
-        if(a==4){
-            Intent selectIntent = new Intent(t_EventWriter.this,Newsfeed.class);
-            startActivity(selectIntent);
-
-        }
-
-
 
 
 
@@ -954,10 +899,14 @@ public class t_EventWriter extends Activity
 
 
     }
+
+
+
+
 
     public void onClickAttendance(View v)
     {
-        Intent selectIntent = new Intent(t_EventWriter.this,t_Attendance.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,t_Attendance.class);
         startActivity(selectIntent);
 
 
@@ -965,7 +914,7 @@ public class t_EventWriter extends Activity
 
     public void onClickAnnouncement(View v)
     {
-        Intent selectIntent = new Intent(t_EventWriter.this,t_Announcement_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,t_Announcement_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -973,7 +922,7 @@ public class t_EventWriter extends Activity
 
     public void onClickNotes(View v)
     {
-        Intent selectIntent = new Intent(t_EventWriter.this,t_notes_Viewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -981,7 +930,7 @@ public class t_EventWriter extends Activity
 
     public void onClickEvents(View v)
     {
-        Intent selectIntent = new Intent(t_EventWriter.this,EventViewer.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,EventViewer.class);
         startActivity(selectIntent);
 
 
@@ -989,145 +938,264 @@ public class t_EventWriter extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_EventWriter.this,Newsfeed.class);
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,Newsfeed.class);
         startActivity(selectIntent);
 
 
     }
 
-
-
-
-
-    private void colorCheck() {
-
-        ImageView attendanceImageView = (ImageView) findViewById(R.id.attendance);
-        ImageView announcementImageView = (ImageView) findViewById(R.id.announcement);
-        ImageView notesImageView = (ImageView) findViewById(R.id.notes);
-        ImageView eventsImageView = (ImageView) findViewById(R.id.events);
-        ImageView profileImageView = (ImageView) findViewById(R.id.profile);
-
-
-        if (a == 0) {
-
-            attendanceImageView.setImageResource(R.drawable.attendance_grey);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.newsfeed);
-
-        }
-        if (a == 1) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements_grey);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.newsfeed);
-        }
-
-        if (a == 2) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes_grey);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.newsfeed);
-        }
-
-        if (a == 3) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events_grey);
-            profileImageView.setImageResource(R.drawable.newsfeed);
-        }
-
-        if (a == 4) {
-            attendanceImageView.setImageResource(R.drawable.attendance);
-            announcementImageView.setImageResource(R.drawable.announcements);
-            notesImageView.setImageResource(R.drawable.notes);
-            eventsImageView.setImageResource(R.drawable.events);
-            profileImageView.setImageResource(R.drawable.newsfeed_grey);
-        }
-
-
-    }
 
 
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
         Log.v("pre-Send","pre-Send");
-        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"event");
-        Intent selectIntent = new Intent(t_EventWriter.this,EventViewer.class);
+        SharedPreferences mPrefs = getSharedPreferences("label", 0);
+        String videoTitle =  mPrefs.getString("videoTitle", "default_value_if_variable_not_found");
+        String videoDescription =  mPrefs.getString("videoDescription", "default_value_if_variable_not_found");
+
+        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"videoInfo");
+        Intent selectIntent = new Intent(t_VideoInfoWriterViaLink.this,t_notes_Viewer.class);
         startActivity(selectIntent);
     }
 
-    public void setSheetIds()
+    public void writeVideoData()
     {
-        String mode = "test";
+        getResultsFromApi();
+    }
 
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
 
-        if(mode.equals("test")) {
-            mEditor.putString("eventSheetId", "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw").apply();
-            mEditor.putString("notesSheetId", "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0").apply();
-            mEditor.putString("announcementSheetId", "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0").apply();
-            mEditor.putString("miscSheetId", "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
-        }else if(mode.equals("release"))
+
+
+//    public void  validateYouTubeUrl() {
+//
+//        String youTubeURl = "https://www.youtube.com/watch?v=Btr8uOU0BkI";
+//        String pattern = "https?:\\/\\/(?:[0-9A-Z-]+\\.)?(?:youtu\\.be\\/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|<\\/a>))[?=&+%\\w]*";
+//
+//        if (!youTubeURl.isEmpty() && youTubeURl.matches(pattern)) {
+//            /// Valid youtube URL
+//            Log.v("youtubeUrl",youTubeURl);
+//        }
+//        else{
+//            // Not Valid youtube URL
+//            Log.v("falseyoutubeUrl",youTubeURl);
+//        }
+//    }
+
+    private String getVideoId(String url) {
+
+
+
+                Log.v("length", String.valueOf(url.length()));
+                if (url.contains("youtube.com")) {
+                    String trimmedFileId = url.substring(url.indexOf("?v=") + 3, url.indexOf("?v=") + 14);
+
+                    return  trimmedFileId;
+
+                }else if(url.contains("youtu.be"))
+                {
+                    return url.substring(url.length()-11);
+                }else
+                {
+                    return "Invalid Url";
+                }
+
+
+
+
+    }
+
+
+
+    private static final String YOUTUBE_FRAGMENT_TAG = "youtube";
+    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+    final JsonFactory jsonFactory = new GsonFactory();
+    GoogleAccountCredential credential;
+    private YouTubePlayer mYouTubePlayer;
+    private boolean mIsFullScreen = false;
+    private Intent intent;
+    private String expTitle;
+    private String expDesc;
+    private String expFullName;
+    private String expFileAttachment;
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    public void directLite(View view) {
+        this.setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void panToVideo(final String youtubeId) {
+        popPlayerFromBackStack();
+        YouTubePlayerFragment playerFragment = YouTubePlayerFragment
+                .newInstance();
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.detail_container, playerFragment,
+                        YOUTUBE_FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(null).commit();
+        playerFragment.initialize(Auth.KEY,
+                new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(
+                            YouTubePlayer.Provider provider,
+                            YouTubePlayer youTubePlayer, boolean b) {
+
+
+                        youTubePlayer.loadVideo(youtubeId);
+                        mYouTubePlayer = youTubePlayer;
+                        youTubePlayer
+                                .setPlayerStateChangeListener(t_VideoInfoWriterViaLink.this);
+                        mYouTubePlayer.setShowFullscreenButton(false);
+                    }
+
+                    @Override
+                    public void onInitializationFailure(
+                            YouTubePlayer.Provider provider,
+                            YouTubeInitializationResult result) {
+                        showErrorToast(result.toString());
+                    }
+                });
+    }
+
+    public boolean popPlayerFromBackStack() {
+        if (mIsFullScreen) {
+            mYouTubePlayer.setFullscreen(false);
+            return false;
+        }
+        if (getFragmentManager().findFragmentByTag(YOUTUBE_FRAGMENT_TAG) != null) {
+            getFragmentManager().popBackStack();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onAdStarted() {
+    }
+
+
+
+
+    @Override
+    public void onError(YouTubePlayer.ErrorReason errorReason) {
+        showErrorToast(errorReason.toString());
+    }
+
+    private void showErrorToast(String message) {
+//        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
+//                .show();
+        if(message.equals("UNKNOWN"))
         {
-            mEditor.putString("eventSheetId", "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw").apply();
-            mEditor.putString("notesSheetId", "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ").apply();
-            mEditor.putString("announcementSheetId", "116OBhXliG69OB5bKRAEwpmlOz21LCCWStniSuIR6wPI").apply();
-            mEditor.putString("miscSheetId", "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU  ").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+            Toast.makeText(getApplicationContext(), "Please Check your Youtube Link", Toast.LENGTH_SHORT)
+                    .show();
+
+            isYoutubeVerified = false;
+
         }
 
-
-
     }
 
-    public String  getEventSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("eventSheetId", "default_value_if_variable_not_found");
+    @Override
+    public void onLoaded(String arg0) {
     }
 
-    public String  getAnnouncementSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("announcementSheetId", "default_value_if_variable_not_found");
+    @Override
+    public void onLoading() {
     }
 
-    public String  getNoteSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("notesSheetId", "default_value_if_variable_not_found");
-
+    @Override
+    public void onVideoEnded() {
+        // popPlayerFromBackStack();
     }
 
-    public String  getMiscSheetId()
-    {
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("miscSheetId", "default_value_if_variable_not_found");
-
+    @Override
+    public void onVideoStarted() {
     }
 
-    public String getUploadedVideoInfoSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
+    @Override
+    public void onFullscreen(boolean fullScreen) {
+        mIsFullScreen = fullScreen;
     }
 
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.play, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    public interface Callbacks {
+
+        public void onVideoSelected(VideoData video);
+
+        public void onResume();
+
+    }
+
+    TextWatcher watch = new TextWatcher(){
+
+        @Override
+        public void afterTextChanged(Editable arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
+            String urlFieldValue = String.valueOf(s);
+            Log.v("output", urlFieldValue + urlFieldValue.length());
+            if(urlFieldValue.length()>=11)
+            {
+               String videoOutput =  getVideoId(urlFieldValue.trim());
+
+               if(!videoOutput.contains("Invalid Url"))
+                {
+                    panToVideo(videoOutput.trim());
+
+                }
+            }
+
+
+
+
+
+        }};
 }

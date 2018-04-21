@@ -1020,9 +1020,13 @@ public class t_notes_Viewer extends Activity
 
     public void onClickAddVideo(View view)
     {
-        Intent selectIntent = new Intent(t_notes_Viewer.this,youtubeUploadMainActivity.class);
+//        Intent selectIntent = new Intent(t_notes_Viewer.this,youtubeUploadMainActivity.class);
+        Intent selectIntent = new Intent(t_notes_Viewer.this,t_VideoInfoWriterViaLink.class);
+
         startActivity(selectIntent);
     }
+
+
 
 
     private void hideOnScroll()

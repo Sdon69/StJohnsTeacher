@@ -149,7 +149,7 @@ public class send_firebase_notification {
         departmentCollection[++arrayIncrementer] = "Management";
         departmentCollection[++arrayIncrementer] = "Education";
         departmentCollection[++arrayIncrementer] = "Science";
-        departmentCollection[++arrayIncrementer] = "Other Subjects";
+        departmentCollection[++arrayIncrementer] = "Other";
 
         String[] semesterCollection = new String[6];
         arrayIncrementer = 0;

@@ -16,16 +16,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +42,6 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.IOException;
-import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -335,7 +331,6 @@ public class t_Announcement_Writer extends Activity
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
-        Log.v("t_Announcement_Writer" , "Success");
         return connectionStatusCode == ConnectionResult.SUCCESS;
 
     }
@@ -440,7 +435,7 @@ public class t_Announcement_Writer extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                Log.v("MainActivity", "Wofdad");
+
 
                 results.add("");
 
@@ -454,15 +449,14 @@ public class t_Announcement_Writer extends Activity
 
                     if (Str1.contains("BonBlank88"))
                     {
-                        Log.v("if", Str1);
-                        Log.v("if", range);
+
 
                         break;
                     }
 
                     if (Str1.equals(sId))
                     {
-                        Log.v(sId, Str1);
+
                         idAvailcheck = false;
                     }
 
@@ -472,7 +466,7 @@ public class t_Announcement_Writer extends Activity
 
 
                     range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
-                    Log.v("for", range);
+
 
 
 
@@ -487,11 +481,16 @@ public class t_Announcement_Writer extends Activity
                 long timestamp = System.currentTimeMillis() / 1000;
                 //Getting System date
                 Calendar c = Calendar.getInstance();
-                System.out.println("Current time => " + c.getTime());
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 String formattedDate = df.format(c.getTime());
                 arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName ,
                         String.valueOf(--a),formattedDate,"None", String.valueOf(timestamp));
+
+                SharedPreferences mPrefs = getSharedPreferences("label", 0);
+                SharedPreferences.Editor mEditor = mPrefs.edit();
+                mEditor.putString("savedCheckBoxesAnnouncements", subCataegories).apply();
+
+
                 oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
@@ -505,7 +504,7 @@ public class t_Announcement_Writer extends Activity
 
             }
             else {
-                Log.v("Not available", sId);
+
 
 
             }
@@ -525,7 +524,7 @@ public class t_Announcement_Writer extends Activity
         protected void onPreExecute() {
             mOutputText.setText("");
             mProgress.show();
-            Log.v("t_Announcement_Writer" , "Worked");
+
 
 
         }
@@ -537,11 +536,11 @@ public class t_Announcement_Writer extends Activity
             mProgress.hide();
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
-                Log.v("t_Announcement_Writer" , "damn");
+
             } else {
                 output.add(0, " ");
-                mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_Announcement_Writer" , "Wofdad21");
+                mOutputText.setText(TextUtils.join("\n", output) );
+
                 successfulRecord();
 
 
@@ -564,23 +563,11 @@ public class t_Announcement_Writer extends Activity
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
-                    Log.v("t_Announcement_Writer" , "Worked2");
+
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
             }
-        }
-    }
-
-    private void Go(List<String> output) {
-        mProgress.hide();
-        if (output == null || output.size() == 0) {
-            mOutputText.setText("No results returned.");
-        } else {
-            output.add(0, "Data retrieved using the Google Sheets API:");
-            mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_Announcement_Writer" , "Wofdad");
-
         }
     }
 
@@ -630,12 +617,6 @@ public class t_Announcement_Writer extends Activity
         List<Object> data1 = new ArrayList<Object>();
         data1.add(timeStamp);
 
-
-
-
-
-
-
         List<List<Object>> data = new ArrayList<List<Object>>();
         data.add (data1);
 
@@ -652,11 +633,11 @@ public class t_Announcement_Writer extends Activity
         EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
 
 
-        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
-        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
-        CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
-        CheckBox lGConvention = (CheckBox) findViewById(R.id.gConvention);
-        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gSocialAwareness);
+        CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
+        CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
+        CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
+        CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
+        CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
         CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
 
         CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
@@ -687,20 +668,19 @@ public class t_Announcement_Writer extends Activity
 
         //Getting System date
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => " + c.getTime());
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = df.format(c.getTime());
-        Log.v("Date" , formattedDate);
+
 
         publishDate = formattedDate;
 
         //Checkboxes for Genre
-        art = lGTechnology.isChecked();
-        education= lGSocialAwareness.isChecked();
-        commerce = lGSocialGathering.isChecked();
+        art = lGArt.isChecked();
+        education= lGEducation.isChecked();
+        commerce = lGCommerce.isChecked();
         otherSubjects = lGOther.isChecked();
-        management = lGDebate.isChecked();
-        science = lGConvention.isChecked();
+        management = lGManagement.isChecked();
+        science = lGScience.isChecked();
 
         //Checkboxes for Semesters
         semesterOne = lSemster1.isChecked();
@@ -755,7 +735,7 @@ public class t_Announcement_Writer extends Activity
                                     }
 
                                     if (otherSubjects) {
-                                        subCataegories = subCataegories.concat("Other Subjects");
+                                        subCataegories = subCataegories.concat("Other");
                                     }
 
                                     if (semesterOne) {
@@ -852,57 +832,21 @@ public class t_Announcement_Writer extends Activity
         String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
         String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
 
+        String savedCheckboxes =  mPrefs.getString("savedCheckBoxesAnnouncements", "default_value_if_variable_not_found");
+
+        loadCheckBoxes(savedCheckboxes);
         fullName = FirstName.concat(" " + LastName);
 
-
-
-        String tableString = mPrefs.getString("table", "default_value_if_variable_not_found");
 
         savedPass = passString;
         savedId = idString;
 
-
-
-        //tableDetails
-        tableNo = mPrefs.getInt("tableNo", 1);
-        String AnnSheetId = mPrefs.getString("AnnSheetId", "1OKiX0QWm2VerdWhuLPF1NIoTEOXHpBFo9qNPgu9HH7Y");
-        gSavedAnnSheetId = AnnSheetId;
-
-
-
-
-
-        Log.v(passString , idString);
     }
+    
+    
 
 
 
-    public void saveNewWorkbookName(){
-
-
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-        mEditor.putInt("tableNo", tableNo++);
-
-        String tableIds[] = new String[10];
-
-        tableIds[0] ="a";
-        tableIds[1] ="1OKiX0QWm2VerdWhuLPF1NIoTEOXHpBFo9qNPgu9HH7Y";
-        tableIds[2] ="1CPkY8WUh1xK7oLPT3Fv33ZvD4XVQF40NB24GkhbOx60";
-
-
-
-        mEditor.putString("AnnSheetId", tableIds[tableNo]).commit();
-
-        gSavedAnnSheetId = tableIds[tableNo];
-
-
-
-
-        Log.v("Saved data" , sId);
-
-
-    }
 
     public void onClickAttendance(View v)
     {
@@ -1059,7 +1003,7 @@ public class t_Announcement_Writer extends Activity
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
-        Log.v("pre-Send","pre-Send " + subCataegories);
+
 
 
 
@@ -1073,71 +1017,83 @@ public class t_Announcement_Writer extends Activity
         startActivity(selectIntent);
     }
 
-    public void setSheetIds()
+
+    public void  loadCheckBoxes(String saveKey)
     {
-        String mode = "test";
 
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-
-        if(mode.equals("test")) {
-            mEditor.putString("eventSheetId", "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw").apply();
-            mEditor.putString("notesSheetId", "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0").apply();
-            mEditor.putString("announcementSheetId", "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0").apply();
-            mEditor.putString("miscSheetId", "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
-        }else if(mode.equals("release"))
+        String savedCheckBoxes = saveKey;
+        if(savedCheckBoxes != null)
         {
-            mEditor.putString("eventSheetId", "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw").apply();
-            mEditor.putString("notesSheetId", "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ").apply();
-            mEditor.putString("announcementSheetId", "116OBhXliG69OB5bKRAEwpmlOz21LCCWStniSuIR6wPI").apply();
-            mEditor.putString("miscSheetId", "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU  ").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
+            subCataegories = savedCheckBoxes;
+            String[] departmentCollection = new String[6];
+            String outputTopic =  "";
+            int arrayIncrementer = 0;
+            departmentCollection[arrayIncrementer] = "Art";
+            departmentCollection[++arrayIncrementer] = "Commerce";
+            departmentCollection[++arrayIncrementer] = "Management";
+            departmentCollection[++arrayIncrementer] = "Education";
+            departmentCollection[++arrayIncrementer] = "Science";
+            departmentCollection[++arrayIncrementer] = "Other";
+
+            String[] semesterCollection = new String[6];
+            arrayIncrementer = 0;
+            semesterCollection[arrayIncrementer] = "First Semester";
+            semesterCollection[++arrayIncrementer] = "Second Semester";
+            semesterCollection[++arrayIncrementer] = "Third Semester";
+            semesterCollection[++arrayIncrementer] = "Fourth Semester";
+            semesterCollection[++arrayIncrementer] = "Fifth Semester";
+            semesterCollection[++arrayIncrementer] = "Sixth and Above Semesters";
+
+            CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
+            CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
+            CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
+            CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
+            CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
+            CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+
+            CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
+            CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
+            CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
+            CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
+            CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
+            CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+
+
+            if (subCataegories.contains("Art")) {
+            lGArt.setChecked(true);
+            }  if (subCataegories.contains("Commerce")) {
+            lGCommerce.setChecked(true);
+        }  if (subCataegories.contains("Management")) {
+            lGManagement.setChecked(true);
+        }  if (subCataegories.contains("Education")) {
+            lGEducation.setChecked(true);
+        }  if (subCataegories.contains("Science")) {
+            lGScience.setChecked(true);
+        }  if (subCataegories.contains("Other")) {
+            lGOther.setChecked(true);
         }
 
 
 
+            if (subCataegories.contains("First Semester")) {
+                lSemster1.setChecked(true);
+            }  if (subCataegories.contains("Second Semester")) {
+            lSemster2.setChecked(true);
+        }  if (subCataegories.contains("Third Semester")) {
+            lSemster3.setChecked(true);
+        }  if (subCataegories.contains("Fourth Semester")) {
+            lSemster4.setChecked(true);
+        }  if (subCataegories.contains("Fifth Semester")) {
+            lSemster5.setChecked(true);
+        }  if (subCataegories.contains("Sixth and Above Semesters")) {
+            lSemster6.setChecked(true);
+        }
+
+
+        }
     }
 
-    public String  getEventSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("eventSheetId", "default_value_if_variable_not_found");
-    }
-
-    public String  getAnnouncementSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("announcementSheetId", "default_value_if_variable_not_found");
-    }
-
-    public String  getNoteSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("notesSheetId", "default_value_if_variable_not_found");
-
-    }
-
-    public String  getMiscSheetId()
-    {
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("miscSheetId", "default_value_if_variable_not_found");
-
-    }
-
-    public String getUploadedVideoInfoSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
-    }
 
 }
+  
+  

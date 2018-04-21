@@ -13,20 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.theironfoundry8890.stjohnsteacher.R;
-import com.theironfoundry8890.stjohnsteacher.dStudentProfile;
-import com.theironfoundry8890.stjohnsteacher.t_Announcement_Viewer;
-import com.theironfoundry8890.stjohnsteacher.t_Announcement_Writer;
 import com.theironfoundry8890.stjohnsteacher.t_VideoInfoWriter;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class ReviewActivity extends Activity {
     VideoView mVideoView;
@@ -121,11 +114,11 @@ public class ReviewActivity extends Activity {
         EditText lEventTitle =  (EditText) findViewById(R.id.videoTitle);
         EditText lEventDesc =  (EditText) findViewById(R.id.videoDescription);
 
-        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
-        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
-        CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
-        CheckBox lGConvention = (CheckBox) findViewById(R.id.gConvention);
-        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gSocialAwareness);
+        CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
+        CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
+        CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
+        CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
+        CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
         CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
 
         CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
@@ -142,12 +135,12 @@ public class ReviewActivity extends Activity {
 
 
         //Checkboxes for Genre
-        boolean art = lGTechnology.isChecked();
-        boolean education= lGSocialAwareness.isChecked();
-        boolean commerce = lGSocialGathering.isChecked();
+        boolean art = lGArt.isChecked();
+        boolean education= lGEducation.isChecked();
+        boolean commerce = lGCommerce.isChecked();
         boolean otherSubjects = lGOther.isChecked();
-        boolean management = lGDebate.isChecked();
-        boolean science = lGConvention.isChecked();
+        boolean management = lGManagement.isChecked();
+        boolean science = lGScience.isChecked();
 
         //Checkboxes for Semesters
         boolean semesterOne = lSemster1.isChecked();
@@ -195,7 +188,7 @@ public class ReviewActivity extends Activity {
                                     }
 
                                     if (otherSubjects) {
-                                        subCataegories = subCataegories.concat("Other Subjects");
+                                        subCataegories = subCataegories.concat("Other");
                                     }
 
                                     if (semesterOne) {

@@ -654,11 +654,11 @@ public class t_VideoInfoWriter extends Activity
         EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
         EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
 
-        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
-        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
-        CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
-        CheckBox lGConvention = (CheckBox) findViewById(R.id.gConvention);
-        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gSocialAwareness);
+        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gArt);
+        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gCommerce);
+        CheckBox lGDebate = (CheckBox) findViewById(R.id.gManagement);
+        CheckBox lGConvention = (CheckBox) findViewById(R.id.gScience);
+        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gEducation);
         CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
 
         CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
@@ -761,7 +761,7 @@ public class t_VideoInfoWriter extends Activity
                                 }
 
                                 if(otherSubjects){
-                                    subCataegories = subCataegories.concat("Other Subjects");
+                                    subCataegories = subCataegories.concat("Other");
                                 }
 
                                 if(semesterOne){

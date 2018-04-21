@@ -2,18 +2,6 @@ package com.theironfoundry8890.stjohnsteacher;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class sheetsIdCollection extends Activity {
 
@@ -21,7 +9,7 @@ public class sheetsIdCollection extends Activity {
 
     public void setSheetIds()
     {
-        String mode = "release";
+        String mode = "test";
 
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         SharedPreferences.Editor mEditor = mPrefs.edit();
@@ -47,7 +35,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getEventSheetId()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
           return  "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw";
 
@@ -59,7 +47,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getAnnouncementSheetId()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
             return  "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0";
 
@@ -71,7 +59,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getNoteSheetId()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
             return  "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0";
 
@@ -84,7 +72,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String  getMiscSheetId()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
             return  "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY";
 
@@ -97,7 +85,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String getUploadedVideoInfoSheetId()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
             return  "17o0GpXwWZskawufsMj-iH8wdbFx_2HZ6Jfjtc1JjjfU";
 
@@ -109,7 +97,7 @@ public class sheetsIdCollection extends Activity {
 
     public static String getApiKey()
     {
-        String mode = "release";
+        String mode = "test";
         if(mode.equals("test")) {
             return  "AIzaSyDhyP7p8FDixgOyGy0KdbHMXRRFCvaXpWc";
 
