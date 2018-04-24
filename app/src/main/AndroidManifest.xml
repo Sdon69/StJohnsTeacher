@@ -55,6 +55,7 @@
         <activity android:name=".t_Teacher_Profile"/>
         <activity android:name=".t_VideoInfoWriterViaLink"
             android:parentActivityName=".t_notes_Viewer"/>
+        <activity android:name=".timetableWriter"/>
         <service
             android:name="com.theironfoundry8890.stjohnsteacher.youtubeDataUploader.UploadService"
             android:exported="true" />

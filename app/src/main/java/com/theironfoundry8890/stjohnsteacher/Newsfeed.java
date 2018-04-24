@@ -2141,6 +2141,9 @@ public class Newsfeed extends Activity
             timetableVisible = true;
         }
 
+//
+//        Intent selectIntent = new Intent(Newsfeed.this,timetableWriter.class);
+//        startActivity(selectIntent);
 
     }
 

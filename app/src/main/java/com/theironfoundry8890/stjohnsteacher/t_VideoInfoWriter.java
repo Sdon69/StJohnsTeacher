@@ -107,8 +107,7 @@ public class t_VideoInfoWriter extends Activity
     private String sManagement ;
     private String sScience ;
 
-    private int tableNo;
-    private String gSavedAnnSheetId;
+
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -969,6 +968,9 @@ public class t_VideoInfoWriter extends Activity
             });
         }
     };
+
+
+
 
 
 }

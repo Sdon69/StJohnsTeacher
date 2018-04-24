@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mLayout"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#ffffff"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
+        >
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
+
+
+            <TextView
+                android:id="@+id/newsFeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="TimeTable Writer"
+
+                android:textStyle="bold"
+                android:textSize="16dp"
+
+
+                />
+            <View
+                android:layout_width="60dp"
+                android:layout_height="6dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorPrimary" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:paddingTop="10dp"
+            android:visibility="gone"
+            android:id="@+id/progressLayout"
+            >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+
+                android:id="@+id/progressCircle"
+                />
+            <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@drawable/loading_icon"-->
+            <!--android:id="@+id/progressImage"/>-->
+
+
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:onClick="onClickCopy"
+            android:background="?android:attr/selectableItemBackground"
+
+            >
+
+
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_margin="4dp"-->
+                <!--android:src="@drawable/timetable_logo"-->
+                <!--android:onClick="onClickTimetable"/>-->
+
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+                android:text="COPY"
+            android:layout_margin="4dp"
+                android:textColor="@color/colorPrimary"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:onClick="onClickProfileButton"
+            android:background="?android:attr/selectableItemBackground"
+
+            >
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:src="@drawable/profile" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:scrollbars="none">
+    <LinearLayout
+        android:id="@+id/timetableNewsfeedLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+        <LinearLayout
+            android:id="@+id/firstSemesterTimetableLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/timetable_input"
+                android:id="@+id/mondayTimetable"
+                /></LinearLayout><LinearLayout
+        android:id="@+id/secondSemesterTimetableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/timetable_input"
+            android:id="@+id/tuesdayTimetable"
+            />
+    </LinearLayout><LinearLayout
+        android:id="@+id/thirdSemesterTimetableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/timetable_input"
+            android:id="@+id/wednesdayTimetable"
+            /></LinearLayout>
+   
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/timetable_input"
+            android:id="@+id/thursdayTimetable"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/timetable_input"
+            android:id="@+id/fridayTimetable"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/timetable_input"
+            android:id="@+id/saturdayTimetable"
+            />
+    </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>
+
+

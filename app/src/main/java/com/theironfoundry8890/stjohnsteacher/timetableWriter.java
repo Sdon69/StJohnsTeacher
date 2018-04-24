@@ -10,16 +10,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,40 +43,65 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class t_Announcement_Writer extends Activity
+public class timetableWriter extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private Button mCallApiButton;
     ProgressDialog mProgress;
-
+    private String sFName;
+    private String sLName;
+    private String sClass;
+    private String sEmail;
+    private String sSection;
     private String sId;
+    private String sPhone;
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
     private boolean workbookEnd = false;
 
-    private String fullName;
-
-    private int a = 1;
+    private int a = 0;
     private float x1,x2;
     static final int MIN_DISTANCE = 150;
+
+    private String fullName;
+
+
+
+
 
     //Event Details
     private String eventTitle;
     private String eventDescription;
     private String publishDate;
+    private String eventDate;
     private String confirmPass;
     private String savedPass;
     private String savedId;
+    private String savedTable;
+
+    private String eventDay;
+    private String eventMonth;
+    private String eventYear;
+
+
+    private String lastDateOfRegistration;
+    private String lastDayOfRegistration;
+    private String lastMonthOfRegistration;
+    private String lastYearOfRegistration;
+
+    private String entryfees;
+
+    private String savedSpreadsheetId;
+
+
 
     //Subjects
     private boolean art = false;
@@ -103,7 +129,16 @@ public class t_Announcement_Writer extends Activity
     private String sScience ;
 
     private int tableNo;
-    private String gSavedAnnSheetId;
+    private String gSavedTableSheetId;
+
+
+
+
+
+
+
+
+
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -122,7 +157,11 @@ public class t_Announcement_Writer extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.t_announcement_writer);
+        setContentView(R.layout.timetable_writer);
+
+//        colorCheck();
+
+
 
         LinearLayout activityLayout = (LinearLayout) findViewById(R.id.mLayout);
 
@@ -132,9 +171,11 @@ public class t_Announcement_Writer extends Activity
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
 
+
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -149,15 +190,14 @@ public class t_Announcement_Writer extends Activity
         mProgress.setMessage("Loading ...");
         mProgress.setCanceledOnTouchOutside(false);
 
+
         setContentView(activityLayout);
 
+        setDays();
+
         loadData();
-//        EditText title =  (EditText) findViewById(R.id.eventTitle);
-//        title.addTextChangedListener(watch);
 
-        colorCheck();
-
-
+        // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -179,13 +219,12 @@ public class t_Announcement_Writer extends Activity
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+
             Toast.makeText(getApplicationContext(), "No Network Connection",
                     Toast.LENGTH_SHORT).show();
+            mOutputText.setText("No network connection available.");
         } else {
-
             new MakeRequestTask(mCredential).execute();
-
         }
     }
 
@@ -333,6 +372,7 @@ public class t_Announcement_Writer extends Activity
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
+
         return connectionStatusCode == ConnectionResult.SUCCESS;
 
     }
@@ -362,7 +402,7 @@ public class t_Announcement_Writer extends Activity
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                t_Announcement_Writer.this,
+                timetableWriter.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -400,23 +440,18 @@ public class t_Announcement_Writer extends Activity
             }
         }
 
-        /**
-         * Fetch a list of names and majors of students in a sample spreadsheet:
-         * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-         * @return List of names and majors
-         * @throws IOException
-         */
+
         private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = sheetsIdCollection.getAnnouncementSheetId();
+            String spreadsheetId = "1nQIkxGLryx6qAHMRQrJsZvQtyLPA5qRpJ7NXy731TrI";
             int a = 2;
             idAvailcheck = true;
-            String range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
+            String range =  "Feedback!".concat("A"+ a++ + ":S");
 
-            List<List<Object>> arrData;
+            List<List<Object>> arrData = getData(eventTitle,savedId , fullName);
 
             ValueRange oRange = new ValueRange();
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
-
+            oRange.setValues(arrData);
 
 
             List<ValueRange> oList = new ArrayList<>();
@@ -447,59 +482,31 @@ public class t_Announcement_Writer extends Activity
 
 
 
-                    String Str1 = String.valueOf(row.get(0));
-
-                    if (Str1.contains("BonBlank88"))
-                    {
 
 
-                        break;
-                    }
-
-                    if (Str1.equals(sId))
-                    {
-
-                        idAvailcheck = false;
-                    }
 
 
-                    range =  "Stj Teacher Notes!".concat("A"+ a++ + ":S");
+
+
+
+
+
+
+                    range =  "Feedback!".concat("A"+ a++ + ":S");
+
+
+
+
+
+
 
                 }
 
             }
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
-            if(idAvailcheck) {           // Check if id is not taken
-                long timestamp = System.currentTimeMillis() / 1000;
-                //Getting System date
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                String formattedDate = df.format(c.getTime());
-                arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName ,
-                        String.valueOf(--a),formattedDate,"None", String.valueOf(timestamp));
 
-                SharedPreferences mPrefs = getSharedPreferences("label", 0);
-                SharedPreferences.Editor mEditor = mPrefs.edit();
-                mEditor.putString("savedCheckBoxesAnnouncements", subCataegories).apply();
-
-
-                oRange.setValues(arrData);
                 BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
 
-                range = "Timestamp!B2:B";
-                oRange.setRange(range);
-                spreadsheetId =  sheetsIdCollection.getMiscSheetId();
-                arrData = getDataForTimeStamp(String.valueOf(timestamp));
-                oRange.setValues(arrData);
-                oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
-
-
-            }
-            else {
-
-
-
-            }
 
 
 
@@ -531,9 +538,8 @@ public class t_Announcement_Writer extends Activity
 
             } else {
                 output.add(0, " ");
-                mOutputText.setText(TextUtils.join("\n", output) );
+                mOutputText.setText(TextUtils.join("\n", output));
 
-                successfulRecord();
 
 
             }
@@ -551,7 +557,7 @@ public class t_Announcement_Writer extends Activity
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            t_Announcement_Writer.REQUEST_AUTHORIZATION);
+                            timetableWriter.REQUEST_AUTHORIZATION);
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
@@ -563,6 +569,18 @@ public class t_Announcement_Writer extends Activity
         }
     }
 
+    private void Go(List<String> output) {
+        mProgress.hide();
+        if (output == null || output.size() == 0) {
+            mOutputText.setText("No results returned.");
+        } else {
+            output.add(0, "Data retrieved using the Google Sheets API:");
+            mOutputText.setText(TextUtils.join("\n", output));
+
+
+        }
+    }
+
     public void onClick2(View v) {
 
         mOutputText.setText("");
@@ -571,231 +589,175 @@ public class t_Announcement_Writer extends Activity
 
     }
 
-
-    public void onClickAttachFiles(View v) {
-
-        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/androidAnnouncementWriter");
-        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
-        startActivity(webIntent);
-
-
-    }
-
-
-    public static List<List<Object>> getData (String pTitle , String pDesc,
-                                              String pCataegories , String pId
-            ,String fullN,String uniqueId,String pDate,String fileUrl,String timestamp)  {
+    public static List<List<Object>> getData (String feedback , String fullName,
+                                              String pId )  {
 
         List<Object> data1 = new ArrayList<Object>();
-        data1.add(pTitle);
-        data1.add(pDesc);
-        data1.add(pCataegories);
+        data1.add(feedback);
+        data1.add(fullName);
         data1.add(pId);
-        data1.add(fullN);
-        data1.add(uniqueId);
-        data1.add(pDate);
-        data1.add(fileUrl);
-        data1.add(timestamp);
+
+
+
+
+
 
         List<List<Object>> data = new ArrayList<List<Object>>();
         data.add (data1);
 
         return data;
     }
-
-
-    public static List<List<Object>> getDataForTimeStamp (String timeStamp)  {
-
-        List<Object> data1 = new ArrayList<Object>();
-        data1.add(timeStamp);
-
-        List<List<Object>> data = new ArrayList<List<Object>>();
-        data.add (data1);
-
-        return data;
-    }
-
 
     public void submitInfo(View view) {
 
 
 
         //Retriving data from layout
+
+//        EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
+//        DatePicker lLastdateofReg =  (DatePicker) findViewById(R.id.lastDateOfRegistration);
+//        DatePicker lDateEvent =  (DatePicker) findViewById(R.id.date_of_event);
+//        EditText lentryFees =  (EditText) findViewById(R.id.entryFees);
+//        EditText lpasswordConfirm =  (EditText) findViewById(R.id.pass_check);
+//
+//        CheckBox lGTechnology = (CheckBox) findViewById(R.id.gTechnology);
+//        CheckBox lGSocialGathering = (CheckBox) findViewById(R.id.gSocialGathering);
+//        CheckBox lGDebate = (CheckBox) findViewById(R.id.gDebate);
+//        CheckBox lGConvention = (CheckBox) findViewById(R.id.gConvention);
+//        CheckBox lGSocialAwareness = (CheckBox) findViewById(R.id.gSocialAwareness);
+//        CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+//
+//        CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
+//        CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
+//        CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
+//        CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
+//        CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
+//        CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+
+//        eventDescription = String.valueOf(lEventDesc.getText());
+
+
         EditText lEventTitle =  (EditText) findViewById(R.id.eventTitle);
-        EditText lEventDesc =  (EditText) findViewById(R.id.eventDesc);
-
-
-        CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
-        CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
-        CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
-        CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
-        CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
-        CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
-
-        CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
-        CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
-        CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
-        CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
-        CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
-        CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
-
-
-
-
-
-
-
-
-
-
-        //Event Details
         eventTitle = String.valueOf(lEventTitle.getText());
-        eventDescription = String.valueOf(lEventDesc.getText());
 
 
 
-
-
-
-
-        //Getting System date
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String formattedDate = df.format(c.getTime());
-
-
-        publishDate = formattedDate;
-
-        //Checkboxes for Genre
-        art = lGArt.isChecked();
-        education= lGEducation.isChecked();
-        commerce = lGCommerce.isChecked();
-        otherSubjects = lGOther.isChecked();
-        management = lGManagement.isChecked();
-        science = lGScience.isChecked();
-
-        //Checkboxes for Semesters
-        semesterOne = lSemster1.isChecked();
-        semesterTwo= lSemster2.isChecked();
-        semesterThree = lSemster3.isChecked();
-        semesterFour = lSemster4.isChecked();
-        semesterFive = lSemster5.isChecked();
-        semesterSix = lSemster6.isChecked();
-
-        //Converting above booleans to String so they can be used in public static list parameters
-        sArt = String.valueOf(art);
-        sEducation = String.valueOf(education);
-        sCommerce = String.valueOf(commerce);
-        sOtherSubjects = String.valueOf(otherSubjects);
-        sManagement = String.valueOf(management);
-        sScience = String.valueOf(science);
-
-
-
+//
+//        //Getting System date
+//        Calendar c = Calendar.getInstance();
+//        System.out.println("Current time => " + c.getTime());
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+//        String formattedDate = df.format(c.getTime());
+//
+//
+//        publishDate = formattedDate;
+//
+//        //Checkboxes for Genre
+//        art = lGTechnology.isChecked();
+//        education= lGSocialAwareness.isChecked();
+//        commerce = lGSocialGathering.isChecked();
+//        otherSubjects = lGOther.isChecked();
+//        management = lGDebate.isChecked();
+//        science = lGConvention.isChecked();
+//
+//        //Checkboxes for Semesters
+//        semesterOne = lSemster1.isChecked();
+//        semesterTwo= lSemster2.isChecked();
+//        semesterThree = lSemster3.isChecked();
+//        semesterFour = lSemster4.isChecked();
+//        semesterFive = lSemster5.isChecked();
+//        semesterSix = lSemster6.isChecked();
+//
+//        //Converting above booleans to String so they can be used in public static list parameters
+//        sArt = String.valueOf(art);
+//        sEducation = String.valueOf(education);
+//        sCommerce = String.valueOf(commerce);
+//        sOtherSubjects = String.valueOf(otherSubjects);
+//        sManagement = String.valueOf(management);
+//        sScience = String.valueOf(science);
+//
+//        //Converting above booleans to String so they can be used in public static list parameters
+//        /*sArt = String.valueOf(semesterOne);
+//        sEducation = String.valueOf(semesterTwo);
+//        sCommerce = String.valueOf(semesterThree);
+//        sOtherSubjects = String.valueOf(semesterFour);
+//        sManagement = String.valueOf(semesterFive);
+//        sScience = String.valueOf(semesterSix);*/
+//
+//
+//        //Password Security Check
+//        confirmPass = String.valueOf(lpasswordConfirm.getText());
 
 
 
 
 
         if (eventTitle.length() >= 1) {
-            if (eventDescription.length() >= 1) {
-                if (eventDescription.length() <= 49000) {
-                    if (true) {
-                        if (true) {
-                            if(art || commerce || management ||  science || education|| otherSubjects ) {
-                                if(semesterOne || semesterTwo || semesterThree || semesterFour || semesterFive || semesterSix) {
 
 
-                                    if (art) {
-                                        subCataegories = subCataegories.concat("Art");
-                                    }
 
-                                    if (commerce) {
-                                        subCataegories = subCataegories.concat("Commerce");
-                                    }
-
-                                    if (education) {
-                                        subCataegories = subCataegories.concat("Education");
-                                    }
-
-                                    if (management) {
-                                        subCataegories = subCataegories.concat("Management");
-                                    }
-
-                                    if (science) {
-                                        subCataegories = subCataegories.concat("Science");
-                                    }
-
-                                    if (otherSubjects) {
-                                        subCataegories = subCataegories.concat("Other");
-                                    }
-
-                                    if (semesterOne) {
-                                        subCataegories = subCataegories.concat("First Semester");
-                                    }
-
-                                    if (semesterTwo) {
-                                        subCataegories = subCataegories.concat("Second Semester");
-                                    }
-
-                                    if (semesterThree) {
-                                        subCataegories = subCataegories.concat("Third Semester");
-                                    }
-
-                                    if (semesterFour) {
-                                        subCataegories = subCataegories.concat("Fourth Semester");
-                                    }
-
-                                    if (semesterFive) {
-                                        subCataegories = subCataegories.concat("Fifth Semester");
-                                    }
-
-                                    if (semesterSix) {
-                                        subCataegories = subCataegories.concat("Sixth and Above Semesters");
-                                    }
-
-                                    mOutputText.setText("");
-                                    getResultsFromApi();
-                                }else{
-                                    Toast.makeText(getApplicationContext(), "Atleast Choose One Semester",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }else {
-                                Toast.makeText(getApplicationContext(), "Atleast Choose One Department",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                                mOutputText.setText("");
+                                getResultsFromApi();
 
 
-                        }
-
-                        else {
-
-                            Toast.makeText(getApplicationContext(), "Password dont match",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Minimum size of Password is 8 characters",
-                                Toast.LENGTH_SHORT).show();
-
-                    }
-                } else {
-
-                    Toast.makeText(getApplicationContext(), "Notes field character limit is 49000",
-                            Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(getApplicationContext(), "Notes field is blank",
-                        Toast.LENGTH_SHORT).show();
-            }
         }else
         {
-            Toast.makeText(getApplicationContext(), "Concept field is blank",
+            Toast.makeText(getApplicationContext(), "Feedback field is blank",
                     Toast.LENGTH_SHORT).show();
         }
-
-
+//
+////Concatenating a string to check which cataegory is present
+//        if(art)
+//        {
+//            subCataegories = subCataegories.concat("Art");
+//        }
+//
+//        if(commerce)
+//        {
+//            subCataegories = subCataegories.concat("Commerce");
+//        }
+//
+//        if(education)
+//        {
+//            subCataegories = subCataegories.concat("Education");
+//        }
+//
+//        if(management){
+//            subCataegories = subCataegories.concat("Management");
+//        }
+//
+//        if(science){
+//            subCataegories = subCataegories.concat("Science");
+//        }
+//
+//        if(otherSubjects){
+//            subCataegories = subCataegories.concat("Other");
+//        }
+//
+//        if(semesterOne){
+//            subCataegories = subCataegories.concat("First Semester");
+//        }
+//
+//        if(semesterTwo){
+//            subCataegories = subCataegories.concat("Second Semester");
+//        }
+//
+//        if(semesterThree){
+//            subCataegories = subCataegories.concat("Third Semester");
+//        }
+//
+//        if(semesterFour){
+//            subCataegories = subCataegories.concat("Fourth Semester");
+//        }
+//
+//        if(semesterFive){
+//            subCataegories = subCataegories.concat("Fifth Semester");
+//        }
+//
+//        if(semesterSix){
+//            subCataegories = subCataegories.concat("Sixth and Above Semesters");
+//        }
+//
 
 
 
@@ -803,46 +765,44 @@ public class t_Announcement_Writer extends Activity
 
     }
 
-    public void displayAvailability() {
-
-
-        if (!idAvailcheck) {
-            Toast.makeText(getApplicationContext(), " Id already taken",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
 
 
 
     public void loadData(){
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        String idString = mPrefs.getString("ttag", "default_value_if_variable_not_found");
-        String passString = mPrefs.getString("tpass", "default_value_if_variable_not_found");
+        String idString = mPrefs.getString("tag", "default_value_if_variable_not_found");
+        String passString = mPrefs.getString("pass", "default_value_if_variable_not_found");
 
-        String FirstName =  mPrefs.getString("tFirstName", "default_value_if_variable_not_found");
-        String LastName =  mPrefs.getString("tLastName", "default_value_if_variable_not_found");
+        String FirstName = mPrefs.getString("FirstName", "default_value_if_variable_not_found");
+        String LastName = mPrefs.getString("LastName", "default_value_if_variable_not_found");
 
-        String savedCheckboxes =  mPrefs.getString("savedCheckBoxesAnnouncements", "default_value_if_variable_not_found");
-
-        loadCheckBoxes(savedCheckboxes);
         fullName = FirstName.concat(" " + LastName);
 
+
+
+        String tableString = mPrefs.getString("table", "default_value_if_variable_not_found");
 
         savedPass = passString;
         savedId = idString;
 
+
+
+            //tableDetails
+            tableNo = mPrefs.getInt("tableNo", 1);
+            String tableSheetId = mPrefs.getString("tableSheetId", "1g6CIOrbqXTrMOMnlrgi_S2HpaABcUqPd_vch8HHSujM");
+            gSavedTableSheetId = tableSheetId;
+
+
+
+
+
+
     }
-    
-    
-
-
 
 
     public void onClickAttendance(View v)
     {
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Attendance.class);
+        Intent selectIntent = new Intent(timetableWriter.this,timetableWriter.class);
         startActivity(selectIntent);
 
 
@@ -850,7 +810,7 @@ public class t_Announcement_Writer extends Activity
 
     public void onClickAnnouncement(View v)
     {
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Announcement_Viewer.class);
+        Intent selectIntent = new Intent(timetableWriter.this,t_Announcement_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -858,7 +818,7 @@ public class t_Announcement_Writer extends Activity
 
     public void onClickNotes(View v)
     {
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,t_notes_Viewer.class);
+        Intent selectIntent = new Intent(timetableWriter.this,t_notes_Viewer.class);
         startActivity(selectIntent);
 
 
@@ -866,7 +826,7 @@ public class t_Announcement_Writer extends Activity
 
     public void onClickEvents(View v)
     {
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,EventViewer.class);
+        Intent selectIntent = new Intent(timetableWriter.this,EventViewer.class);
         startActivity(selectIntent);
 
 
@@ -874,66 +834,12 @@ public class t_Announcement_Writer extends Activity
 
     public void onClickProfile(View v)
     {
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,Newsfeed.class);
+        Intent selectIntent = new Intent(timetableWriter.this,Newsfeed.class);
         startActivity(selectIntent);
 
 
     }
 
-
-    private void swipe() {
-
-        TextView head2 = (TextView) findViewById(R.id.head2);
-        TextView head1 = (TextView) findViewById(R.id.head);
-
-        Button button1 = (Button) findViewById(R.id.Button1);
-        Button button2 = (Button) findViewById(R.id.Button2);
-        Button button3 = (Button) findViewById(R.id.Button3);
-
-
-
-        if(a==0){
-
-            Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Attendance.class);
-            startActivity(selectIntent);
-
-        }
-
-
-        if(a==1) {
-
-            Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Announcement_Viewer.class);
-            startActivity(selectIntent);
-
-
-        }
-
-        if(a==2) {
-            Intent selectIntent = new Intent(t_Announcement_Writer.this,t_notes_Viewer.class);
-            startActivity(selectIntent);
-        }
-
-        if(a==3) {
-            Intent selectIntent = new Intent(t_Announcement_Writer.this,EventViewer.class);
-            startActivity(selectIntent);
-
-        }
-
-        if(a==4){
-            Intent selectIntent = new Intent(t_Announcement_Writer.this,Newsfeed.class);
-            startActivity(selectIntent);
-
-        }
-
-
-
-
-
-
-
-
-
-    }
 
 
 
@@ -949,7 +855,7 @@ public class t_Announcement_Writer extends Activity
 
         if (a == 0) {
 
-            attendanceImageView.setImageResource(R.drawable.attendance_grey);
+            attendanceImageView.setImageResource(R.drawable.announcements);
             announcementImageView.setImageResource(R.drawable.announcements);
             notesImageView.setImageResource(R.drawable.notes);
             eventsImageView.setImageResource(R.drawable.events);
@@ -991,130 +897,311 @@ public class t_Announcement_Writer extends Activity
 
     }
 
-
-    public void successfulRecord()
+    public void setDays()
     {
-        Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
+        String daysOfTheWeek = "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+        String daysOfTheWeekArray [] = daysOfTheWeek.split(",");
 
-
-
-
-
-
-        send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"announcement");
-
-
-
-        Intent selectIntent = new Intent(t_Announcement_Writer.this,t_Announcement_Viewer.class);
-        startActivity(selectIntent);
-    }
-
-
-    public void  loadCheckBoxes(String saveKey)
-    {
-
-        String savedCheckBoxes = saveKey;
-        if(savedCheckBoxes != null)
+        for(int i=1;i<=6;i++)
         {
-            subCataegories = savedCheckBoxes;
-            String[] departmentCollection = new String[6];
-            String outputTopic =  "";
-            int arrayIncrementer = 0;
-            departmentCollection[arrayIncrementer] = "Art";
-            departmentCollection[++arrayIncrementer] = "Commerce";
-            departmentCollection[++arrayIncrementer] = "Management";
-            departmentCollection[++arrayIncrementer] = "Education";
-            departmentCollection[++arrayIncrementer] = "Science";
-            departmentCollection[++arrayIncrementer] = "Other";
+            View dayTimetableView=  findViewById(R.id.mondayTimetable);
+            TextView dayOftheWeek;
+            if(i==1)
+            {
+               dayTimetableView =  findViewById(R.id.mondayTimetable);
 
-            String[] semesterCollection = new String[6];
-            arrayIncrementer = 0;
-            semesterCollection[arrayIncrementer] = "First Semester";
-            semesterCollection[++arrayIncrementer] = "Second Semester";
-            semesterCollection[++arrayIncrementer] = "Third Semester";
-            semesterCollection[++arrayIncrementer] = "Fourth Semester";
-            semesterCollection[++arrayIncrementer] = "Fifth Semester";
-            semesterCollection[++arrayIncrementer] = "Sixth and Above Semesters";
+            }
+            else if(i==2)
+            {
+                dayTimetableView =  findViewById(R.id.tuesdayTimetable);
+            }
+            else if(i==3)
+            {
+                dayTimetableView =  findViewById(R.id.wednesdayTimetable);
+            }
+            else if(i==4)
+            {
+                dayTimetableView =  findViewById(R.id.thursdayTimetable);
+            }
+            else if(i==5)
+            {
+                dayTimetableView =  findViewById(R.id.fridayTimetable);
+            }
+            else if(i==6)
+            {
+                dayTimetableView =  findViewById(R.id.saturdayTimetable);
+            }
 
-            CheckBox lGArt = (CheckBox) findViewById(R.id.gArt);
-            CheckBox lGCommerce = (CheckBox) findViewById(R.id.gCommerce);
-            CheckBox lGManagement = (CheckBox) findViewById(R.id.gManagement);
-            CheckBox lGScience = (CheckBox) findViewById(R.id.gScience);
-            CheckBox lGEducation = (CheckBox) findViewById(R.id.gEducation);
-            CheckBox lGOther = (CheckBox) findViewById(R.id.gOther);
+            dayOftheWeek = (TextView) dayTimetableView.findViewById(R.id.dayOfTheWeek);
+            dayOftheWeek.setText(daysOfTheWeekArray[i]);
 
-            CheckBox lSemster1 = (CheckBox) findViewById(R.id.gSemester1);
-            CheckBox lSemster2 = (CheckBox) findViewById(R.id.gSemester2);
-            CheckBox lSemster3 = (CheckBox) findViewById(R.id.gSemester3);
-            CheckBox lSemster4 = (CheckBox) findViewById(R.id.gSemester4);
-            CheckBox lSemster5 = (CheckBox) findViewById(R.id.gSemester5);
-            CheckBox lSemster6 = (CheckBox) findViewById(R.id.gSemester6);
+// Get a reference to the AutoCompleteTextView in the layout
 
+// Get the string array
+            String[] retrievedTimeSlotsResource = getResources().getStringArray(R.array.timeSlots);
 
-            if (subCataegories.contains("Art")) {
-            lGArt.setChecked(true);
-            }  if (subCataegories.contains("Commerce")) {
-            lGCommerce.setChecked(true);
-        }  if (subCataegories.contains("Management")) {
-            lGManagement.setChecked(true);
-        }  if (subCataegories.contains("Education")) {
-            lGEducation.setChecked(true);
-        }  if (subCataegories.contains("Science")) {
-            lGScience.setChecked(true);
-        }  if (subCataegories.contains("Other")) {
-            lGOther.setChecked(true);
-        }
+            String[] timeSlotsArray = retrievedTimeSlotsResource;
 
 
+// Create the adapter and set it to the AutoCompleteTextView
 
-            if (subCataegories.contains("First Semester")) {
-                lSemster1.setChecked(true);
-            }  if (subCataegories.contains("Second Semester")) {
-            lSemster2.setChecked(true);
-        }  if (subCataegories.contains("Third Semester")) {
-            lSemster3.setChecked(true);
-        }  if (subCataegories.contains("Fourth Semester")) {
-            lSemster4.setChecked(true);
-        }  if (subCataegories.contains("Fifth Semester")) {
-            lSemster5.setChecked(true);
-        }  if (subCataegories.contains("Sixth and Above Semesters")) {
-            lSemster6.setChecked(true);
-        }
+            AutoCompleteTextView timeSlot0 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot0);
+            String timeSlot0String = String.valueOf(timeSlot0.getText());
 
+            AutoCompleteTextView timeSlot1 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot1);
+            String timeSlot1String = String.valueOf(timeSlot1.getText());
+
+            AutoCompleteTextView timeSlot2 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot2);
+            String timeSlot2String = String.valueOf(timeSlot2.getText());
+
+            AutoCompleteTextView timeSlot3 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot3);
+            String timeSlot3String = String.valueOf(timeSlot3.getText());
+
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<String>(this, R.layout.text_view_timetable_input, timeSlotsArray);
+            timeSlot0.setAdapter(adapter);
+            timeSlot1.setAdapter(adapter);
+            timeSlot2.setAdapter(adapter);
+            timeSlot3.setAdapter(adapter);
 
         }
+
+
     }
 
-//    TextWatcher watch = new TextWatcher(){
-//
-//        @Override
-//        public void afterTextChanged(Editable arg0) {
-//            // TODO Auto-generated method stub
-//
-//        }
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-//                                      int arg3) {
-//            // TODO Auto-generated method stub
-//
-//        }
-//
-//        @Override
-//        public void onTextChanged(CharSequence s, int a, int b, int c) {
-//            // TODO Auto-generated method stub
-//            String title = String.valueOf(s);
-//            EditText descriptionEditText =   (EditText) findViewById(R.id.eventDesc);
-//            descriptionEditText.setText("Below are notes explaining " + title + ".");
-//
-//
-//
-//
-//
-//
-//
-//        }};
+    public void scanData()
+    {
+        String daysOfTheWeek = "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+        String daysOfTheWeekArray [] = daysOfTheWeek.split(",");
+        String submitString = "";
+        String timeSlot0String="";
+        String timeSlot1String="";
+        String timeSlot2String="";
+        String timeSlot3String="";
+        for(int i=1;i<=6;i++)
+        {
+            View dayTimetableView=  findViewById(R.id.mondayTimetable);
+            TextView dayOftheWeek;
+            if(i==1)
+            {
+                dayTimetableView =  findViewById(R.id.mondayTimetable);
+
+            }
+            else if(i==2)
+            {
+                dayTimetableView =  findViewById(R.id.tuesdayTimetable);
+            }
+            else if(i==3)
+            {
+                dayTimetableView =  findViewById(R.id.wednesdayTimetable);
+            }
+            else if(i==4)
+            {
+                dayTimetableView =  findViewById(R.id.thursdayTimetable);
+            }
+            else if(i==5)
+            {
+                dayTimetableView =  findViewById(R.id.fridayTimetable);
+            }
+            else if(i==6)
+            {
+                dayTimetableView =  findViewById(R.id.saturdayTimetable);
+            }
+
+            dayOftheWeek = (TextView) dayTimetableView.findViewById(R.id.dayOfTheWeek);
+            dayOftheWeek.setText(daysOfTheWeekArray[i]);
+
+// Get a reference to the AutoCompleteTextView in the layout
+
+// Get the string array
+            String[] retrievedTimeSlotsResource = getResources().getStringArray(R.array.timeSlots);
+
+            String[] timeSlotsArray = retrievedTimeSlotsResource;
+
+
+// Create the adapter and set it to the AutoCompleteTextView
+
+            AutoCompleteTextView timeSlot0 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot0);
+             timeSlot0String = String.valueOf(timeSlot0.getText());
+
+            AutoCompleteTextView timeSlot1 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot1);
+             timeSlot1String = String.valueOf(timeSlot1.getText());
+
+            AutoCompleteTextView timeSlot2 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot2);
+             timeSlot2String = String.valueOf(timeSlot2.getText());
+
+            AutoCompleteTextView timeSlot3 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot3);
+             timeSlot3String = String.valueOf(timeSlot3.getText());
+
+            AutoCompleteTextView subjectSlot0 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot0);
+
+            AutoCompleteTextView subjectSlot1 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot1);
+
+            AutoCompleteTextView subjectSlot2 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot2);
+
+            AutoCompleteTextView subjectSlot3 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot3);
+
+
+            String subjectSlot0String = String.valueOf(subjectSlot0.getText());
+            String subjectSlot1String = String.valueOf(subjectSlot1.getText());
+            String subjectSlot2String = String.valueOf(subjectSlot2.getText());
+            String subjectSlot3String = String.valueOf(subjectSlot3.getText());
+
+            if(i!=6)
+           submitString = submitString + subjectSlot0String + "<subjects5432>"+ subjectSlot1String  +"<subjects5432>"+ subjectSlot2String +"<subjects5432>"+ subjectSlot3String +"<subjects5432><days5548>";
+                   else
+                submitString = submitString +  subjectSlot0String + "<subjects5432>"+ subjectSlot1String  +"<subjects5432>"+ subjectSlot2String +"<subjects5432>"+ subjectSlot3String +"<subjects5432>";
+
+
+
+        }
+
+        submitString =
+                "<semester6643>1" +
+                "<type6280>" + timeSlot0String +
+                "<time2298>  " + timeSlot1String +  " <time2298>" + timeSlot2String + "<time2298> " +  timeSlot3String + "<type6280>"  + submitString;
+
+        Log.v("submitString",submitString);
+    }
+
+    public void setDummyValues()
+    {
+        String daysOfTheWeek = "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+        String daysOfTheWeekArray [] = daysOfTheWeek.split(",");
+
+        for(int i=1;i<=6;i++)
+        {
+            View dayTimetableView=  findViewById(R.id.mondayTimetable);
+            TextView dayOftheWeek;
+            if(i==1)
+            {
+                dayTimetableView =  findViewById(R.id.mondayTimetable);
+
+            }
+            else if(i==2)
+            {
+                dayTimetableView =  findViewById(R.id.tuesdayTimetable);
+            }
+            else if(i==3)
+            {
+                dayTimetableView =  findViewById(R.id.wednesdayTimetable);
+            }
+            else if(i==4)
+            {
+                dayTimetableView =  findViewById(R.id.thursdayTimetable);
+            }
+            else if(i==5)
+            {
+                dayTimetableView =  findViewById(R.id.fridayTimetable);
+            }
+            else if(i==6)
+            {
+                dayTimetableView =  findViewById(R.id.saturdayTimetable);
+            }
+
+            dayOftheWeek = (TextView) dayTimetableView.findViewById(R.id.dayOfTheWeek);
+            dayOftheWeek.setText(daysOfTheWeekArray[i]);
+
+// Get a reference to the AutoCompleteTextView in the layout
+
+// Get the string array
+            String[] retrievedTimeSlotsResource = getResources().getStringArray(R.array.timeSlots);
+
+            String[] timeSlotsArray = retrievedTimeSlotsResource;
+
+
+// Create the adapter and set it to the AutoCompleteTextView
+
+
+            AutoCompleteTextView timeSlot0 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot0);
+
+            AutoCompleteTextView timeSlot1 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot1);
+
+            AutoCompleteTextView timeSlot2 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot2);
+
+            AutoCompleteTextView timeSlot3 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.timeSlot3);
+
+            AutoCompleteTextView subjectSlot0 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot0);
+
+            AutoCompleteTextView subjectSlot1 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot1);
+
+            AutoCompleteTextView subjectSlot2 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot2);
+
+            AutoCompleteTextView subjectSlot3 = (AutoCompleteTextView) dayTimetableView.findViewById(R.id.subjectSlot3);
+
+
+
+            timeSlot0.setText("10:10-10:20");
+            timeSlot1.setText("10:10-10:20");
+            timeSlot2.setText("10:10-10:20");
+            timeSlot3.setText("10:10-10:20");
+
+            subjectSlot0.setText("RM");
+            subjectSlot1.setText("CM");
+            subjectSlot2.setText("DM");
+            subjectSlot3.setText("KM");
+
+        }
+
+
+    }
+
+    public void scanPeriods()
+    {
+        String daysOfTheWeek = "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+        String daysOfTheWeekArray [] = daysOfTheWeek.split(",");
+        ArrayList timeSlotsOfTheWeek = new ArrayList();
+        for(int i=1;i<=6;i++)
+        {
+            View dayTimetableView=  findViewById(R.id.mondayTimetable);
+            TextView dayOftheWeek;
+            if(i==1)
+            {
+                dayTimetableView =  findViewById(R.id.mondayTimetable);
+
+            }
+            else if(i==2)
+            {
+                dayTimetableView =  findViewById(R.id.tuesdayTimetable);
+            }
+            else if(i==3)
+            {
+                dayTimetableView =  findViewById(R.id.wednesdayTimetable);
+            }
+            else if(i==4)
+            {
+                dayTimetableView =  findViewById(R.id.thursdayTimetable);
+            }
+            else if(i==5)
+            {
+                dayTimetableView =  findViewById(R.id.fridayTimetable);
+            }
+            else if(i==6)
+            {
+                dayTimetableView =  findViewById(R.id.saturdayTimetable);
+            }
+
+            dayOftheWeek = (TextView) dayTimetableView.findViewById(R.id.dayOfTheWeek);
+            dayOftheWeek.setText(daysOfTheWeekArray[i]);
+
+
+
+
+
+        }
+
+
+    }
+
+
+    public void onClickCopy(View v)
+    {
+        Log.v("copy","copy");
+        setDummyValues();
+        scanData();
+
+    }
+
 
 }
-  
-  
+

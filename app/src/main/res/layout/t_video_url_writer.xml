@@ -50,7 +50,8 @@
                     android:hint="Title"
                     android:maxLength="80"
                     android:textColorHint="#c0cce0"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="onClickTitle"/>
 
                 <EditText
                     android:id="@+id/eventDesc"
@@ -67,7 +68,8 @@
                     android:hint="Video link eg. 'https://www.youtube.com/watch?v=IV_m_uZOUgI' without inverted commas."
                     android:maxLength="49000"
                     android:textColorHint="#c0cce0"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="onClickUrlField"/>
 
                 <FrameLayout
                     android:id="@+id/container"

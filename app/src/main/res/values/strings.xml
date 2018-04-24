@@ -111,6 +111,17 @@
 
     </string-array>
 
+
+    <string-array name="timeSlots">
+        <item>10:10–10:55</item>
+        <item>10:55–11:40</item>
+        <item>11:40–12:25</item>
+        <item>12:25–13:10</item>
+       </string-array>
+
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

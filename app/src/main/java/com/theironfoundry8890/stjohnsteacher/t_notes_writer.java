@@ -14,7 +14,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -192,7 +194,8 @@ public class t_notes_writer extends Activity
         mProgress.setMessage("Loading ...");
         mProgress.setCanceledOnTouchOutside(false);
         setContentView(activityLayout);
-
+        EditText title = (EditText) findViewById(R.id.eventTitle);
+        title.addTextChangedListener(watch);
         loadData();
 
         // Initialize credentials and service object.
@@ -1231,5 +1234,36 @@ public class t_notes_writer extends Activity
 
         }
     }
+
+
+    TextWatcher watch = new TextWatcher(){
+
+        @Override
+        public void afterTextChanged(Editable arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
+            String title = String.valueOf(s);
+            EditText descriptionEditText = (EditText) findViewById(R.id.eventDesc);
+            descriptionEditText.setText("Below are notes explaining " + title + ".");
+
+
+
+
+
+
+
+        }};
 }
 

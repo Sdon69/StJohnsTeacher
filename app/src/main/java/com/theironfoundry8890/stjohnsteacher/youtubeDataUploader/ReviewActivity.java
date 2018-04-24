@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,9 @@ public class ReviewActivity extends Activity {
         }
         mFileUri = intent.getData();
         loadAccount();
+
+        EditText title =  (EditText) findViewById(R.id.videoTitle);
+        title.addTextChangedListener(watch);
         SharedPreferences mPrefs = getSharedPreferences("label", 0);
         String savedCheckboxes =  mPrefs.getString("savedCheckBoxesVideoViaUpload", "default_value_if_variable_not_found");
 
@@ -355,4 +360,33 @@ public class ReviewActivity extends Activity {
         }
     }
 
+    TextWatcher watch = new TextWatcher(){
+
+        @Override
+        public void afterTextChanged(Editable arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
+            String title = String.valueOf(s);
+            EditText descriptionEditText = (EditText) findViewById(R.id.videoDescription);
+            descriptionEditText.setText("Below is a video explaining " + title + ".");
+
+
+
+
+
+
+
+        }};
 }

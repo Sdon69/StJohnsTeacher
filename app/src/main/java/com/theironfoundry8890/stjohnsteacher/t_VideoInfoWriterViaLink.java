@@ -74,6 +74,7 @@ public class t_VideoInfoWriterViaLink extends Activity
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
     private boolean workbookEnd = false;
+    private String selectedField;
 
     private String fullName;
 
@@ -611,6 +612,22 @@ public class t_VideoInfoWriterViaLink extends Activity
         getResultsFromApi();
 
 
+    }
+
+    public void onClickUrlField(View v) {
+
+    selectedField = "selectedLink";
+        EditText youtubeUrl = (EditText) findViewById(R.id.videoUrl);
+        youtubeUrl.addTextChangedListener(watch);
+
+
+    }
+
+    public void onClickTitle(View v)
+    {
+        selectedField = "selectedTitle";
+        EditText titleEditTexr = (EditText) findViewById(R.id.eventTitle);
+        titleEditTexr.addTextChangedListener(watch);
     }
 
 
@@ -1190,18 +1207,21 @@ public class t_VideoInfoWriterViaLink extends Activity
         public void onTextChanged(CharSequence s, int a, int b, int c) {
             // TODO Auto-generated method stub
             String urlFieldValue = String.valueOf(s);
-            Log.v("output", urlFieldValue + urlFieldValue.length());
-            if(urlFieldValue.length()>=11)
-            {
-               String videoOutput =  getVideoId(urlFieldValue.trim());
 
-               if(!videoOutput.contains("Invalid Url"))
-                {
-                    panToVideo(videoOutput.trim());
+            if(selectedField.equals("selectedLink")) {
+                if (urlFieldValue.length() >= 11) {
+                    String videoOutput = getVideoId(urlFieldValue.trim());
 
+                    if (!videoOutput.contains("Invalid Url")) {
+                        panToVideo(videoOutput.trim());
+
+                    }
                 }
+            }else if(selectedField.equals("selectedTitle"))
+            {
+                EditText description =  (EditText) findViewById(R.id.eventDesc);
+                description.setText("Below is a video explaining " + urlFieldValue + ".");
             }
-
 
 
 
@@ -1281,5 +1301,7 @@ public class t_VideoInfoWriterViaLink extends Activity
 
         }
     }
+
+
 
 }
