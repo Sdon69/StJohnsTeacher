@@ -65,6 +65,8 @@ public class t_SignUp extends Activity
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
+    private boolean isEmailAvailable = true;
+    private boolean isPhoneNoAvailable = true;
     private boolean sVirginity;
 
 
@@ -387,6 +389,8 @@ public class t_SignUp extends Activity
             String spreadsheetId = "1wW2WXPzQnS0uZrZmhe-3OsHMSIjx3SfSRJQp0pUbqkQ";
             int a = 2;
             idAvailcheck = true;
+            isEmailAvailable = true;
+            isPhoneNoAvailable = true;
             String range = "Teacher Data!".concat("A"+ a++ + ":H");
 
             List<List<Object>> arrData = getData(sId , sPassword ,sFName,sLName,sEmail,sPhone);
@@ -418,7 +422,6 @@ public class t_SignUp extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                Log.v("MainActivity", "Wofdad");
 
                 results.add("");
 
@@ -429,20 +432,34 @@ public class t_SignUp extends Activity
 
 
                     String Str1 = String.valueOf(row.get(0));
+//                    String retrievedPhoneNo = String.valueOf(row.get(5));
+//                    String retrievedEmailId = String.valueOf(row.get(4));
 
                     if (Str1.equals("0"))
                     {
-                        Log.v("if", Str1);
-                        Log.v("if", range);
+
 
                         break;
                     }
 
+
                     if (Str1.equals(sId))
                     {
-                        Log.v(sId, Str1);
                         idAvailcheck = false;
+                        break;
                     }
+//                    else if (retrievedPhoneNo.equals(sPhone))
+//                    {
+//                        isPhoneNoAvailable = false;
+//                        break;
+//                    }
+//                    else if (retrievedEmailId.equals(sEmail))
+//                    {
+//                        isEmailAvailable = false;
+//                        break;
+//                    }
+
+
 
 
 
@@ -450,7 +467,7 @@ public class t_SignUp extends Activity
 
 
                     range = "Teacher Data!".concat("A"+ a++ + ":H");
-                    Log.v("for", range);
+
 
 
 
@@ -461,19 +478,11 @@ public class t_SignUp extends Activity
 
             }
             oRange.setRange(range); // I NEED THE NUMBER OF THE LAST ROW
-            if(idAvailcheck) {           // Check if id is not taken
+            if(idAvailcheck && isPhoneNoAvailable && isEmailAvailable) {           // Check if id is not taken
 
-
-
-                BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest).execute();
-
-
-
-
-
-
-
-            }
+                BatchUpdateValuesResponse oResp1 = mService.spreadsheets().values().batchUpdate(spreadsheetId, oRequest)
+                        .execute();
+    }
             else {
                 Log.v("Not available", sId);
 
@@ -493,7 +502,7 @@ public class t_SignUp extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_SignUp" , "Worked");
 
@@ -509,9 +518,7 @@ public class t_SignUp extends Activity
                 mOutputText.setText("No results returned.");
                 Log.v("t_SignUp" , "damn");
             } else {
-                output.add(0, " ");
-                mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_SignUp" , "Wofdad21");
+
                 displayAvailability();
 
             }
@@ -531,9 +538,9 @@ public class t_SignUp extends Activity
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             t_SignUp.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
-                    Log.v("t_SignUp" , "Worked2");
+//                    mOutputText.setText("The following error occurred:\n"
+//                            + mLastError.getMessage());
+                    displayAvailability();
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
@@ -555,7 +562,7 @@ public class t_SignUp extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -613,7 +620,7 @@ public class t_SignUp extends Activity
                             if (sEmail.contains("@") && sEmail.contains(".")) {
                                 if (sPhone.length() >= 10) {
 
-                                    mOutputText.setText("");
+
                                     getResultsFromApi();
 
 
@@ -665,6 +672,14 @@ public class t_SignUp extends Activity
             Toast.makeText(getApplicationContext(), " Id already taken",
                     Toast.LENGTH_SHORT).show();
 
+        }else if(!isEmailAvailable)
+        {
+            Toast.makeText(getApplicationContext(), " Email already taken",
+                    Toast.LENGTH_SHORT).show();
+        }else if(!isPhoneNoAvailable)
+        {
+            Toast.makeText(getApplicationContext(), " Phone No. already taken",
+                    Toast.LENGTH_SHORT).show();
         }
         else {
             saveData();

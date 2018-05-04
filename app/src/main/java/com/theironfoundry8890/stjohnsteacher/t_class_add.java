@@ -511,7 +511,7 @@ public class t_class_add extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_class_add" , "Worked");
 
@@ -575,7 +575,7 @@ public class t_class_add extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -640,7 +640,7 @@ public class t_class_add extends Activity
                 if (confirmPass.length() >= 8) {
                     if (confirmPass.equals(savedPass)) {
                         Log.v("dept_filter" , dept_filter);
-                        mOutputText.setText("");
+
                         getResultsFromApi();
                     }
                     else {

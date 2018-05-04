@@ -481,7 +481,7 @@ public class t_EditProfileActivity extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_EditProfileActivity" , "Worked");
 
@@ -544,7 +544,7 @@ public class t_EditProfileActivity extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -600,7 +600,7 @@ public class t_EditProfileActivity extends Activity
                             if (sEmail.contains("@")) {
                                 if (sPhone.length() >= 10) {
 
-                                    mOutputText.setText("");
+
                                     getResultsFromApi();
 
 

@@ -661,7 +661,7 @@ public class EventViewer extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -783,7 +783,7 @@ public class EventViewer extends Activity
         EventList();
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 

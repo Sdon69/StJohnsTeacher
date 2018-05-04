@@ -148,10 +148,6 @@ public class youtubeUploadMainActivity extends Activity implements
             mUploadsListFragment = (UploadsListFragment) getFragmentManager()
                     .findFragmentById(R.id.list_fragment);
 
-            if(mChosenAccountName!= null)
-            {
-                pickFileFunction();
-            }
 
         }
     }
@@ -459,7 +455,7 @@ public class youtubeUploadMainActivity extends Activity implements
                         videoIds.add(item.getContentDetails().getVideoId());
                     }
 
-                    // Get details of uploaded videos with a videos list
+                    // Get detail of uploaded videos with a videos list
                     // request.
                     VideoListResponse vlr = youtube.videos()
                             .list("id,snippet,status")
@@ -557,12 +553,13 @@ public class youtubeUploadMainActivity extends Activity implements
 
         // Workaround for Nexus 7 Android 4.3 Intent Returning Null problem
         // create a file to save the video in specific folder (this works for
-        // video only)
+        // vide o only)
         // mFileURI = getOutputMediaFile(MEDIA_TYPE_VIDEO);
         // intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileURI);
 
         // set the video image quality to high
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+
 
         // start the Video Capture Intent
         startActivityForResult(intent, RESULT_VIDEO_CAP);

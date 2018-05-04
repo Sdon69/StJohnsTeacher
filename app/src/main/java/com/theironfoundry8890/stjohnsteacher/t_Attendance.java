@@ -433,7 +433,7 @@ public class t_Attendance extends Activity
 
         if (!class_filter.equals("Class")) {
             mode = "sectionfeed";
-            mOutputText.setText("");
+
             getResultsFromApi();
         }
 
@@ -866,7 +866,7 @@ public class t_Attendance extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_Attendance" , "Worked");
 
@@ -928,7 +928,7 @@ public class t_Attendance extends Activity
                 {
                     mode = "attendancefeed";
 
-                    mOutputText.setText("");
+
                     getResultsFromApi();
                 }
 
@@ -979,7 +979,7 @@ public class t_Attendance extends Activity
                     {
                         mode = "attendancefeed";
 
-                        mOutputText.setText("");
+
                         getResultsFromApi();
                     }
 
@@ -1007,7 +1007,7 @@ public class t_Attendance extends Activity
 
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -1019,7 +1019,7 @@ public class t_Attendance extends Activity
         mode = "doneotp";
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
     }
@@ -1118,7 +1118,7 @@ public class t_Attendance extends Activity
         sItems.setAdapter(adapter);
 
         mode = "classfeed";
-        mOutputText.setText("");
+
         getResultsFromApi();
 
     }
@@ -1348,7 +1348,7 @@ public class t_Attendance extends Activity
 
 
 
-                        mOutputText.setText("");
+
                         getResultsFromApi();
 
                     }else{
@@ -1427,7 +1427,7 @@ public class t_Attendance extends Activity
 
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
     }
 
@@ -1456,7 +1456,7 @@ public class t_Attendance extends Activity
                         setContentView(R.layout.t_otp_displayer);
 
 
-                        mOutputText.setText("");
+
                         getResultsFromApi();
 
 
@@ -1536,7 +1536,7 @@ public class t_Attendance extends Activity
 
             Spinner spin = (Spinner) findViewById(R.id.spinner_class);
             spin.setOnItemSelectedListener(this);
-            mOutputText.setText("");
+
             getResultsFromApi();
         }
         else

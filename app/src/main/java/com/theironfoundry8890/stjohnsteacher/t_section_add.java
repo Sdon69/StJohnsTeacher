@@ -541,7 +541,7 @@ public class t_section_add extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_section_add" , "Worked");
 
@@ -625,7 +625,7 @@ public class t_section_add extends Activity
 
 
 
-            mOutputText.setText("");
+
             getResultsFromApi();
 
 
@@ -679,7 +679,7 @@ public class t_section_add extends Activity
                 if (confirmPass.length() >= 8) {
                     if (confirmPass.equals(savedPass)) {
                         Log.v("dept_filter" , dept_filter);
-                        mOutputText.setText("");
+
                         getResultsFromApi();
                     }
                     else {
@@ -721,7 +721,7 @@ public class t_section_add extends Activity
         savedPass = passString;
         savedId = idString;
         Log.v(passString , idString);
-        mOutputText.setText("");
+
         getResultsFromApi();
 
     }

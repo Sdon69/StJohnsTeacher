@@ -608,7 +608,7 @@ public class t_VideoInfoWriterViaLink extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -1233,7 +1233,7 @@ public class t_VideoInfoWriterViaLink extends Activity
         String savedCheckBoxes = saveKey;
         if(savedCheckBoxes != null)
         {
-            subCataegories = savedCheckBoxes;
+            String subCataegories = savedCheckBoxes;
             String[] departmentCollection = new String[6];
             String outputTopic =  "";
             int arrayIncrementer = 0;

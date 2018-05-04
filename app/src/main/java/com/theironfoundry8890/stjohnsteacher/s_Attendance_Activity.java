@@ -613,7 +613,7 @@ public class s_Attendance_Activity extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("s_Attendance_Activity" , "Worked");
 
@@ -760,7 +760,7 @@ public class s_Attendance_Activity extends Activity
     {
         mode = "classSearch";
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -818,7 +818,7 @@ public class s_Attendance_Activity extends Activity
         mode = "nameSearch";
         Log.v("namemode", mode);
 
-        mOutputText.setText("");
+
         getResultsFromApi();
     }
 

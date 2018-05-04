@@ -540,7 +540,7 @@ public class t_VideoInfoWriter extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
 //            mProgress.show();
             Log.v("t_Announcement_Writer" , "Worked");
 
@@ -591,7 +591,7 @@ public class t_VideoInfoWriter extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -790,7 +790,7 @@ public class t_VideoInfoWriter extends Activity
                                 if(semesterSix){
                                     subCataegories = subCataegories.concat("Sixth and Above Semesters");
                                 }
-                                mOutputText.setText("");
+
                                 getResultsFromApi();
 
                             }else {

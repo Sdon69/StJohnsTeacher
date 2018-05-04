@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mLayout"><RelativeLayout
+    android:id="@+id/mLayout">
+    <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,7 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#ffffff">
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -43,18 +45,7 @@
                 android:layout_weight="8"
                 android:orientation="vertical"
                 android:layout_margin="8dp">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onClickAttachFiles"
-                    android:text="Attach Files"
-                    android:textAllCaps="true"
-                    android:background="@drawable/round_button"
-                    android:textColor="#f8fcff"
-                    android:paddingRight="5dp"
-                    android:paddingLeft="5dp"
 
-                    />
                 <EditText
                     android:id="@+id/eventTitle"
                     android:layout_width="match_parent"
@@ -191,7 +182,11 @@
                     android:text="Sixth and Above Semesters"
                     android:textColor="#4489c8"
                     android:textStyle="bold" />
-
+                <WebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="16dp"/>
 
                 <Button
                     android:layout_width="wrap_content"

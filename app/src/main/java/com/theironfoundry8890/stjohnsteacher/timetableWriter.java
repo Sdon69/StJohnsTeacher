@@ -521,7 +521,7 @@ public class timetableWriter extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
 
 
@@ -583,7 +583,7 @@ public class timetableWriter extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -696,7 +696,7 @@ public class timetableWriter extends Activity
 
 
 
-                                mOutputText.setText("");
+
                                 getResultsFromApi();
 
 

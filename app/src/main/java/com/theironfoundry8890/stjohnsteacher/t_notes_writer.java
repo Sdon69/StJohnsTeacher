@@ -2,25 +2,39 @@ package com.theironfoundry8890.stjohnsteacher;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -44,11 +58,13 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -59,24 +75,23 @@ public class t_notes_writer extends Activity
     GoogleAccountCredential mCredential;
     private Button mCallApiButton;
     ProgressDialog mProgress;
-    private String sFName;
-    private String sLName;
-    private String sClass;
-    private String sEmail;
-    private String sSection;
-    private String sId;
-    private String sPhone;
+
     private TextView mOutputText;
     private String sPassword;private String userId;
     private boolean idAvailcheck = true;
     private boolean workbookEnd = false;
-
+    private String fileUrl = "None";
+    private boolean readyToSubmit = false;
     private int a = 2;
     private float x1,x2;
     static final int MIN_DISTANCE = 150;
 
     private String fullName;
-
+    private static final String TAG = t_notes_writer.class.getSimpleName();
+    private String mCM;
+    private ValueCallback<Uri> mUM;
+    private ValueCallback<Uri[]> mUMA;
+    private final static int FCR=1;
 
 
 
@@ -85,26 +100,10 @@ public class t_notes_writer extends Activity
     private String eventTitle;
     private String eventDescription;
     private String publishDate;
-    private String eventDate;
-    private String confirmPass;
     private String savedPass;
     private String savedId;
-    private String savedTable;
 
-    private String eventDay;
-    private String eventMonth;
-    private String eventYear;
-
-
-    private String lastDateOfRegistration;
-    private String lastDayOfRegistration;
-    private String lastMonthOfRegistration;
-    private String lastYearOfRegistration;
-
-    private String entryfees;
-
-    private String savedSpreadsheetId;
-
+    WebView webView;
 
 
     //Subjects
@@ -197,7 +196,101 @@ public class t_notes_writer extends Activity
         EditText title = (EditText) findViewById(R.id.eventTitle);
         title.addTextChangedListener(watch);
         loadData();
+        if(Build.VERSION.SDK_INT >=23 && (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(t_notes_writer.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        }
 
+        webView = (WebView) findViewById(R.id.webview);
+        assert webView != null;
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        ButtonClickJavascriptInterface myJavaScriptInterface = new ButtonClickJavascriptInterface(t_notes_writer.this);
+
+        webView.addJavascriptInterface(myJavaScriptInterface, "MyFunction");
+        webSettings.setAllowFileAccess(true);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            webSettings.setMixedContentMode(0);
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }else if(Build.VERSION.SDK_INT >= 19){
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }else if(Build.VERSION.SDK_INT < 19){
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        webView.setWebViewClient(new Callback());
+        webView.loadUrl("https://stormy-bayou-35005.herokuapp.com/driveUpload.html");
+        webView.setWebChromeClient(new WebChromeClient(){
+            //For Android 3.0+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_notes_writer.this.startActivityForResult(Intent.createChooser(i,"File Chooser"), FCR);
+            }
+            // For Android 3.0+, above method not supported in some android 3+ versions, in such case we use this
+            public void openFileChooser(ValueCallback uploadMsg, String acceptType){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_notes_writer.this.startActivityForResult(
+                        Intent.createChooser(i, "File Browser"),
+                        FCR);
+            }
+            //For Android 4.1+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_notes_writer.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), t_notes_writer.FCR);
+            }
+            //For Android 5.0+
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams){
+                if(mUMA != null){
+                    mUMA.onReceiveValue(null);
+                }
+                mUMA = filePathCallback;
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(takePictureIntent.resolveActivity(t_notes_writer.this.getPackageManager()) != null){
+                    File photoFile = null;
+                    try{
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCM);
+                    }catch(IOException ex){
+                        Log.e(TAG, "Image file creation failed", ex);
+                    }
+                    if(photoFile != null){
+                        mCM = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    }else{
+                        takePictureIntent = null;
+                    }
+                }
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("*/*");
+                Intent[] intentArray;
+                if(takePictureIntent != null){
+                    intentArray = new Intent[]{takePictureIntent};
+                }else{
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                startActivityForResult(chooserIntent, FCR);
+                return true;
+            }
+        });
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -206,7 +299,38 @@ public class t_notes_writer extends Activity
     }
 
 
+    public class Callback extends WebViewClient {
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl){
+            Toast.makeText(getApplicationContext(), "Failed loading app!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    // Create an image file
+    private File createImageFile() throws IOException{
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "img_"+timeStamp+"_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName,".jpg",storageDir);
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event){
+        if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch(keyCode){
+                case KeyEvent.KEYCODE_BACK:
+                    if(webView.canGoBack()){
+                        webView.goBack();
+                    }else{
+                        finish();
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }
     /**
      * Attempt to call the API, after verifying that all the preconditions are
      * satisfied. The preconditions are: Google Play Services installed, an
@@ -268,6 +392,38 @@ public class t_notes_writer extends Activity
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            Uri[] results = null;
+            //Check if response is positive
+            if(resultCode== Activity.RESULT_OK){
+                if(requestCode == FCR){
+                    if(null == mUMA){
+                        return;
+                    }
+                    if(data == null || data.getData() == null){
+                        //Capture Photo if no image available
+                        if(mCM != null){
+                            results = new Uri[]{Uri.parse(mCM)};
+                        }
+                    }else{
+                        String dataString = data.getDataString();
+                        if(dataString != null){
+                            results = new Uri[]{Uri.parse(dataString)};
+                        }
+                    }
+                }
+            }
+            mUMA.onReceiveValue(results);
+            mUMA = null;
+        }else{
+            if(requestCode == FCR){
+                if(null == mUM) return;
+                Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+                mUM.onReceiveValue(result);
+                mUM = null;
+            }
+        }
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -467,7 +623,7 @@ public class t_notes_writer extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                Log.v("MainActivity", "Wofdad");
+
 
                 results.add("");
 
@@ -512,7 +668,7 @@ public class t_notes_writer extends Activity
             long timestamp = System.currentTimeMillis() / 1000;
                 // Check if id is not taken
                 arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName
-                        ,String.valueOf(--a),publishDate,"None", String.valueOf(timestamp));
+                        ,String.valueOf(--a),publishDate,fileUrl, String.valueOf(timestamp));
                 oRange.setValues(arrData);
 
 
@@ -542,7 +698,7 @@ public class t_notes_writer extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_notes_writer" , "Worked");
 
@@ -553,14 +709,11 @@ public class t_notes_writer extends Activity
 
         @Override
         protected void onPostExecute(List<String> output) {
-            mProgress.hide();
+
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
-                Log.v("t_notes_writer" , "damn");
+
             } else {
-                output.add(0, " ");
-                mOutputText.setText(TextUtils.join("\n", output));
-                Log.v("t_notes_writer" , "Wofdad21");
+
                 successfulRecord();
 
 
@@ -570,7 +723,7 @@ public class t_notes_writer extends Activity
 
         @Override
         protected void onCancelled() {
-            mProgress.hide();
+
 
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
@@ -584,7 +737,7 @@ public class t_notes_writer extends Activity
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
-                    Log.v("t_notes_writer" , "Worked2");
+
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
@@ -592,21 +745,11 @@ public class t_notes_writer extends Activity
         }
     }
 
-    private void Go(List<String> output) {
-        mProgress.hide();
-        if (output == null || output.size() == 0) {
-            mOutputText.setText("No results returned.");
-        } else {
-            output.add(0, "Data retrieved using the Google Sheets API:");
-            mOutputText.setText(TextUtils.join("\n", output));
-            Log.v("t_notes_writer" , "Wofdad");
 
-        }
-    }
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -661,8 +804,10 @@ public class t_notes_writer extends Activity
 
         return data;
     }
-
     public void submitInfo(View view) {
+        webView.loadUrl("javascript:check()");
+    }
+    public void checkAndSubmit() {
 
 
 
@@ -707,10 +852,10 @@ public class t_notes_writer extends Activity
 
         //Getting System date
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => " + c.getTime());
+
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = df.format(c.getTime());
-        Log.v("Date" , formattedDate);
+
 
         publishDate = formattedDate;
 
@@ -749,7 +894,7 @@ public class t_notes_writer extends Activity
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
                 if (eventDescription.length() <= 49000) {
-                    if (true) {
+                    if (readyToSubmit) {
                         if (true) {
                             if(art || commerce || management ||  science || education|| otherSubjects ) {
                                if(semesterOne || semesterTwo || semesterThree || semesterFour || semesterFive || semesterSix) {
@@ -803,7 +948,7 @@ public class t_notes_writer extends Activity
                                        subCataegories = subCataegories.concat("Sixth and Above Semesters");
                                    }
 
-                                   mOutputText.setText("");
+
                                    getResultsFromApi();
                                }else{
                                    Toast.makeText(getApplicationContext(), "Atleast Choose One Semester",
@@ -825,7 +970,7 @@ public class t_notes_writer extends Activity
                         }
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Minimum size of Password is 8 characters",
+                        Toast.makeText(getApplicationContext(), "File Uploading",
                                 Toast.LENGTH_SHORT).show();
 
                     }
@@ -902,32 +1047,7 @@ public class t_notes_writer extends Activity
 
 
 
-    public void saveNewWorkbookName(){
 
-
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-        mEditor.putInt("tableNo", tableNo++);
-
-        String tableIds[] = new String[10];
-
-        tableIds[0] ="a";
-        tableIds[1] ="1g6CIOrbqXTrMOMnlrgi_S2HpaABcUqPd_vch8HHSujM";
-        tableIds[2] ="1CPkY8WUh1xK7oLPT3Fv33ZvD4XVQF40NB24GkhbOx60";
-
-
-
-        mEditor.putString("tableSheetId", tableIds[tableNo]).commit();
-
-        gSavedTableSheetId = tableIds[tableNo];
-
-
-
-
-        Log.v("Saved data" , sId);
-
-
-    }
 
     public void onClickAttendance(View v)
     {
@@ -971,59 +1091,7 @@ public class t_notes_writer extends Activity
 
 
 
-    private void swipe() {
 
-        TextView head2 = (TextView) findViewById(R.id.head2);
-        TextView head1 = (TextView) findViewById(R.id.head);
-
-        Button button1 = (Button) findViewById(R.id.Button1);
-        Button button2 = (Button) findViewById(R.id.Button2);
-        Button button3 = (Button) findViewById(R.id.Button3);
-
-
-
-        if(a==0){
-
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Attendance.class);
-            startActivity(selectIntent);
-
-        }
-
-
-        if(a==1) {
-
-            Intent selectIntent = new Intent(t_notes_writer.this,t_Announcement_Viewer.class);
-            startActivity(selectIntent);
-
-
-        }
-
-        if(a==2) {
-            Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
-            startActivity(selectIntent);
-        }
-
-        if(a==3) {
-            Intent selectIntent = new Intent(t_notes_writer.this,EventViewer.class);
-            startActivity(selectIntent);
-
-        }
-
-        if(a==4){
-            Intent selectIntent = new Intent(t_notes_writer.this,Newsfeed.class);
-            startActivity(selectIntent);
-
-        }
-
-
-
-
-
-
-
-
-
-    }
 
 
 
@@ -1085,7 +1153,7 @@ public class t_notes_writer extends Activity
     public void successfulRecord()
     {
         Toast.makeText(this, "Record Successfully added", Toast.LENGTH_SHORT).show();
-        Log.v("pre-Send","pre-Send");
+
         send_firebase_notification.sendGcmMessage(eventTitle,eventDescription,subCataegories,"note");
         Intent selectIntent = new Intent(t_notes_writer.this,t_notes_Viewer.class);
         startActivity(selectIntent);
@@ -1093,72 +1161,7 @@ public class t_notes_writer extends Activity
     }
 
 
-    public void setSheetIds()
-    {
-        String mode = "test";
 
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-
-        if(mode.equals("test")) {
-            mEditor.putString("eventSheetId", "1tFhDy9sR9dlJ0jwNbqbcq3TnFpViMHJOi2xeOv_Wqqw").apply();
-            mEditor.putString("notesSheetId", "1pAZtRVUuQFuGoUiWjiZRwXbrfju3ZcJgR0Lq6mBmmW0").apply();
-            mEditor.putString("announcementSheetId", "1P0iFk6F9AHddLOM4N_8NbMVVByz671rbzDikJIbcsS0").apply();
-            mEditor.putString("miscSheetId", "10PpNnvF4j5GNlbGrP4vPoPV8pQhix_9JP5kK9zlQDmY").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
-        }else if(mode.equals("release"))
-        {
-            mEditor.putString("eventSheetId", "1SC0UPYthsoS5NKDuC5oJt-y29__f0gm0wkIkJoDduWw").apply();
-            mEditor.putString("notesSheetId", "1UDDtel5vAFBqVnaPZIZl20SwZEz_7fxGXYQOuKLvSmQ").apply();
-            mEditor.putString("announcementSheetId", "116OBhXliG69OB5bKRAEwpmlOz21LCCWStniSuIR6wPI").apply();
-            mEditor.putString("miscSheetId", "1nzKRlq7cQrI_XiJGxJdNax5oB91bR_SypiazWO2JTuU  ").apply();
-            mEditor.putString("uploadedVideoInfoSheetId", "12C3ceqz_Fr7GmXpLxt-n4iMhbr86yluGqT4fno_CW-8").apply();
-        }
-
-
-
-    }
-
-    public String  getEventSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("eventSheetId", "default_value_if_variable_not_found");
-    }
-
-    public String  getAnnouncementSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("announcementSheetId", "default_value_if_variable_not_found");
-    }
-
-    public String  getNoteSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("notesSheetId", "default_value_if_variable_not_found");
-
-    }
-
-    public String  getMiscSheetId()
-    {
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("miscSheetId", "default_value_if_variable_not_found");
-
-    }
-
-    public String getUploadedVideoInfoSheetId()
-    {
-        setSheetIds();
-        SharedPreferences mPrefs = getSharedPreferences("label", 0);
-
-        return mPrefs.getString("uploadedVideoInfoSheetId", "default_value_if_variable_not_found");
-    }
 
     public void  loadCheckBoxes(String saveKey)
     {
@@ -1166,7 +1169,7 @@ public class t_notes_writer extends Activity
         String savedCheckBoxes = saveKey;
         if(savedCheckBoxes != null)
         {
-            subCataegories = savedCheckBoxes;
+            String subCataegories = savedCheckBoxes;
             String[] departmentCollection = new String[6];
             String outputTopic =  "";
             int arrayIncrementer = 0;
@@ -1265,5 +1268,35 @@ public class t_notes_writer extends Activity
 
 
         }};
+
+    public class ButtonClickJavascriptInterface {
+        Context mContext;
+        ButtonClickJavascriptInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void onButtonClick(String toast) {
+            Log.v("status",toast);
+            if(toast.equals("noFile")) {
+                Log.v("uploaded No File", toast);
+                readyToSubmit = true;
+                checkAndSubmit();
+
+            }
+
+            else if(toast.contains("http")) {
+                fileUrl = toast;
+                readyToSubmit = true;
+                checkAndSubmit();
+            }
+            else if(toast.contains("progress"))
+            {
+                readyToSubmit = false;
+                checkAndSubmit();
+            }
+//            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 

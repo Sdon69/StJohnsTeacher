@@ -46,7 +46,7 @@
             android:textAppearance="?android:textAppearanceLarge"
             android:textColorHint="#c00"
             android:textStyle="bold"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
         <Button
             android:id="@+id/pick_button"
             style="?android:attr/borderlessButtonStyle"

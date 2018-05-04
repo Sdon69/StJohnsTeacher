@@ -455,16 +455,17 @@ public class t_Signin extends Activity
 
                     if (dId.equals("0"))
                     {
-                        Log.v("if", dId);
-                        Log.v("if", range);
+
 
                         break;
                     }
 
-                    Log.v(sId , dId);
-                    if (dId.contains(sId))
+                    String retrievedPhoneNo = String.valueOf(row.get(5));
+                    String retrievedEmailId = String.valueOf(row.get(4));
+                    Log.v("retrievedPhoneNo",retrievedPhoneNo);
+                    Log.v("retrievedEmailId",retrievedEmailId);
+                    if (dId.equals(sId) || retrievedPhoneNo.equals(sId)  || retrievedEmailId.equals(sId))
                     {
-                        Log.v("Id equal" , sId);
                         idCheck = true;
 
                         dPassword = String.valueOf(row.get(1));
@@ -519,7 +520,7 @@ public class t_Signin extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_Signin" , "Worked");
 
@@ -584,7 +585,7 @@ public class t_Signin extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -627,7 +628,7 @@ public class t_Signin extends Activity
             if (sPassword.length() >= 8) {
 
 
-                mOutputText.setText("");
+
                 getResultsFromApi();
 
 

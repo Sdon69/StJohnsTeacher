@@ -511,7 +511,7 @@ Log.v(Str1,subjectAbb);
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_subject_add" , "Worked");
 
@@ -575,7 +575,7 @@ Log.v(Str1,subjectAbb);
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -640,7 +640,7 @@ Log.v(Str1,subjectAbb);
                     if (confirmPass.length() >= 8) {
                         if (confirmPass.equals(savedPass)) {
                             Log.v("dept_filter" , dept_filter);
-                                mOutputText.setText("");
+
                                 getResultsFromApi();
                             }
                         else {

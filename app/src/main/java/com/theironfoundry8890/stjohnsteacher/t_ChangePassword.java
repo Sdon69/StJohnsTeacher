@@ -477,7 +477,7 @@ public class t_ChangePassword extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_ChangePassword" , "Worked");
 
@@ -541,7 +541,7 @@ public class t_ChangePassword extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -597,7 +597,7 @@ public class t_ChangePassword extends Activity
 
                                     tPass = stPassword;
 
-                                    mOutputText.setText("");
+
                                     getResultsFromApi();
 
 

@@ -435,7 +435,7 @@ public class attendace_retrieve_auto extends Activity
 
         if (!class_filter.equals("Class")) {
             mode = "sectionfeed";
-            mOutputText.setText("");
+
             getResultsFromApi();
         }
 
@@ -794,7 +794,7 @@ public class attendace_retrieve_auto extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("attendace_retrieve_auto" , "Worked");
 
@@ -918,7 +918,7 @@ public class attendace_retrieve_auto extends Activity
 
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -930,7 +930,7 @@ public class attendace_retrieve_auto extends Activity
         mode = "doneotp";
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
     }
@@ -982,7 +982,7 @@ public class attendace_retrieve_auto extends Activity
         sItems.setAdapter(adapter);
 
         mode = "classfeed";
-        mOutputText.setText("");
+
         getResultsFromApi();
 
     }
@@ -1206,7 +1206,7 @@ public class attendace_retrieve_auto extends Activity
 
 
 
-                        mOutputText.setText("");
+
                         getResultsFromApi();
 
                     }else{
@@ -1278,7 +1278,7 @@ public class attendace_retrieve_auto extends Activity
 
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
     }
 
@@ -1296,7 +1296,7 @@ public class attendace_retrieve_auto extends Activity
 
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
     }
 
@@ -1355,7 +1355,7 @@ public class attendace_retrieve_auto extends Activity
 
             Spinner spin = (Spinner) findViewById(R.id.spinner_class);
             spin.setOnItemSelectedListener(this);
-            mOutputText.setText("");
+
             getResultsFromApi();
         }
         else

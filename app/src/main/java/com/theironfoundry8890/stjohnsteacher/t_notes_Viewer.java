@@ -625,7 +625,7 @@ public class t_notes_Viewer extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             ProgressBar loadingCircle = (ProgressBar) findViewById(R.id.loadingCircle);
             loadingCircle.setVisibility(View.VISIBLE);
 
@@ -746,7 +746,7 @@ public class t_notes_Viewer extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -885,7 +885,7 @@ public class t_notes_Viewer extends Activity
         EventList();
 
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 

@@ -517,7 +517,7 @@ public class t_EventWriter extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
             Log.v("t_EventWriter" , "Worked");
 
@@ -581,7 +581,7 @@ public class t_EventWriter extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -826,7 +826,7 @@ public class t_EventWriter extends Activity
                                 }
 
 
-                                mOutputText.setText("");
+
                                 getResultsFromApi();
 
                             }else {

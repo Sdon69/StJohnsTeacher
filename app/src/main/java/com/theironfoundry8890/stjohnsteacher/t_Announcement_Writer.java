@@ -2,22 +2,38 @@ package com.theironfoundry8890.stjohnsteacher;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,11 +57,13 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -56,7 +74,12 @@ public class t_Announcement_Writer extends Activity
     GoogleAccountCredential mCredential;
     private Button mCallApiButton;
     ProgressDialog mProgress;
-
+    WebView webView;
+    private static final String TAG = t_Announcement_Writer.class.getSimpleName();
+    private String mCM;
+    private ValueCallback<Uri> mUM;
+    private ValueCallback<Uri[]> mUMA;
+    private final static int FCR=1;
     private String sId;
     private TextView mOutputText;
     private String sPassword;private String userId;
@@ -102,6 +125,7 @@ public class t_Announcement_Writer extends Activity
     private String sManagement ;
     private String sScience ;
 
+
     private int tableNo;
     private String gSavedAnnSheetId;
 
@@ -113,6 +137,8 @@ public class t_Announcement_Writer extends Activity
     private static final String BUTTON_TEXT = "Call Google Sheets API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS};
+    private String fileUrl = "None";
+    private boolean readyToSubmit = false;
 
     /**
      * Create the main activity.
@@ -158,13 +184,141 @@ public class t_Announcement_Writer extends Activity
         colorCheck();
 
 
+        if(Build.VERSION.SDK_INT >=23 && (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(t_Announcement_Writer.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        }
+
+        webView = (WebView) findViewById(R.id.webview);
+        assert webView != null;
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        ButtonClickJavascriptInterface myJavaScriptInterface = new ButtonClickJavascriptInterface(t_Announcement_Writer.this);
+
+        webView.addJavascriptInterface(myJavaScriptInterface, "MyFunction");
+        webSettings.setAllowFileAccess(true);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            webSettings.setMixedContentMode(0);
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }else if(Build.VERSION.SDK_INT >= 19){
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }else if(Build.VERSION.SDK_INT < 19){
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        webView.setWebViewClient(new Callback());
+        webView.loadUrl("https://stormy-bayou-35005.herokuapp.com/driveUpload.html");
+        webView.setWebChromeClient(new WebChromeClient(){
+            //For Android 3.0+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_Announcement_Writer.this.startActivityForResult(Intent.createChooser(i,"File Chooser"), FCR);
+            }
+            // For Android 3.0+, above method not supported in some android 3+ versions, in such case we use this
+            public void openFileChooser(ValueCallback uploadMsg, String acceptType){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_Announcement_Writer.this.startActivityForResult(
+                        Intent.createChooser(i, "File Browser"),
+                        FCR);
+            }
+            //For Android 4.1+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                t_Announcement_Writer.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), t_Announcement_Writer.FCR);
+            }
+            //For Android 5.0+
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams){
+                if(mUMA != null){
+                    mUMA.onReceiveValue(null);
+                }
+                mUMA = filePathCallback;
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(takePictureIntent.resolveActivity(t_Announcement_Writer.this.getPackageManager()) != null){
+                    File photoFile = null;
+                    try{
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCM);
+                    }catch(IOException ex){
+                        Log.e(TAG, "Image file creation failed", ex);
+                    }
+                    if(photoFile != null){
+                        mCM = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    }else{
+                        takePictureIntent = null;
+                    }
+                }
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("*/*");
+                Intent[] intentArray;
+                if(takePictureIntent != null){
+                    intentArray = new Intent[]{takePictureIntent};
+                }else{
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                startActivityForResult(chooserIntent, FCR);
+                return true;
+            }
+        });
+
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
     }
 
+    public class Callback extends WebViewClient {
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl){
+            Toast.makeText(getApplicationContext(), "Failed loading app!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    // Create an image file
+    private File createImageFile() throws IOException{
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "img_"+timeStamp+"_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName,".jpg",storageDir);
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event){
+        if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch(keyCode){
+                case KeyEvent.KEYCODE_BACK:
+                    if(webView.canGoBack()){
+                        webView.goBack();
+                    }else{
+                        finish();
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -237,6 +391,38 @@ public class t_Announcement_Writer extends Activity
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            Uri[] results = null;
+            //Check if response is positive
+            if(resultCode== Activity.RESULT_OK){
+                if(requestCode == FCR){
+                    if(null == mUMA){
+                        return;
+                    }
+                    if(data == null || data.getData() == null){
+                        //Capture Photo if no image available
+                        if(mCM != null){
+                            results = new Uri[]{Uri.parse(mCM)};
+                        }
+                    }else{
+                        String dataString = data.getDataString();
+                        if(dataString != null){
+                            results = new Uri[]{Uri.parse(dataString)};
+                        }
+                    }
+                }
+            }
+            mUMA.onReceiveValue(results);
+            mUMA = null;
+        }else{
+            if(requestCode == FCR){
+                if(null == mUM) return;
+                Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+                mUM.onReceiveValue(result);
+                mUM = null;
+            }
+        }
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -476,7 +662,7 @@ public class t_Announcement_Writer extends Activity
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 String formattedDate = df.format(c.getTime());
                 arrData = getData(eventTitle , eventDescription ,subCataegories, savedId , fullName ,
-                        String.valueOf(--a),formattedDate,"None", String.valueOf(timestamp));
+                        String.valueOf(--a),formattedDate,fileUrl, String.valueOf(timestamp));
 
                 SharedPreferences mPrefs = getSharedPreferences("label", 0);
                 SharedPreferences.Editor mEditor = mPrefs.edit();
@@ -514,7 +700,7 @@ public class t_Announcement_Writer extends Activity
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
 
 
@@ -525,7 +711,7 @@ public class t_Announcement_Writer extends Activity
 
         @Override
         protected void onPostExecute(List<String> output) {
-            mProgress.hide();
+//            mProgress.hide();
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
 
@@ -565,7 +751,7 @@ public class t_Announcement_Writer extends Activity
 
     public void onClick2(View v) {
 
-        mOutputText.setText("");
+
         getResultsFromApi();
 
 
@@ -574,14 +760,16 @@ public class t_Announcement_Writer extends Activity
 
     public void onClickAttachFiles(View v) {
 
-        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/androidAnnouncementWriter");
+        Uri webpage = Uri.parse("https://stormy-bayou-35005.herokuapp.com/driveUpload.html");
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
         startActivity(webIntent);
 
 
     }
 
-
+    public void showToast(String toast) {
+        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+    }
     public static List<List<Object>> getData (String pTitle , String pDesc,
                                               String pCataegories , String pId
             ,String fullN,String uniqueId,String pDate,String fileUrl,String timestamp)  {
@@ -617,6 +805,11 @@ public class t_Announcement_Writer extends Activity
 
 
     public void submitInfo(View view) {
+        webView.loadUrl("javascript:toAndroid()");
+
+    }
+
+    public void checkAndSubmit() {
 
 
 
@@ -700,7 +893,7 @@ public class t_Announcement_Writer extends Activity
         if (eventTitle.length() >= 1) {
             if (eventDescription.length() >= 1) {
                 if (eventDescription.length() <= 49000) {
-                    if (true) {
+                    if (readyToSubmit) {
                         if (true) {
                             if(art || commerce || management ||  science || education|| otherSubjects ) {
                                 if(semesterOne || semesterTwo || semesterThree || semesterFour || semesterFive || semesterSix) {
@@ -754,7 +947,6 @@ public class t_Announcement_Writer extends Activity
                                         subCataegories = subCataegories.concat("Sixth and Above Semesters");
                                     }
 
-                                    mOutputText.setText("");
                                     getResultsFromApi();
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Atleast Choose One Semester",
@@ -776,7 +968,7 @@ public class t_Announcement_Writer extends Activity
                         }
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Minimum size of Password is 8 characters",
+                        Toast.makeText(getApplicationContext(), "File Uploading",
                                 Toast.LENGTH_SHORT).show();
 
                     }
@@ -802,6 +994,7 @@ public class t_Announcement_Writer extends Activity
 
 
     }
+
 
     public void displayAvailability() {
 
@@ -834,8 +1027,8 @@ public class t_Announcement_Writer extends Activity
         savedId = idString;
 
     }
-    
-    
+
+
 
 
 
@@ -1016,7 +1209,7 @@ public class t_Announcement_Writer extends Activity
         String savedCheckBoxes = saveKey;
         if(savedCheckBoxes != null)
         {
-            subCataegories = savedCheckBoxes;
+            String subCataegories = savedCheckBoxes;
             String[] departmentCollection = new String[6];
             String outputTopic =  "";
             int arrayIncrementer = 0;
@@ -1085,6 +1278,36 @@ public class t_Announcement_Writer extends Activity
         }
     }
 
+    public class ButtonClickJavascriptInterface {
+        Context mContext;
+        ButtonClickJavascriptInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void onButtonClick(String toast) {
+            Log.v("status",toast);
+            if(toast.equals("noFile")) {
+                Log.v("uploaded No File", toast);
+                readyToSubmit = true;
+                checkAndSubmit();
+
+            }
+
+            else if(toast.contains("http")) {
+                fileUrl = toast;
+                readyToSubmit = true;
+                checkAndSubmit();
+            }
+            else if(toast.contains("progress"))
+            {
+                readyToSubmit = false;
+                checkAndSubmit();
+            }
+//            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 //    TextWatcher watch = new TextWatcher(){
 //
 //        @Override
@@ -1116,5 +1339,6 @@ public class t_Announcement_Writer extends Activity
 //        }};
 
 }
+
   
   
